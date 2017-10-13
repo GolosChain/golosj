@@ -149,19 +149,13 @@ public class KeyGenerator {
     public static String suggestBrainKey() throws SteemKeyHandlingException {
         ArrayList<String> brainKeyParts = new ArrayList<>();
 
-        try {
             for (int i = 0; i < BRAIN_KEY_WORD_COUNT; i++) {
                 brainKeyParts.add(
-                        BrainkeyDictionaryManager.getInstance().getBrainKeyDictionary()[SecureRandom.getInstanceStrong()
+                        BrainkeyDictionaryManager.getInstance().getBrainKeyDictionary()[new SecureRandom()
                                 .nextInt(BrainkeyDictionaryManager.getInstance().getBrainKeyDictionary().length - 1)]
                                         .toUpperCase());
             }
-        } catch (NoSuchAlgorithmException e) {
-            throw new SteemKeyHandlingException(
-                    "The algorithm used to provide a strong random number is not available on your system.", e);
-        }
-
-        return String.join(" ", brainKeyParts);
+        return StringUtils.join(brainKeyParts," ");
     }
 
     /**

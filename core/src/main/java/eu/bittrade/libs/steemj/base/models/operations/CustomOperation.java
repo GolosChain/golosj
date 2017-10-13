@@ -6,6 +6,7 @@ import java.security.InvalidParameterException;
 import java.util.List;
 import java.util.Map;
 
+import eu.bittrade.libs.steemj.util.NumbersUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.bitcoinj.core.Utils;
 
@@ -106,7 +107,7 @@ public class CustomOperation extends Operation {
      * @return The id of this operation.
      */
     public int getId() {
-        return Short.toUnsignedInt(this.id);
+        return NumbersUtils.toUnsignedInt(this.id);
     }
 
     /**

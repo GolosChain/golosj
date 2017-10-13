@@ -1,16 +1,15 @@
 package eu.bittrade.libs.steemj.base.models;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import javax.annotation.Nullable;
+import java.util.Date;
+import java.util.List;
 
 /**
  * This class represents the Steem "discussion" object.
- * 
+ *
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class Discussion extends Comment {
@@ -35,9 +34,11 @@ public class Discussion extends Comment {
     @JsonProperty("reblogged_by")
     private List<AccountName> rebloggedBy;
     @JsonProperty("first_reblogged_by")
-    private Optional<AccountName> firstRebloggedBy;
+    @Nullable
+    private AccountName firstRebloggedBy;
     @JsonProperty("first_reblogged_on")
-    private Optional<Date> firstRebloggedOn;
+    @Nullable
+    private Date firstRebloggedOn;
 
     /**
      * This object is only used to wrap the JSON response in a POJO, so
@@ -119,14 +120,14 @@ public class Discussion extends Comment {
     /**
      * @return the firstRebloggedBy
      */
-    public Optional<AccountName> getFirstRebloggedBy() {
+    public AccountName getFirstRebloggedBy() {
         return firstRebloggedBy;
     }
 
     /**
      * @return the firstRebloggedOn
      */
-    public Optional<Date> getFirstRebloggedOn() {
+    public Date getFirstRebloggedOn() {
         return firstRebloggedOn;
     }
 

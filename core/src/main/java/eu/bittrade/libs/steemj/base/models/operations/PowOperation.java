@@ -1,13 +1,6 @@
 package eu.bittrade.libs.steemj.base.models.operations;
 
-import java.math.BigInteger;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.lang3.builder.ToStringBuilder;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.ChainProperties;
 import eu.bittrade.libs.steemj.base.models.Checksum;
@@ -16,10 +9,16 @@ import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.enums.ValidationType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.interfaces.SignatureObject;
+import eu.bittrade.libs.steemj.util.NumbersUtils;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
+import java.math.BigInteger;
+import java.util.List;
+import java.util.Map;
 
 /**
  * This class represents the Steem "pow_operation" object.
- * 
+ *
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class PowOperation extends Operation {
@@ -54,9 +53,8 @@ public class PowOperation extends Operation {
     /**
      * <b>Notice:</b> The private active key of this account needs to be stored
      * in the key storage.
-     * 
-     * @param workerAccount
-     *            the workerAccount to set
+     *
+     * @param workerAccount the workerAccount to set
      */
     public void setWorkerAccount(AccountName workerAccount) {
         this.workerAccount = workerAccount;
@@ -70,8 +68,7 @@ public class PowOperation extends Operation {
     }
 
     /**
-     * @param blockId
-     *            the blockId to set
+     * @param blockId the blockId to set
      */
     public void setBlockId(Checksum blockId) {
         this.blockId = blockId;
@@ -81,15 +78,14 @@ public class PowOperation extends Operation {
      * @return the nonce
      */
     public BigInteger getNonce() {
-        return new BigInteger(Long.toUnsignedString(this.nonce));
+        return new BigInteger(NumbersUtils.toUnsignedString(this.nonce));
     }
 
     /**
-     * @param nonce
-     *            the nonce to set
+     * @param nonce the nonce to set
      */
     public void setNonce(BigInteger nonce) {
-        this.nonce = Long.parseUnsignedLong(nonce.toString());
+        this.nonce = NumbersUtils.parseUnsignedLong(nonce.toString());
     }
 
     /**
@@ -100,8 +96,7 @@ public class PowOperation extends Operation {
     }
 
     /**
-     * @param work
-     *            the work to set
+     * @param work the work to set
      */
     public void setWork(Pow work) {
         this.work = work;
@@ -115,8 +110,7 @@ public class PowOperation extends Operation {
     }
 
     /**
-     * @param properties
-     *            the properties to set
+     * @param properties the properties to set
      */
     public void setProperties(ChainProperties properties) {
         this.properties = properties;

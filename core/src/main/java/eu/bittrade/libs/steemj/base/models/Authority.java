@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import eu.bittrade.libs.steemj.util.NumbersUtils;
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
@@ -20,6 +21,7 @@ import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.interfaces.ByteTransformable;
 import eu.bittrade.libs.steemj.interfaces.SignatureObject;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 
 /**
  * This class is the java implementation of the Steem "authority" object.
@@ -51,8 +53,8 @@ public class Authority implements ByteTransformable, SignatureObject {
      * Constructor thats set required values to avoid null pointer exceptions.
      */
     public Authority() {
-        this.setAccountAuths(new HashMap<AccountName, Integer>());
-        this.setKeyAuths(new HashMap<PublicKey, Integer>());
+        this.setAccountAuths(new HashMap<AccountName,Integer>());
+        this.setKeyAuths(new HashMap<PublicKey,Integer>());
         // Set default values.
         this.setWeightThreshold(0);
     }
@@ -168,7 +170,7 @@ public class Authority implements ByteTransformable, SignatureObject {
         int hashCode = 1;
         hashCode = 31 * hashCode + (this.getAccountAuths() == null ? 0 : this.getAccountAuths().hashCode());
         hashCode = 31 * hashCode + (this.getKeyAuths() == null ? 0 : this.getKeyAuths().hashCode());
-        hashCode = 31 * hashCode + Long.hashCode(this.getWeightThreshold());
+        hashCode = 31 * hashCode + NumbersUtils.hashCode(this.getWeightThreshold());
         return hashCode;
     }
 

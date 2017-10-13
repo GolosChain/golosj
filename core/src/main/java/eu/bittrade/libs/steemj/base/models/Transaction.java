@@ -1,5 +1,19 @@
 package eu.bittrade.libs.steemj.base.models;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.annotations.VisibleForTesting;
+import eu.bittrade.libs.steemj.base.models.operations.Operation;
+import eu.bittrade.libs.steemj.configuration.SteemJConfig;
+import eu.bittrade.libs.steemj.enums.PrivateKeyType;
+import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
+import eu.bittrade.libs.steemj.interfaces.SignatureObject;
+import eu.bittrade.libs.steemj.util.NumbersUtils;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.bitcoinj.core.Utils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.Serializable;
 import java.security.InvalidParameterException;
 import java.sql.Timestamp;
@@ -9,35 +23,22 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.bitcoinj.core.Utils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.common.annotations.VisibleForTesting;
-
-import eu.bittrade.libs.steemj.base.models.operations.Operation;
-import eu.bittrade.libs.steemj.configuration.SteemJConfig;
-import eu.bittrade.libs.steemj.enums.PrivateKeyType;
-import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
-import eu.bittrade.libs.steemj.interfaces.SignatureObject;
-
 /**
  * This class represents a Steem "transaction" object.
- * 
+ *
  * @author <a href="http://Steemit.com/@dez1337">dez1337</a>
  */
 public class Transaction implements Serializable {
-    /** Generated serial version uid. */
+    /**
+     * Generated serial version uid.
+     */
     private static final long serialVersionUID = -3834759301983200246L;
     private static final Logger LOGGER = LoggerFactory.getLogger(Transaction.class);
 
     /**
      * The ref_block_num indicates a particular block in the past by referring
      * to the block number which has this number as the last two bytes.
-     * 
+     * <p>
      * The original type is Uint16, but we have to use int (32bit) as Java does
      * not support unsigned types. For sure we will only use 2 bytes of this
      * field when we serialize it.
@@ -47,11 +48,10 @@ public class Transaction implements Serializable {
     /**
      * The ref_block_prefix on the other hand is obtain from the block id of
      * that particular reference block.
-     * 
+     * <p>
      * The original type is Uint32, but we have to use long (64 bit) as Java
      * does not support unsigned types. For sure we will only use 4 bytes of
      * this field when we serialize it.
-     * 
      */
     @JsonProperty("ref_block_prefix")
     protected int refBlockPrefix;
@@ -65,28 +65,23 @@ public class Transaction implements Serializable {
 
     /**
      * Create a new transaction object.
-     * 
-     * @param refBlockNum
-     *            The reference block number (see {@link #setRefBlockNum(int)}).
-     * @param refBlockPrefix
-     *            The reference block index (see
-     *            {@link #setRefBlockPrefix(long)}).
-     * @param expirationDate
-     *            Define until when the transaction has to be processed (see
-     *            {@link #setExpirationDate(TimePointSec)}).
-     * @param operations
-     *            A list of operations to process within this Transaction (see
-     *            {@link #setOperations(List)}).
-     * @param extensions
-     *            Extensions are currently not supported and will be ignored
-     *            (see {@link #setExtensions(List)}).
+     *
+     * @param refBlockNum    The reference block number (see {@link #setRefBlockNum(int)}).
+     * @param refBlockPrefix The reference block index (see
+     *                       {@link #setRefBlockPrefix(long)}).
+     * @param expirationDate Define until when the transaction has to be processed (see
+     *                       {@link #setExpirationDate(TimePointSec)}).
+     * @param operations     A list of operations to process within this Transaction (see
+     *                       {@link #setOperations(List)}).
+     * @param extensions     Extensions are currently not supported and will be ignored
+     *                       (see {@link #setExtensions(List)}).
      */
     @JsonCreator
     public Transaction(@JsonProperty("ref_block_num") int refBlockNum,
-            @JsonProperty("ref_block_prefix") long refBlockPrefix,
-            @JsonProperty("expiration") TimePointSec expirationDate,
-            @JsonProperty("operations") List<Operation> operations,
-            @JsonProperty("extensions") List<FutureExtensions> extensions) {
+                       @JsonProperty("ref_block_prefix") long refBlockPrefix,
+                       @JsonProperty("expiration") TimePointSec expirationDate,
+                       @JsonProperty("operations") List<Operation> operations,
+                       @JsonProperty("extensions") List<FutureExtensions> extensions) {
         this.setRefBlockNum(refBlockNum);
         this.setRefBlockPrefix(refBlockPrefix);
         this.setExpirationDate(expirationDate);
@@ -100,16 +95,13 @@ public class Transaction implements Serializable {
      * {@link eu.bittrade.libs.steemj.base.models.BlockId} object as the
      * reference block and will also set the <code>expirationDate</code> to the
      * latest possible time.
-     * 
-     * @param blockId
-     *            The block reference (see {@link #setRefBlockNum(int)} and
-     *            {@link #setRefBlockPrefix(long)}).
-     * @param operations
-     *            A list of operations to process within this Transaction (see
-     *            {@link #setOperations(List)}).
-     * @param extensions
-     *            Extensions are currently not supported and will be ignored
-     *            (see {@link #setExtensions(List)}).
+     *
+     * @param blockId    The block reference (see {@link #setRefBlockNum(int)} and
+     *                   {@link #setRefBlockPrefix(long)}).
+     * @param operations A list of operations to process within this Transaction (see
+     *                   {@link #setOperations(List)}).
+     * @param extensions Extensions are currently not supported and will be ignored
+     *                   (see {@link #setExtensions(List)}).
      */
     public Transaction(BlockId blockId, List<Operation> operations, List<FutureExtensions> extensions) {
         this.setRefBlockNum(blockId.getNumberFromHash());
@@ -122,7 +114,7 @@ public class Transaction implements Serializable {
 
     /**
      * <b>This method is only used by JUnit-Tests</b>
-     * 
+     * <p>
      * Create a new signed transaction object.
      */
     @VisibleForTesting
@@ -131,7 +123,7 @@ public class Transaction implements Serializable {
 
     /**
      * Get the list of configured extensions.
-     * 
+     *
      * @return All extensions.
      */
     public List<FutureExtensions> getExtensions() {
@@ -143,7 +135,7 @@ public class Transaction implements Serializable {
 
     /**
      * Get all Operations that have been added to this transaction.
-     * 
+     *
      * @return All operations.
      */
     public List<Operation> getOperations() {
@@ -152,33 +144,32 @@ public class Transaction implements Serializable {
 
     /**
      * Get the ref block number in its int representation.
-     * 
+     * <p>
      * The ref_block_num indicates a particular block in the past by referring
      * to the block number which has this number as the last two bytes.
-     * 
+     *
      * @return The ref block number.
      */
     public int getRefBlockNum() {
-        return Short.toUnsignedInt(refBlockNum);
+        return NumbersUtils.toUnsignedInt(refBlockNum);
     }
 
     /**
      * Get the ref block prefix in its long representation.
-     * 
+     * <p>
      * The ref_block_prefix on the other hand is obtain from the block id of
      * that particular reference block.
-     * 
+     *
      * @return The ref block prefix.
      */
     public long getRefBlockPrefix() {
-        return Integer.toUnsignedLong(refBlockPrefix);
+        return NumbersUtils.toUnsignedLong(refBlockPrefix);
     }
 
     /**
      * Extensions are currently not supported and will be ignored.
-     * 
-     * @param extensions
-     *            Define a list of extensions.
+     *
+     * @param extensions Define a list of extensions.
      */
     public void setExtensions(List<FutureExtensions> extensions) {
         this.extensions = extensions;
@@ -186,11 +177,9 @@ public class Transaction implements Serializable {
 
     /**
      * Define a list of operations that should be send with this transaction.
-     * 
-     * @param operations
-     *            A list of operations.
-     * @throws InvalidParameterException
-     *             If the given object does not contain at least one Operation.
+     *
+     * @param operations A list of operations.
+     * @throws InvalidParameterException If the given object does not contain at least one Operation.
      */
     public void setOperations(List<Operation> operations) {
         if (operations == null || operations.isEmpty()) {
@@ -202,12 +191,11 @@ public class Transaction implements Serializable {
 
     /**
      * Set the ref block number by providing its int representation.
-     * 
+     * <p>
      * The ref_block_num indicates a particular block in the past by referring
      * to the block number which has this number as the last two bytes.
-     * 
-     * @param refBlockNum
-     *            The ref block number as int.
+     *
+     * @param refBlockNum The ref block number as int.
      */
     public void setRefBlockNum(int refBlockNum) {
         this.refBlockNum = (short) refBlockNum;
@@ -217,9 +205,8 @@ public class Transaction implements Serializable {
      * Set the ref block prefix by providing its long representation. If you
      * only have the String representation use {@link #setRefBlockPrefix(String)
      * setRefBlockPrefix(String)}.
-     * 
-     * @param refBlockPrefix
-     *            The ref block prefix.
+     *
+     * @param refBlockPrefix The ref block prefix.
      */
     public void setRefBlockPrefix(long refBlockPrefix) {
         this.refBlockPrefix = (int) refBlockPrefix;
@@ -230,9 +217,8 @@ public class Transaction implements Serializable {
      * String representation can be received from the @link
      * {@link eu.bittrade.libs.steemj.SteemJ#getDynamicGlobalProperties
      * getDynamicGlobalProperties} method.
-     * 
-     * @param refBlockPrefix
-     *            The String representation of the ref block prefix.
+     *
+     * @param refBlockPrefix The String representation of the ref block prefix.
      */
     public void setRefBlockPrefix(String refBlockPrefix) {
         this.refBlockPrefix = (int) Utils.readUint32(Utils.HEX.decode(refBlockPrefix), 4);
@@ -245,7 +231,7 @@ public class Transaction implements Serializable {
      * method will return the latest possible expiration date if no other time
      * has been configured using the {@link #setExpirationDate(TimePointSec)
      * setExpirationDate(TimePointSec)} method.
-     * 
+     *
      * @return The expiration date.
      */
     public TimePointSec getExpirationDate() {
@@ -263,9 +249,8 @@ public class Transaction implements Serializable {
     /**
      * Define how long this transaction is valid. If not processed in the given
      * time, the transaction will not be accepted.
-     * 
-     * @param expirationDate
-     *            The expiration date to set.
+     *
+     * @param expirationDate The expiration date to set.
      */
     public void setExpirationDate(TimePointSec expirationDate) {
         this.expirationDate = expirationDate;
@@ -276,7 +261,7 @@ public class Transaction implements Serializable {
      * in this transaction. The returned list is already a minimized version to
      * avoid an "irrelevant signature included Unnecessary signature(s)
      * detected" error.
-     * 
+     *
      * @return All required authorities and private key types.
      */
     protected Map<SignatureObject, List<PrivateKeyType>> getRequiredAuthorities() {
@@ -293,9 +278,8 @@ public class Transaction implements Serializable {
 
     /**
      * Validate if all fields of this transaction object have acceptable values.
-     * 
-     * @throws SteemInvalidTransactionException
-     *             In case a field does not fullfil the requirements.
+     *
+     * @throws SteemInvalidTransactionException In case a field does not fullfil the requirements.
      */
     public void validate() throws SteemInvalidTransactionException {
         if (this.getExpirationDate().getDateTimeAsTimestamp() > (new Timestamp(System.currentTimeMillis())).getTime()
