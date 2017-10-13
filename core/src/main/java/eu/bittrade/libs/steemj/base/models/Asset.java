@@ -101,7 +101,7 @@ public class Asset implements ByteTransformable {
      *            AssetSymbolType}.
      */
     public void setSymbol(AssetSymbolType symbol) {
-        if (symbol.equals(AssetSymbolType.VESTS)) {
+        if (symbol.equals(AssetSymbolType.VESTS) || symbol.equals(AssetSymbolType.GESTS)) {
             this.precision = 6;
         } else {
             this.precision = 3;

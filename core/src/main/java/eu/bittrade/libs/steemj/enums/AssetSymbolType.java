@@ -1,23 +1,12 @@
 package eu.bittrade.libs.steemj.enums;
 
 /**
- * This enum stores all available asset symbols.
+ * This class is the java implementation of the <a href=
+ * "https://github.com/steemit/steem/blob/steem-prerelease-v0.18.2/libraries/protocol/include/steemit/protocol/config.hpp">Steem
+ * assets object</a>.
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public enum AssetSymbolType {
-    /** Steem Power (SP) Symbol */
-    VESTS,
-    /** Steem Sybol */
-    STEEM,
-    /** Steem Backed Dollar (SBD) Symbol */
-    SBD,
-    /** Steem Dollar Symbol */
-    STMD,
-    /** Steem Sybol for the test network */
-    TESTS,
-    /** Steem Backed Dollar Symbol for the test network */
-    TBD,
-    /** Steem Dollar Symbol for the test network */
-    TSTD
+    GOLOS, GESTS, GBG,VESTS, STEEM, SBD, STMD, TESTS, TBD, TSTD
 }

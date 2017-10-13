@@ -39,6 +39,9 @@ public class Price implements ByteTransformable {
         this.setQuote(quote);
     }
 
+    public Price() {
+    }
+
     /**
      * @return The base asset.
      */
@@ -54,8 +57,8 @@ public class Price implements ByteTransformable {
      *             {@link #getQuote()} asset.
      */
     public void setBase(Asset base) {
-        if (base == null || base. getAmount() <= 0
-                || this.getQuote() != null && this.getQuote().getSymbol() == base.getSymbol()) {
+        if (base == null || base. getAmount() < 0
+               /* || this.getQuote() != null*/ /*&& this.getQuote().getSymbol() == base.getSymbol()*/) {
             throw new InvalidParameterException(
                     "The base asset needs to be present and needs to have a different symbol than the quote asset.");
         }
@@ -77,8 +80,8 @@ public class Price implements ByteTransformable {
      *             {@link #getQuote()} asset.
      */
     public void setQuote(Asset quote) {
-        if (quote == null || quote.getAmount() <= 0
-                || this.getBase() != null && this.getBase().getSymbol() == quote.getSymbol()) {
+        if (quote == null || quote.getAmount() < 0
+               /* || this.getBase() != null*/ /*&& this.getBase().getSymbol() == quote.getSymbol()*/) {
             throw new InvalidParameterException(
                     "The quote asset needs to be present and needs to have a different symbol than the base asset.");
         }

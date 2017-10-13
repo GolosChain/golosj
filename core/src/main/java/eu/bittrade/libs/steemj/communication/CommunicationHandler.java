@@ -1,30 +1,5 @@
 package eu.bittrade.libs.steemj.communication;
 
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.TimeZone;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
-
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.SSLSession;
-import javax.websocket.CloseReason;
-import javax.websocket.DeploymentException;
-import javax.websocket.EncodeException;
-import javax.websocket.Endpoint;
-import javax.websocket.EndpointConfig;
-import javax.websocket.MessageHandler;
-import javax.websocket.Session;
-
-import org.glassfish.tyrus.client.ClientManager;
-import org.glassfish.tyrus.client.ClientProperties;
-import org.glassfish.tyrus.client.SslContextConfigurator;
-import org.glassfish.tyrus.client.SslEngineConfigurator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -32,7 +7,6 @@ import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
-
 import eu.bittrade.libs.steemj.base.models.SignedBlockHeader;
 import eu.bittrade.libs.steemj.base.models.error.SteemError;
 import eu.bittrade.libs.steemj.base.models.serializer.BooleanSerializer;
@@ -44,10 +18,26 @@ import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemResponseError;
 import eu.bittrade.libs.steemj.exceptions.SteemTimeoutException;
 import eu.bittrade.libs.steemj.exceptions.SteemTransformationException;
+import org.glassfish.tyrus.client.ClientManager;
+import org.glassfish.tyrus.client.ClientProperties;
+import org.glassfish.tyrus.client.SslContextConfigurator;
+import org.glassfish.tyrus.client.SslEngineConfigurator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.net.ssl.SSLSession;
+import javax.websocket.*;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.TimeZone;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 /**
  * This class handles the communication to the Steem web socket API.
- * 
+ *
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class CommunicationHandler extends Endpoint implements MessageHandler.Whole<String> {
@@ -62,11 +52,10 @@ public class CommunicationHandler extends Endpoint implements MessageHandler.Who
 
     /**
      * Initialize the Connection Handler.
-     * 
-     * @throws SteemCommunicationException
-     *             If no connection to the Steem Node could be established.
+     * <p>
+     * If no connection to the Steem Node could be established.
      */
-    public CommunicationHandler() throws SteemCommunicationException {
+    public CommunicationHandler() {
         this.client = ClientManager.createClient();
 
         // Tyrus expects a SSL connection if the SSL_ENGINE_CONFIGURATOR
@@ -77,22 +66,12 @@ public class CommunicationHandler extends Endpoint implements MessageHandler.Who
                 && SteemJConfig.getInstance().getWebSocketEndpointURI().getScheme().equals("wss")
                 || SteemJConfig.getInstance().getWebSocketEndpointURI().getScheme().equals("https")) {
             SslEngineConfigurator sslEngineConfigurator = new SslEngineConfigurator(new SslContextConfigurator());
-            sslEngineConfigurator.setHostnameVerifier(new HostnameVerifier() {
-                @Override
-                public boolean verify(String host, SSLSession sslSession) {
-                    return true;
-                }
-            });
-            // TODO: Requires Java 8:
-            // sslEngineConfigurator.setHostnameVerifier((String host,
-            // SSLSession sslSession) -> true);
+            sslEngineConfigurator.setHostnameVerifier((String host, SSLSession sslSession) -> true);
             client.getProperties().put(ClientProperties.SSL_ENGINE_CONFIGURATOR, sslEngineConfigurator);
         }
 
         client.setDefaultMaxSessionIdleTimeout(SteemJConfig.getInstance().getSocketTimeout());
         client.getProperties().put(ClientProperties.RECONNECT_HANDLER, new SteemJReconnectHandler());
-
-        connect();
     }
 
     @Override
@@ -116,34 +95,29 @@ public class CommunicationHandler extends Endpoint implements MessageHandler.Who
     /**
      * Perform a request to the web socket API whose response will automatically
      * get transformed into the given object.
-     * 
-     * @param requestObject
-     *            A request object that contains all needed parameters.
-     * @param targetClass
-     *            The target class for the transformation.
-     * @param <T>
-     *            The object that you want to map the result to.
+     *
+     * @param requestObject A request object that contains all needed parameters.
+     * @param targetClass   The target class for the transformation.
+     * @param <T>           The object that you want to map the result to.
      * @return The server response transformed into a list of given objects.
-     * @throws SteemTimeoutException
-     *             If the server was not able to answer the request in the given
-     *             time (@see
-     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(long)
-     *             setResponseTimeout()})
-     * @throws SteemCommunicationException
-     *             If there is a connection problem.
-     * @throws SteemTransformationException
-     *             If the SteemJ is unable to transform the JSON response into a
-     *             Java object.
-     * @throws SteemResponseError
-     *             If the Server returned an error object.
+     * @throws SteemTimeoutException        If the server was not able to answer the request in the given
+     *                                      time (@see
+     *                                      {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(long)
+     *                                      setResponseTimeout()})
+     * @throws SteemCommunicationException  If there is a connection problem.
+     * @throws SteemTransformationException If the SteemJ is unable to transform the JSON response into a
+     *                                      Java object.
+     * @throws SteemResponseError           If the Server returned an error object.
      */
     public <T> List<T> performRequest(RequestWrapperDTO requestObject, Class<T> targetClass)
             throws SteemCommunicationException {
-        if (!session.isOpen()) {
+        if (session == null || !session.isOpen()) {
             connect();
         }
 
         try {
+            LOGGER.debug(requestObject.toString());
+
             sendMessageSynchronously(requestObject);
 
             @SuppressWarnings("unchecked")
@@ -183,9 +157,8 @@ public class CommunicationHandler extends Endpoint implements MessageHandler.Who
 
     /**
      * This method establishes a new connection to the web socket Server.
-     * 
-     * @throws SteemCommunicationException
-     *             If there is a connection problem.
+     *
+     * @throws SteemCommunicationException If there is a connection problem.
      */
     private void connect() throws SteemCommunicationException {
         try {
@@ -202,18 +175,12 @@ public class CommunicationHandler extends Endpoint implements MessageHandler.Who
 
     /**
      * Sends a message to the Steem Node and waits for an answer.
-     * 
-     * @param requestObject
-     *            The object to send.
-     * @throws IOException
-     *             If something went wrong.
-     * @throws EncodeException
-     *             If something went wrong.
-     * @throws SteemTimeoutException
-     *             If the node took to long to answer.
-     * @throws InterruptedException
-     *             If something went wrong.
-     * 
+     *
+     * @param requestObject The object to send.
+     * @throws IOException           If something went wrong.
+     * @throws EncodeException       If something went wrong.
+     * @throws SteemTimeoutException If the node took to long to answer.
+     * @throws InterruptedException  If something went wrong.
      */
     private void sendMessageSynchronously(RequestWrapperDTO requestObject)
             throws IOException, EncodeException, SteemTimeoutException, InterruptedException {
@@ -265,7 +232,7 @@ public class CommunicationHandler extends Endpoint implements MessageHandler.Who
 
     /**
      * Get a preconfigured jackson Object Mapper instance.
-     * 
+     *
      * @return The object mapper.
      */
     public static ObjectMapper getObjectMapper() {

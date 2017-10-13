@@ -103,7 +103,7 @@ public class TransferToVestingOperation extends AbstractTransferOperation {
     public void setAmount(Asset amount) {
         if (amount == null) {
             throw new InvalidParameterException("The amount can't be null.");
-        } else if (!amount.getSymbol().equals(AssetSymbolType.STEEM)) {
+        } else if (!amount.getSymbol().equals(AssetSymbolType.STEEM) && !amount.getSymbol().equals(AssetSymbolType.GOLOS)) {
             throw new InvalidParameterException("The amount must be of type STEEM.");
         } else if (amount.getAmount() <= 0) {
             throw new InvalidParameterException("Must transfer a nonzero amount.");

@@ -15,6 +15,8 @@ public class GlobalProperties {
     // Original type is uint32_t so we use long here.
     @JsonProperty("head_block_number")
     private long headBlockNumber;
+    @JsonProperty("vote_regeneration_per_day")
+    private int voteRegenerationPerDay;
     @JsonProperty("head_block_id")
     private BlockId headBlockId;
     @JsonProperty("time")
@@ -89,6 +91,10 @@ public class GlobalProperties {
      * therefore this class should not be instantiated.
      */
     private GlobalProperties() {
+    }
+
+    public int getVoteRegenerationPerDay() {
+        return voteRegenerationPerDay;
     }
 
     /**

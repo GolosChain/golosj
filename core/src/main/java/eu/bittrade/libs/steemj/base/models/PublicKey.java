@@ -1,7 +1,13 @@
 package eu.bittrade.libs.steemj.base.models;
 
-import java.util.Arrays;
-
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.google.common.primitives.Bytes;
+import eu.bittrade.libs.steemj.base.models.serializer.PublicKeySerializer;
+import eu.bittrade.libs.steemj.configuration.SteemJConfig;
+import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
+import eu.bittrade.libs.steemj.interfaces.ByteTransformable;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.bitcoinj.core.AddressFormatException;
 import org.bitcoinj.core.Base58;
@@ -10,21 +16,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spongycastle.crypto.digests.RIPEMD160Digest;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.google.common.primitives.Bytes;
-
-import eu.bittrade.libs.steemj.base.models.serializer.PublicKeySerializer;
-import eu.bittrade.libs.steemj.configuration.SteemJConfig;
-import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
-import eu.bittrade.libs.steemj.interfaces.ByteTransformable;
+import java.util.Arrays;
 
 /**
  * This class is the java implementation of the <a href=
  * "https://github.com/steemit/steem/blob/master/libraries/protocol/include/steemit/protocol/types.hpp">Steem
  * public_key object</a>.
- * 
+ *
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 @JsonSerialize(using = PublicKeySerializer.class)
@@ -38,16 +36,14 @@ public class PublicKey implements ByteTransformable {
 
     /**
      * Create a new public key by providing an address as String.
-     * 
-     * @param address
-     *            The address in its String representation.
-     *            <p>
-     *            Example: <br>
-     *            STM5jYVokmZHdEpwo5oCG3ES2Ca4VYzy6tM8pWWkGdgVnwo2mFLFq
-     *            </p>
-     * @throws AddressFormatException
-     *             If the input is not base 58 or the checksum does not
-     *             validate.
+     *
+     * @param address The address in its String representation.
+     *                <p>
+     *                Example: <br>
+     *                STM5jYVokmZHdEpwo5oCG3ES2Ca4VYzy6tM8pWWkGdgVnwo2mFLFq
+     *                </p>
+     * @throws AddressFormatException If the input is not base 58 or the checksum does not
+     *                                validate.
      */
     @JsonCreator
     public PublicKey(String address) {
@@ -74,8 +70,13 @@ public class PublicKey implements ByteTransformable {
                     throw new AddressFormatException("Checksum does not match.");
                 }
             }
+            try {
+                this.setPublicKey(ECKey.fromPublicOnly(potentialPublicKey));
+            } catch (IllegalArgumentException e) {
+                e.printStackTrace();
+                LOGGER.error(e.getLocalizedMessage());
+            }
 
-            this.setPublicKey(ECKey.fromPublicOnly(potentialPublicKey));
         } else {
             LOGGER.debug(
                     "An empty address has been provided. This can cause some problems if you plan to broadcast this key.");
@@ -84,9 +85,8 @@ public class PublicKey implements ByteTransformable {
 
     /**
      * Generate the actual checksum of a Steem public key.
-     * 
-     * @param publicKey
-     *            The public key.
+     *
+     * @param publicKey The public key.
      * @return The actual checksum of a Steem public key.
      */
     private byte[] calculateChecksum(byte[] publicKey) {
@@ -100,9 +100,8 @@ public class PublicKey implements ByteTransformable {
     /**
      * Create a new public key by provding a ECKey object containg the public
      * key.
-     * 
-     * @param publicKey
-     *            The public key.
+     *
+     * @param publicKey The public key.
      */
     public PublicKey(ECKey publicKey) {
         this.setPublicKey(publicKey);
@@ -111,7 +110,7 @@ public class PublicKey implements ByteTransformable {
 
     /**
      * Recreate the address from the public key.
-     * 
+     *
      * @return The address.
      */
     @JsonIgnore
@@ -128,7 +127,7 @@ public class PublicKey implements ByteTransformable {
 
     /**
      * Get the public key stored in this object.
-     * 
+     *
      * @return The public key.
      */
     @JsonIgnore()
@@ -138,9 +137,8 @@ public class PublicKey implements ByteTransformable {
 
     /**
      * Set the public key that should be stored in this object.
-     * 
-     * @param publicKey
-     *            The public key.
+     *
+     * @param publicKey The public key.
      */
     private void setPublicKey(ECKey publicKey) {
         this.publicKey = publicKey;

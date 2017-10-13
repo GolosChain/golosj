@@ -1,35 +1,42 @@
 package eu.bittrade.libs.steemj.enums;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 /**
  * An enumeration for all existing APIs.
- * 
+ *
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public enum SteemApis {
-    /** The Steem "login_api" */
-    LOGIN_API,
-    /** The Steem "network_node_api" */
-    NETWORK_NODE_API,
-    /** The Steem "network_broadcast_api" */
-    NETWORK_BROADCAST_API,
-    /** The Steem "account_by_key_api" */
-    ACCOUNT_BY_KEY_API,
-    /** The Steem "account_statistics_api" */
-    ACCOUNT_STATISTICS_API,
-    /** The Steem "auth_util_api" */
-    AUTH_UTIL_API,
-    /** The Steem "block_info_api" */
-    BLOCK_INFO_API,
-    /** The Steem "blockchain_statistics_api" */
-    BLOCKCHAIN_STATISTICS_API,
-    /** The Steem "database_api" */
-    DATABASE_API,
-    /** The Steem "debug_node_api" */
-    DEBUG_NODE_API,
-    /** The Steem "follow_api" */
-    FOLLOW_API,
-    /** The Steem "market_history_api" */
-    MARKET_HISTORY_API,
-    /** The Steem "raw_block_api" */
-    RAW_BLOCK_API;
+    LOGIN_API(1),
+    NETWORK_NODE_API(null),
+    NETWORK_BROADCAST_API(3),
+    ACCOUNT_BY_KEY_API(2),
+    ACCOUNT_STATISTICS_API(null),
+    AUTH_UTIL_API(null),
+    BLOCK_INFO_API(null),
+    BLOCKCHAIN_STATISTICS_API(null),
+    DATABASE_API(0),
+    DEBUG_NODE_API(null),
+    FOLLOW_API(5),
+    MARKET_HISTORY_API(6),
+    RAW_BLOCK_API(null);
+
+    @Nullable
+    private Integer apiId;
+
+    @Nullable
+    SteemApis(Integer apiId) {
+        this.apiId = apiId;
+    }
+
+    @Nullable
+    public Integer getApiId() {
+        return apiId;
+    }
+
+    public void setApiId(@Nonnull Integer apiId) {
+        this.apiId = apiId;
+    }
 }
