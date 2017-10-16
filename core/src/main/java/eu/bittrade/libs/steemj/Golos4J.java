@@ -1,13 +1,20 @@
 package eu.bittrade.libs.steemj;
 
+import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.communication.CommunicationHandler;
+import eu.bittrade.libs.steemj.configuration.PrivateKeyStorage;
 import eu.bittrade.libs.steemj.configuration.SteemJConfig;
+import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.enums.SteemitAddressPrefix;
+import org.apache.commons.lang3.tuple.ImmutablePair;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Set;
 
 /**
  * Created by yuri yurivladdurain@gmail.com .
@@ -36,6 +43,7 @@ public class Golos4J {
     private final AccountByKeyMethods accountByKeyMethodsHandler;
     @Nonnull
     private final SimplifiedOperations simplifiedOperations;
+
     @Nonnull
     public static synchronized Golos4J getInstance() {
         if (instance == null) instance = new Golos4J(null);
@@ -74,8 +82,41 @@ public class Golos4J {
     }
 
     @Nonnull
-    public SteemJConfig getSteemJConfig() {
+    SteemJConfig getSteemJConfig() {
         return steemJConfig;
+    }
+
+    public void addAccount(@Nonnull AccountName account, @Nonnull ImmutablePair<PrivateKeyType, String> key, boolean setIsDefaultAccount) {
+        addAccount(account, Collections.singleton(key), setIsDefaultAccount);
+    }
+
+    public void addAccount(@Nonnull AccountName account, @Nonnull Set<ImmutablePair<PrivateKeyType, String>> keys, boolean setIsDefaultAccount) {
+        steemJConfig.getPrivateKeyStorage().addAccount(account, new ArrayList<>(keys));
+        if (setIsDefaultAccount) setDefaultAccount(account);
+    }
+
+    public void setDefaultAccount(@Nonnull AccountName account) {
+        addAccountIfNeeded(account);
+        steemJConfig.setDefaultAccount(account);
+    }
+
+    public void addKeysToAccount(@Nonnull AccountName account, @Nonnull ImmutablePair<PrivateKeyType, String> key) {
+        addKeysToAccount(account, Collections.singleton(key));
+    }
+
+
+    public void addKeysToAccount(@Nonnull AccountName account, @Nonnull Set<ImmutablePair<PrivateKeyType, String>> keys) {
+        addAccountIfNeeded(account);
+        for (ImmutablePair<PrivateKeyType, String> pair : keys) {
+            steemJConfig.getPrivateKeyStorage().addPrivateKeyToAccount(account, pair);
+        }
+    }
+
+    private void addAccountIfNeeded(@Nonnull AccountName name) {
+        PrivateKeyStorage storage = steemJConfig.getPrivateKeyStorage();
+        if (storage.getAccounts() == null || !storage.getAccounts().contains(name)) {
+            storage.addAccount(name);
+        }
     }
 
     @Nonnull

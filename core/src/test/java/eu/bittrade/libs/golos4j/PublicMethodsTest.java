@@ -2,7 +2,6 @@ package eu.bittrade.libs.golos4j;
 
 
 import eu.bittrade.libs.steemj.Golos4J;
-import eu.bittrade.libs.steemj.IntegrationTest;
 import eu.bittrade.libs.steemj.apis.follow.enums.FollowType;
 import eu.bittrade.libs.steemj.apis.follow.model.*;
 import eu.bittrade.libs.steemj.base.models.*;
@@ -19,7 +18,6 @@ import org.hamcrest.MatcherAssert;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.experimental.categories.Category;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,9 +33,9 @@ import static org.junit.Assert.*;
 
 public class PublicMethodsTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(PublicMethodsTest.class);
-    private static final AccountName ACCOUNT = new AccountName("lenutsa");
+    public static final AccountName ACCOUNT = new AccountName("lenutsa");
     private static final AccountName WITNESS_ACCOUNT = new AccountName("itsmine-78");
-    private static final Permlink PERMLINK = new Permlink("kriptopirozhkovo-khardfokovyi-post");
+    public static final Permlink PERMLINK = new Permlink("kriptopirozhkovo-khardfokovyi-post");
     private Golos4J golos4J;
 
     @Before
@@ -53,7 +51,6 @@ public class PublicMethodsTest {
         assertThat(blockHeader.getWitness(), equalTo("primus"));
     }
 
-    @Category({IntegrationTest.class})
     @Test
     public void testGetOpsInBlock() throws Exception {
         final List<AppliedOperation> appliedOperationsOnlyVirtual = golos4J.getDatabaseMethods().getOpsInBlock(30003, false);
@@ -65,7 +62,6 @@ public class PublicMethodsTest {
         MatcherAssert.assertThat(appliedOperationsOnlyVirtual.get(0).getOp(), instanceOf(VoteOperation.class));
     }
 
-    @Category({IntegrationTest.class})
     @Test
     public void testActiveVotes() throws Exception {
         final List<Vote> votes = golos4J.getDatabaseMethods().getAccountVotes(ACCOUNT);
@@ -368,7 +364,6 @@ public class PublicMethodsTest {
         assertNotEquals("expect non-empty steem revision", "", version.getSteemRevision());
     }
 
-    @Category({IntegrationTest.class})
     @Test
     public void testWitnessCount() throws Exception {
         final int witnessCount = golos4J.getDatabaseMethods().getWitnessCount();

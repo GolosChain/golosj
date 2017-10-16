@@ -1,7 +1,6 @@
 package eu.bittrade.libs.steemj;
 
-import eu.bittrade.libs.steemj.base.models.AccountName;
-import eu.bittrade.libs.steemj.base.models.Permlink;
+import eu.bittrade.libs.steemj.base.models.*;
 import eu.bittrade.libs.steemj.base.models.operations.CommentOperation;
 import eu.bittrade.libs.steemj.communication.CommunicationHandler;
 import eu.bittrade.libs.steemj.configuration.SteemJConfig;
@@ -149,5 +148,10 @@ class GolosSimplifiedOperationsHandler implements SimplifiedOperations {
     public void deletePostOrComment(AccountName postOrCommentAuthor, Permlink postOrCommentPermlink)
             throws SteemCommunicationException, SteemInvalidTransactionException {
         steemJ.deletePostOrComment(postOrCommentAuthor, postOrCommentPermlink);
+    }
+
+    @Override
+    public void createAccount(@Nonnull AccountName creator, @Nonnull Asset fee, @Nonnull AccountName newAccountName, @Nonnull Authority owner, @Nonnull Authority active, @Nonnull Authority posting, @Nonnull PublicKey memoKey) throws SteemCommunicationException, SteemInvalidTransactionException {
+
     }
 }

@@ -1,19 +1,19 @@
 package eu.bittrade.libs.steemj;
 
-import eu.bittrade.libs.steemj.base.models.AccountName;
-import eu.bittrade.libs.steemj.base.models.Permlink;
+import eu.bittrade.libs.steemj.base.models.*;
 import eu.bittrade.libs.steemj.base.models.operations.CommentOperation;
 import eu.bittrade.libs.steemj.configuration.SteemJConfig;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 
+import javax.annotation.Nonnull;
 import java.security.InvalidParameterException;
 
 /**
  * Created by yuri yurivladdurain@gmail.com .
  */
 
-interface SimplifiedOperations {
+public interface SimplifiedOperations {
     /**
      * Use this method to up or down vote a post or a comment.
      * <p>
@@ -57,7 +57,7 @@ interface SimplifiedOperations {
      * @throws InvalidParameterException        If one of the provided parameters does not fulfill the
      *                                          requirements described above.
      */
-    void vote(AccountName postOrCommentAuthor, Permlink postOrCommentPermlink, short percentage)
+    void vote(@Nonnull AccountName postOrCommentAuthor, @Nonnull Permlink postOrCommentPermlink, short percentage)
             throws SteemCommunicationException, SteemInvalidTransactionException;
 
     /**
@@ -96,7 +96,7 @@ interface SimplifiedOperations {
      *                                          requirements described above.
      */
     void vote(AccountName voter, AccountName postOrCommentAuthor, Permlink postOrCommentPermlink,
-                     short percentage) throws SteemCommunicationException, SteemInvalidTransactionException;
+              short percentage) throws SteemCommunicationException, SteemInvalidTransactionException;
 
     /**
      * Use this method to cancel a previous vote for a post or a comment.
@@ -164,6 +164,7 @@ interface SimplifiedOperations {
      */
     void cancelVote(AccountName voter, AccountName postOrCommentAuthor, Permlink postOrCommentPermlink)
             throws SteemCommunicationException, SteemInvalidTransactionException;
+
     /**
      * Use this method to follow the <code>accountToFollow</code>.
      * <p>
@@ -272,6 +273,7 @@ interface SimplifiedOperations {
      */
     CommentOperation createPost(String title, String content, String[] tags)
             throws SteemCommunicationException, SteemInvalidTransactionException;
+
     /**
      * @param authorThatPublishsThePost
      * @param title
@@ -281,7 +283,7 @@ interface SimplifiedOperations {
      * @throws SteemInvalidTransactionException
      */
     CommentOperation createPost(AccountName authorThatPublishsThePost, String title, String content,
-                                       String[] tags) throws SteemCommunicationException, SteemInvalidTransactionException;
+                                String[] tags) throws SteemCommunicationException, SteemInvalidTransactionException;
 
     /**
      * @param authorOfThePostOrCommentToReplyTo
@@ -292,7 +294,7 @@ interface SimplifiedOperations {
      * @throws SteemInvalidTransactionException
      */
     CommentOperation createComment(AccountName authorOfThePostOrCommentToReplyTo,
-                                          Permlink permlinkOfThePostOrCommentToReplyTo, String content, String[] tags)
+                                   Permlink permlinkOfThePostOrCommentToReplyTo, String content, String[] tags)
             throws SteemCommunicationException, SteemInvalidTransactionException;
 
     /**
@@ -305,8 +307,8 @@ interface SimplifiedOperations {
      * @throws SteemInvalidTransactionException
      */
     CommentOperation createComment(AccountName authorOfThePostOrCommentToReplyTo,
-                                          Permlink permlinkOfThePostOrCommentToReplyTo, AccountName authorThatPublishsTheComment, String content,
-                                          String[] tags) throws SteemCommunicationException, SteemInvalidTransactionException;
+                                   Permlink permlinkOfThePostOrCommentToReplyTo, AccountName authorThatPublishsTheComment, String content,
+                                   String[] tags) throws SteemCommunicationException, SteemInvalidTransactionException;
 
     /**
      * @param permlinkOfThePostToUpdate
@@ -329,7 +331,7 @@ interface SimplifiedOperations {
      * @throws SteemInvalidTransactionException
      */
     CommentOperation updatePost(AccountName authorOfThePostToUpdate, Permlink permlinkOfThePostToUpdate,
-                                       String title, String content, String[] tags) throws SteemCommunicationException, SteemInvalidTransactionException;
+                                String title, String content, String[] tags) throws SteemCommunicationException, SteemInvalidTransactionException;
 
     /**
      * @param parentAuthor
@@ -341,7 +343,7 @@ interface SimplifiedOperations {
      * @throws SteemInvalidTransactionException
      */
     CommentOperation updateComment(AccountName parentAuthor, Permlink parentPermlink,
-                                          Permlink originalPermlinkOfYourComment, String content, String[] tags)
+                                   Permlink originalPermlinkOfYourComment, String content, String[] tags)
             throws SteemCommunicationException, SteemInvalidTransactionException;
 
     /**
@@ -355,8 +357,8 @@ interface SimplifiedOperations {
      * @throws SteemInvalidTransactionException
      */
     CommentOperation updateComment(AccountName parentAuthor, Permlink parentPermlink,
-                                          Permlink originalPermlinkOfTheCommentToUpdate, AccountName originalAuthorOfTheCommentToUpdate,
-                                          String content, String[] tags) throws SteemCommunicationException, SteemInvalidTransactionException;
+                                   Permlink originalPermlinkOfTheCommentToUpdate, AccountName originalAuthorOfTheCommentToUpdate,
+                                   String content, String[] tags) throws SteemCommunicationException, SteemInvalidTransactionException;
 
     /**
      * Use this method to remove a comment or a post.
@@ -413,4 +415,32 @@ interface SimplifiedOperations {
      */
     void deletePostOrComment(AccountName postOrCommentAuthor, Permlink postOrCommentPermlink)
             throws SteemCommunicationException, SteemInvalidTransactionException;
+
+
+    /**
+     * Create a new create account operation. Use this operation to create a new
+     * account.
+     *
+     * @param creator        Set the account that will pay the <code>fee</code> to create
+     *                       the <code>newAccountName</code> (see
+     * @param fee            Set the fee the <code>creator</code> will pay
+     * @param newAccountName Set the new account name
+     * @param owner          if the owner authority should
+     *                       not be updated
+     * @param active         The new active authority or null if the active authority
+     *                       should not be updated
+     * @param posting        The new posting authority or null if the posting authority
+     *                       should not be updated
+     * @param memoKey        The new memo key or null if the memo key should not be updated
+     * @throws SteemCommunicationException      If there is a problem reaching the Steem Node.
+     * @throws SteemInvalidTransactionException If there is a problem while signing the transaction.
+     * @throws InvalidParameterException        If one of the provided parameters does not fulfill the
+     *                                          requirements described above.
+     */
+
+    void createAccount(@Nonnull AccountName creator, @Nonnull Asset fee,
+                       @Nonnull AccountName newAccountName, @Nonnull Authority owner,
+                       @Nonnull Authority active, @Nonnull Authority posting, @Nonnull PublicKey memoKey)
+            throws SteemCommunicationException, SteemInvalidTransactionException;
+
 }

@@ -25,6 +25,7 @@ import org.glassfish.tyrus.client.SslEngineConfigurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSession;
 import javax.websocket.*;
 import java.io.IOException;
@@ -66,7 +67,12 @@ public class CommunicationHandler extends Endpoint implements MessageHandler.Who
                 && SteemJConfig.getInstance().getWebSocketEndpointURI().getScheme().equals("wss")
                 || SteemJConfig.getInstance().getWebSocketEndpointURI().getScheme().equals("https")) {
             SslEngineConfigurator sslEngineConfigurator = new SslEngineConfigurator(new SslContextConfigurator());
-            sslEngineConfigurator.setHostnameVerifier((String host, SSLSession sslSession) -> true);
+            sslEngineConfigurator.setHostnameVerifier(new HostnameVerifier() {
+                @Override
+                public boolean verify(String s, SSLSession sslSession) {
+                    return true;
+                }
+            });
             client.getProperties().put(ClientProperties.SSL_ENGINE_CONFIGURATOR, sslEngineConfigurator);
         }
 

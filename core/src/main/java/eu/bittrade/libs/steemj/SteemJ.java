@@ -192,7 +192,7 @@ public class SteemJ {
         Map<Integer, AppliedOperation> accountActivities = new HashMap<>();
 
         for (Object[] accountActivity : communicationHandler.performRequest(requestObject, Object[].class)) {
-            accountActivities.put((Integer) accountActivity[0], CommunicationHandler.getObjectMapper()
+            accountActivities.put((Integer) accountActivity[0], (AppliedOperation) CommunicationHandler.getObjectMapper()
                     .convertValue(accountActivity[1], new TypeReference<AppliedOperation>() {
                     }));
         }
