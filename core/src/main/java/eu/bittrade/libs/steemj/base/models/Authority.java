@@ -23,9 +23,11 @@ import eu.bittrade.libs.steemj.interfaces.SignatureObject;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
+import javax.annotation.Nonnull;
+
 /**
  * This class is the java implementation of the Steem "authority" object.
- * 
+ *
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class Authority implements ByteTransformable, SignatureObject {
@@ -53,14 +55,24 @@ public class Authority implements ByteTransformable, SignatureObject {
      * Constructor thats set required values to avoid null pointer exceptions.
      */
     public Authority() {
-        this.setAccountAuths(new HashMap<AccountName,Integer>());
-        this.setKeyAuths(new HashMap<PublicKey,Integer>());
+        this.setAccountAuths(new HashMap<AccountName, Integer>());
+        this.setKeyAuths(new HashMap<PublicKey, Integer>());
         // Set default values.
         this.setWeightThreshold(0);
     }
 
     /**
-     * 
+     * Constructor, that's create object, that needed for account creation.
+     */
+    public Authority(@Nonnull PublicKey key) {
+        this.setAccountAuths(new HashMap<AccountName, Integer>());
+        this.setKeyAuths(new HashMap<PublicKey, Integer>());
+        this.keyAuths.put(key, 1);
+        // Set default values.
+        this.setWeightThreshold(1);
+    }
+
+    /**
      * @return the weightThreshold
      */
     public long getWeightThreshold() {
@@ -68,7 +80,6 @@ public class Authority implements ByteTransformable, SignatureObject {
     }
 
     /**
-     * 
      * @param weightThreshold
      */
     public void setWeightThreshold(long weightThreshold) {
@@ -83,7 +94,6 @@ public class Authority implements ByteTransformable, SignatureObject {
     }
 
     /**
-     * 
      * @param accountAuths
      */
     public void setAccountAuths(Map<AccountName, Integer> accountAuths) {
@@ -98,7 +108,6 @@ public class Authority implements ByteTransformable, SignatureObject {
     }
 
     /**
-     * 
      * @param keyAuths
      */
     public void setKeyAuths(Map<PublicKey, Integer> keyAuths) {
@@ -107,9 +116,9 @@ public class Authority implements ByteTransformable, SignatureObject {
 
     /**
      * Check if the authority is impossible.
-     * 
+     *
      * @return <code>true</code> if the authority is impossible, otherwise
-     *         <code>false</code>.
+     * <code>false</code>.
      */
     public boolean isImpossible() {
         long authWeights = 0;
@@ -179,7 +188,7 @@ public class Authority implements ByteTransformable, SignatureObject {
      * {@code 0} characters.
      *
      * @return {@code true} if the account name has more than {@code 0},
-     *         otherwise {@code false}
+     * otherwise {@code false}
      */
     public boolean isEmpty() {
         return this.getAccountAuths().isEmpty() && this.getKeyAuths().isEmpty();

@@ -3,8 +3,10 @@ package eu.bittrade.libs.golos4j;
 import eu.bittrade.libs.steemj.Golos4J;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.AppliedOperation;
+import eu.bittrade.libs.steemj.base.models.GolosIoFilePath;
 import eu.bittrade.libs.steemj.base.models.operations.VoteOperation;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
+import eu.bittrade.libs.steemj.util.AuthUtils;
 import junit.framework.TestCase;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.junit.Before;
@@ -13,15 +15,16 @@ import org.junit.internal.runners.JUnit38ClassRunner;
 import org.junit.runner.RunWith;
 
 import javax.annotation.Nonnull;
+import java.io.File;
 import java.util.Map;
 
 /**
  * Created by yuri yurivladdurain@gmail.com .
  */
 @RunWith(JUnit38ClassRunner.class)
-public class PrivateMethodsTest extends TestCase {
+public class SignedMethodsTest extends TestCase {
     @Nonnull
-    Golos4J golos4J;
+    Golos4J golos4J = Golos4J.getInstance();
 
     @Before
     public void setUp() {
@@ -37,7 +40,19 @@ public class PrivateMethodsTest extends TestCase {
     }
 
     @Test
-    public void qwerf1() {
+    public void testCreateAccount() throws Exception {
+        String login2 = "yuri-vlad-second";
+        String newPassword = "234sfdgkh1ezedsiU234wewe235ym8jhlq1unA0tlkJKfdhyn";
+        Map<PrivateKeyType, String> keysNew = AuthUtils.generatePrivateWiFs(login2, newPassword, PrivateKeyType.values());
+    }
 
+    @Test
+    public void testUploadImage() throws Exception {
+        String login2 = "yuri-vlad-second";
+        golos4J.addAccountUsingMasterPassword(new AccountName(login2), "234sfdgkh1ezedsiU234wewe235ym8jhlq1unA0tlkJKfdhyn");
+        GolosIoFilePath filePath = golos4J.getGolosIoSpecificMethods().uploadFile(new AccountName(login2), new File(getClass().getClassLoader().getResource("ThemeColors.png").getFile()));
+        assertNotNull(filePath);
+        String value = filePath.getError() == null ? filePath.getUrlString() : filePath.getError();
+        assertNotNull(value);
     }
 }

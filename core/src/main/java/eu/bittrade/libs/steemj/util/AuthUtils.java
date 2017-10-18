@@ -128,8 +128,8 @@ public class AuthUtils {
 
         final byte[] privateWifBytesAll = Base58.decode(privateWiFKey);
         if (privateWifBytesAll[0] != (byte) 0x80) throw new IllegalArgumentException("wrong version, must be 0x80");
-        byte[] privateKeyBytes = ArrayUtils.subarray(privateWifBytesAll, 0, privateWifBytesAll.length - 4);
-        final byte[] checkSum = ArrayUtils.subarray(privateWifBytesAll, privateWifBytesAll.length - 4, privateWifBytesAll.length);
+        byte[] privateKeyBytes = ArrayUtils.subarray(privateWifBytesAll, 0, privateWifBytesAll.length - HASH_BYTES_LENGTH);
+        final byte[] checkSum = ArrayUtils.subarray(privateWifBytesAll, privateWifBytesAll.length - HASH_BYTES_LENGTH, privateWifBytesAll.length);
         byte[] newCheckSum = generateChecksumSha256(privateKeyBytes);
         if (!Arrays.equals(checkSum, newCheckSum))
             throw new IllegalArgumentException("Invalid WIF key (checksum miss-match)");

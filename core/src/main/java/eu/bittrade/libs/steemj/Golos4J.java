@@ -6,15 +6,14 @@ import eu.bittrade.libs.steemj.configuration.PrivateKeyStorage;
 import eu.bittrade.libs.steemj.configuration.SteemJConfig;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.enums.SteemitAddressPrefix;
+import eu.bittrade.libs.steemj.util.AuthUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by yuri yurivladdurain@gmail.com .
@@ -43,6 +42,8 @@ public class Golos4J {
     private final AccountByKeyMethods accountByKeyMethodsHandler;
     @Nonnull
     private final SimplifiedOperations simplifiedOperations;
+    @Nonnull
+    private final GolosIoSpecificMethods golosIoSpecificMethods;
 
     @Nonnull
     public static synchronized Golos4J getInstance() {
@@ -79,6 +80,7 @@ public class Golos4J {
         this.networkBroadcastMethodsHandler = new GolosNetworkBroadcastMethodsHandler(this.steemJConfig, communicationHandler, steemJ);
         this.accountByKeyMethodsHandler = new GolosAccountByKeyMethodsHandler(this.steemJConfig, communicationHandler, steemJ);
         this.simplifiedOperations = new GolosSimplifiedOperationsHandler(this.steemJConfig, communicationHandler, steemJ);
+        this.golosIoSpecificMethods = new GolosIoSpecificMethodsHandler(this.steemJConfig, CommunicationHandler.getObjectMapper());
     }
 
     @Nonnull
@@ -104,6 +106,19 @@ public class Golos4J {
         addKeysToAccount(account, Collections.singleton(key));
     }
 
+    @Nonnull
+    public GolosIoSpecificMethods getGolosIoSpecificMethods() {
+        return golosIoSpecificMethods;
+    }
+
+    public void addAccountUsingMasterPassword(@Nonnull AccountName account, @Nonnull String masterPassword) {
+        Map<PrivateKeyType, String> keys = AuthUtils.generatePrivateWiFs(account.getName(), masterPassword, PrivateKeyType.values());
+        Set<ImmutablePair<PrivateKeyType, String>> set = new HashSet<>();
+        for (Map.Entry<PrivateKeyType, String> pair : keys.entrySet()) {
+            set.add(new ImmutablePair<>(pair.getKey(), pair.getValue()));
+        }
+        addKeysToAccount(account, set);
+    }
 
     public void addKeysToAccount(@Nonnull AccountName account, @Nonnull Set<ImmutablePair<PrivateKeyType, String>> keys) {
         addAccountIfNeeded(account);

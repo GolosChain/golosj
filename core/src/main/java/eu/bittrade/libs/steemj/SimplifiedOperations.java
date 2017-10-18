@@ -1,6 +1,9 @@
 package eu.bittrade.libs.steemj;
 
-import eu.bittrade.libs.steemj.base.models.*;
+import eu.bittrade.libs.steemj.base.models.AccountName;
+import eu.bittrade.libs.steemj.base.models.Asset;
+import eu.bittrade.libs.steemj.base.models.Permlink;
+import eu.bittrade.libs.steemj.base.models.PublicKey;
 import eu.bittrade.libs.steemj.base.models.operations.CommentOperation;
 import eu.bittrade.libs.steemj.configuration.SteemJConfig;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
@@ -425,12 +428,13 @@ public interface SimplifiedOperations {
      *                       the <code>newAccountName</code> (see
      * @param fee            Set the fee the <code>creator</code> will pay
      * @param newAccountName Set the new account name
-     * @param owner          if the owner authority should
+     * @param fee            Fee, num of GOLOS, that would be given to new account. For golos chain, it must be not less than 3 GOLOS
+     *                       precision is 1/1000, i.e. 3 GOLOS = 3000 fee
+     * @param ownerKey       owner key of new account. this and other keys can be generated from newAccount name and password,
+     *                       using {@link eu.bittrade.libs.steemj.util.AuthUtils} static methods
      *                       not be updated
-     * @param active         The new active authority or null if the active authority
-     *                       should not be updated
-     * @param posting        The new posting authority or null if the posting authority
-     *                       should not be updated
+     * @param activeKey      active key of new account
+     * @param postingKey     posting key of new account
      * @param memoKey        The new memo key or null if the memo key should not be updated
      * @throws SteemCommunicationException      If there is a problem reaching the Steem Node.
      * @throws SteemInvalidTransactionException If there is a problem while signing the transaction.
@@ -438,9 +442,15 @@ public interface SimplifiedOperations {
      *                                          requirements described above.
      */
 
-    void createAccount(@Nonnull AccountName creator, @Nonnull Asset fee,
-                       @Nonnull AccountName newAccountName, @Nonnull Authority owner,
-                       @Nonnull Authority active, @Nonnull Authority posting, @Nonnull PublicKey memoKey)
+    void createAccount(@Nonnull AccountName creator,
+                       @Nonnull String creatorActiveKey,
+                       @Nonnull Asset fee,
+                       @Nonnull AccountName newAccountName,
+                       @Nonnull PublicKey ownerKey,
+                       @Nonnull PublicKey activeKey,
+                       @Nonnull PublicKey postingKey,
+                       @Nonnull PublicKey memoKey,
+                       @Nonnull String jsonMetadata)
             throws SteemCommunicationException, SteemInvalidTransactionException;
 
 }

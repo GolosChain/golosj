@@ -1,13 +1,18 @@
 package eu.bittrade.libs.steemj;
 
 import eu.bittrade.libs.steemj.base.models.*;
+import eu.bittrade.libs.steemj.base.models.operations.AccountCreateOperation;
 import eu.bittrade.libs.steemj.base.models.operations.CommentOperation;
+import eu.bittrade.libs.steemj.base.models.operations.Operation;
 import eu.bittrade.libs.steemj.communication.CommunicationHandler;
 import eu.bittrade.libs.steemj.configuration.SteemJConfig;
+import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
+import org.apache.commons.lang3.tuple.ImmutablePair;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
 
 /**
  * Created by yuri yurivladdurain@gmail.com .
@@ -150,8 +155,28 @@ class GolosSimplifiedOperationsHandler implements SimplifiedOperations {
         steemJ.deletePostOrComment(postOrCommentAuthor, postOrCommentPermlink);
     }
 
-    @Override
-    public void createAccount(@Nonnull AccountName creator, @Nonnull Asset fee, @Nonnull AccountName newAccountName, @Nonnull Authority owner, @Nonnull Authority active, @Nonnull Authority posting, @Nonnull PublicKey memoKey) throws SteemCommunicationException, SteemInvalidTransactionException {
 
+    public void createAccount(@Nonnull AccountName creator, @Nonnull String creatorActiveKey, @Nonnull Asset fee,
+                              @Nonnull AccountName newAccountName, @Nonnull PublicKey ownerKey,
+                              @Nonnull PublicKey activeKey, @Nonnull PublicKey postingKey,
+                              @Nonnull PublicKey memoKey, @Nonnull String jsonMetadata)
+            throws SteemCommunicationException, SteemInvalidTransactionException {
+
+        AccountCreateOperation accountCreateOperation = new AccountCreateOperation(creator, fee, newAccountName,
+                new Authority(ownerKey), new Authority(activeKey), new Authority(postingKey), memoKey, jsonMetadata);
+
+        GlobalProperties globalProperties = Golos4J.getInstance().getDatabaseMethods().getDynamicGlobalProperties();
+        ArrayList<Operation> operations = new ArrayList<>();
+
+        operations.add(accountCreateOperation);
+
+        SignedTransaction signedTransaction = new SignedTransaction(globalProperties.getHeadBlockId(), operations,
+                null);
+
+        Golos4J.getInstance().addAccount(creator, new ImmutablePair<>(PrivateKeyType.ACTIVE, creatorActiveKey), false);
+
+        signedTransaction.sign();
+
+        Golos4J.getInstance().getNetworkBroadcastMethods().broadcastTransaction(signedTransaction);
     }
 }

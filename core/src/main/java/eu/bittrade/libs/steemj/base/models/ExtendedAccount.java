@@ -4,6 +4,9 @@ import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.deser.std.NumberDeserializers;
+import eu.bittrade.libs.steemj.base.models.deserializer.BigIntegerAppliedOperationsDeserializer;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -23,19 +26,24 @@ public class ExtendedAccount extends Account {
     // The original tpye is map<uint64_t,applied_operation>
     /** Transfer to/from vesting. */
     @JsonProperty("transfer_history")
+    @JsonDeserialize(using = BigIntegerAppliedOperationsDeserializer.class)
     private Map<BigInteger, AppliedOperation> transferHistory;
     // The original tpye is map<uint64_t,applied_operation>
     /** Limit order / cancel / fill. */
     @JsonProperty("market_history")
+    @JsonDeserialize(using = BigIntegerAppliedOperationsDeserializer.class)
     private Map<BigInteger, AppliedOperation> marketHistory;
     // The original tpye is map<uint64_t,applied_operation>
     @JsonProperty("post_history")
+    @JsonDeserialize(using = BigIntegerAppliedOperationsDeserializer.class)
     private Map<BigInteger, AppliedOperation> postHistory;
     // The original tpye is map<uint64_t,applied_operation>
     @JsonProperty("vote_history")
+    @JsonDeserialize(using = BigIntegerAppliedOperationsDeserializer.class)
     private Map<BigInteger, AppliedOperation> voteHistory;
     // The original tpye is map<uint64_t,applied_operation>
     @JsonProperty("other_history")
+    @JsonDeserialize(using = BigIntegerAppliedOperationsDeserializer.class)
     private Map<BigInteger, AppliedOperation> otherHistory;
     // Original type is set<string>.
     @JsonProperty("witness_votes")

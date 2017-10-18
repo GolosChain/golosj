@@ -158,7 +158,7 @@ public class PublicMethodsTest {
 
     @Test
     public void testAccounts() throws Exception {
-        List<ExtendedAccount> accounts = golos4J.getDatabaseMethods().getAccounts(Collections.singletonList(new AccountName("lenutsa")));
+        List<ExtendedAccount> accounts = golos4J.getDatabaseMethods().getAccounts(Collections.singletonList(new AccountName("golos.loto")));
         assertEquals(1, accounts.size());
 
     }
@@ -236,6 +236,16 @@ public class PublicMethodsTest {
             assertThat("expect discussions in " + type + " greater than zero", discussions.size(),
                     greaterThanOrEqualTo(0));
         }
+    }
+
+    @Test
+    public void testGetDiscussionByTrending() throws Exception {
+
+        DiscussionQuery discussionQuery = new DiscussionQuery();
+        discussionQuery.setLimit(10);
+        discussionQuery.setTruncateBody(400);
+        final List<Discussion> discussions = golos4J.getDatabaseMethods().getDiscussionsBy(discussionQuery, DiscussionSortType.GET_DISCUSSIONS_BY_TRENDING30);
+
     }
 
     @Test
@@ -451,22 +461,6 @@ public class PublicMethodsTest {
 
         assertThat(blogAuthors.size(), greaterThan(0));
         assertThat(blogAuthors.get(1).getAccount(), equalTo(new AccountName("ami")));
-    }
-
-    @Test
-    public void testOrderBook() throws Exception {
-        final OrderBook orderBook = golos4J.getDatabaseMethods().getOrderBookUsingDatabaseApi(1);
-
-        assertThat(orderBook.getAsks().size(), equalTo(1));
-        assertThat(orderBook.getBids().get(0).getSbd(), greaterThan(1L));
-    }
-
-    @Test
-    public void testGetFeedHistory() throws Exception {
-        final FeedHistory feedHistory = golos4J.getDatabaseMethods().getFeedHistory();
-
-        assertThat(feedHistory.getCurrentPrice().getBase().getAmount(), greaterThan(1.0));
-        assertThat(feedHistory.getPriceHistory().size(), greaterThan(1));
     }
 
 }
