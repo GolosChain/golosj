@@ -2,9 +2,8 @@ package eu.bittrade.libs.steemj.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.bittrade.libs.steemj.configuration.SteemJConfig;
-import org.bitcoinj.core.ECKey;
-import org.bitcoinj.core.NetworkParameters;
-import org.bitcoinj.core.VarInt;
+import eu.bittrade.libs.steemj.exceptions.SteemFatalErrorException;
+import org.bitcoinj.core.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -268,6 +267,39 @@ public class SteemJUtils {
     }
 
     /**
+     * Use this method to identify the correct key type (posting, active, owner,
+     * memo) by iterating through the types and comparing the elliptic curves.
+     *
+     * @param signature
+     *            The created signature of the message.
+     * @param messageAsHash
+     *            The hash value of the message.
+     * @param requiredPrivateKey
+     *            The private key which has been used to sign the message.
+     * @return The key type indicator (0 = posting, 1 = active, 2 = owner, 3 =
+     *         memo).
+     * @throws SteemFatalErrorException
+     *             If no key type could have been identified.
+     */
+    public static int getKeyType(ECKey.ECDSASignature signature, Sha256Hash messageAsHash, ECKey requiredPrivateKey) {
+        Integer recId = null;
+        for (int i = 0; i < 4; i++) {
+            ECKey publicKey = ECKey.recoverFromSignature(i, signature, messageAsHash,
+                    requiredPrivateKey.isCompressed());
+            if (publicKey != null && publicKey.getPubKeyPoint().equals(requiredPrivateKey.getPubKeyPoint())) {
+                recId = i;
+                break;
+            }
+        }
+
+        if (recId == null) {
+            throw new SteemFatalErrorException("Could not construct a recoverable key. This should never happen.");
+        }
+
+        return recId;
+    }
+
+    /**
      * Get a list of user names that the given <code>content</code> contains.
      *
      * @param content The content to extract the user names from.
@@ -283,5 +315,28 @@ public class SteemJUtils {
         }
 
         return containedUrls;
+    }
+    /**
+     * Create a signed transaction based on the given <code>keyType</code>,
+     * <code>signature</code> and <code>requiredPrivateKey</code>.
+     *
+     * @param keyType
+     *            The key type to set.
+     * @param signature
+     *            The signature used to sign a message.
+     * @param requiredPrivateKey
+     *            The signature of the message.
+     * @return The signed Transaction.
+     */
+    public static byte[] createSignedTransaction(int keyType, ECKey.ECDSASignature signature, ECKey requiredPrivateKey) {
+        int headerByte = keyType + 27 + (requiredPrivateKey.isCompressed() ? 4 : 0);
+
+        byte[] signedTransaction = new byte[65];
+
+        signedTransaction[0] = (byte) headerByte;
+        System.arraycopy(Utils.bigIntegerToBytes(signature.r, 32), 0, signedTransaction, 1, 32);
+        System.arraycopy(Utils.bigIntegerToBytes(signature.s, 32), 0, signedTransaction, 33, 32);
+
+        return signedTransaction;
     }
 }

@@ -2574,7 +2574,7 @@ public class SteemJ {
             }
             jsonMetadataBuilder.append("],");
         }
-        jsonMetadataBuilder.append("\"app\":\"steemj/0.4.0\",\"format\":\"markdown\"}");
+        jsonMetadataBuilder.append("\"app\":\"golos4j/0.0.1\",\"format\":\"markdown\"}");
 
         CommentOperation commentOperation = new CommentOperation(authorOfThePostOrCommentToReplyTo,
                 permlinkOfThePostOrCommentToReplyTo, authorThatPublishsTheComment, permlink, "", content,
@@ -2704,7 +2704,7 @@ public class SteemJ {
             }
             jsonMetadataBuilder.append("],");
         }
-        jsonMetadataBuilder.append("\"app\":\"steemj/0.4.0\",\"format\":\"markdown\"}");
+        jsonMetadataBuilder.append("\"app\":\"golos4j/0.0.1\",\"format\":\"markdown\"}");
 
         CommentOperation commentOperation = new CommentOperation(parentAuthor, parentPermlink, authorOfThePostToUpdate,
                 permlinkOfThePostToUpdate, title, content, jsonMetadataBuilder.toString());
@@ -2810,7 +2810,7 @@ public class SteemJ {
             }
             jsonMetadataBuilder.append("],");
         }
-        jsonMetadataBuilder.append("\"app\":\"steemj/0.4.0\",\"format\":\"markdown\"}");
+        jsonMetadataBuilder.append("\"app\":\"golos4j/0.0.1\",\"format\":\"markdown\"}");
 
         CommentOperation commentOperation = new CommentOperation(parentAuthor, parentPermlink,
                 originalAuthorOfTheCommentToUpdate, originalPermlinkOfTheCommentToUpdate, "", content,
