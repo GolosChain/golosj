@@ -103,10 +103,10 @@ public class FeedPublishOperation extends Operation {
     public void setExchangeRate(Price exchangeRate) {
         if (exchangeRate == null) {
             throw new InvalidParameterException("The price feed can't be null");
-        } else if (!(exchangeRate.getBase().getSymbol().equals(AssetSymbolType.STEEM)
-                && exchangeRate.getQuote().getSymbol().equals(AssetSymbolType.SBD)
-                || exchangeRate.getBase().getSymbol().equals(AssetSymbolType.SBD)
-                        && exchangeRate.getQuote().getSymbol().equals(AssetSymbolType.STEEM))) {
+        } else if (!(exchangeRate.getBase().getSymbol().equals(AssetSymbolType.GOLOS)
+                && exchangeRate.getQuote().getSymbol().equals(AssetSymbolType.GBG)
+                || exchangeRate.getBase().getSymbol().equals(AssetSymbolType.GBG)
+                        && exchangeRate.getQuote().getSymbol().equals(AssetSymbolType.GOLOS))) {
             throw new InvalidParameterException("The Price feed must be a STEEM/SBD price");
         }
 

@@ -144,7 +144,7 @@ public class ConvertOperation extends Operation {
     public void setAmount(Asset amount) {
         if (amount == null) {
             throw new InvalidParameterException("The amount to convert can't be null.");
-        } else if (!amount.getSymbol().equals(AssetSymbolType.SBD)) {
+        } else if (!amount.getSymbol().equals(AssetSymbolType.GBG)) {
             // Only allow conversion from SBD to STEEM, allowing the opposite
             // can enable traders to abuse market fluxuations through converting
             // large quantities without moving the price.

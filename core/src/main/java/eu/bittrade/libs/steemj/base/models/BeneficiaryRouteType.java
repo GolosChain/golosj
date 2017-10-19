@@ -45,6 +45,9 @@ public class BeneficiaryRouteType implements ByteTransformable, Validatable {
         this.setWeight(weight);
     }
 
+    public BeneficiaryRouteType() {
+    }
+
     /**
      * Get the account who is the beneficiary of this comment.
      * 

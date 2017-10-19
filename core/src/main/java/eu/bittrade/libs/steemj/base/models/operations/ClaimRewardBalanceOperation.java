@@ -152,7 +152,7 @@ public class ClaimRewardBalanceOperation extends Operation {
     public void setRewardSbd(Asset rewardSbd) {
         if (rewardSbd == null) {
             throw new InvalidParameterException("The SBD reward can't be null.");
-        } else if (!rewardSbd.getSymbol().equals(AssetSymbolType.SBD)) {
+        } else if (!rewardSbd.getSymbol().equals(AssetSymbolType.SBD) && !rewardSbd.getSymbol().equals(AssetSymbolType.GBG)) {
             throw new InvalidParameterException("The SBD reward must be of symbol type SBD.");
         } else if (rewardSbd.getAmount() < 0) {
             throw new InvalidParameterException("Cannot claim a negative SBD amount");

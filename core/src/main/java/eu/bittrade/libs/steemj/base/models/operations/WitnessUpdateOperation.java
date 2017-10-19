@@ -110,7 +110,7 @@ public class WitnessUpdateOperation extends Operation {
         this.setBlockSigningKey(blockSigningKey);
         this.setFee(fee);
 
-        Asset accountCreationFee = new Asset(1, AssetSymbolType.STEEM);
+        Asset accountCreationFee = new Asset(1, AssetSymbolType.GOLOS);
         long maximumBlockSize = 131072;
         int sdbInterestRate = 1000;
         ChainProperties chainProperties = new ChainProperties(accountCreationFee, maximumBlockSize, sdbInterestRate);
@@ -246,8 +246,8 @@ public class WitnessUpdateOperation extends Operation {
      *             asset symbol is not STEEM.
      */
     public void setFee(Asset fee) {
-        if (fee == null || fee.getAmount() < 0 || fee.getSymbol() != AssetSymbolType.STEEM) {
-            throw new InvalidParameterException("The fee needs to be a positive amount of STEEM.");
+        if (fee == null || fee.getAmount() < 0 || fee.getSymbol() != AssetSymbolType.GOLOS) {
+            throw new InvalidParameterException("The fee needs to be a positive amount of GOLOS.");
         }
         this.fee = fee;
     }

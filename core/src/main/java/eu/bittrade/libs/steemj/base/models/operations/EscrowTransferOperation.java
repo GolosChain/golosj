@@ -167,7 +167,7 @@ public class EscrowTransferOperation extends AbstractEscrowOperation {
      */
     public EscrowTransferOperation(AccountName from, AccountName to, AccountName agent, long escrowId, Asset fee,
             TimePointSec ratificationDeadlineDate, TimePointSec escrowExpirationDate, String jsonMeta) {
-        this(from, to, agent, escrowId, new Asset(0, AssetSymbolType.SBD), new Asset(0, AssetSymbolType.STEEM), fee,
+        this(from, to, agent, escrowId, new Asset(0, AssetSymbolType.GBG), new Asset(0, AssetSymbolType.GOLOS), fee,
                 ratificationDeadlineDate, escrowExpirationDate, jsonMeta);
     }
 
@@ -292,7 +292,7 @@ public class EscrowTransferOperation extends AbstractEscrowOperation {
             throw new InvalidParameterException("The sbd amount can't be null.");
         } else if (sbdAmount.getAmount() < 0) {
             throw new InvalidParameterException("The sbd amount cannot be negative.");
-        } else if (!sbdAmount.getSymbol().equals(AssetSymbolType.SBD)) {
+        } else if (!sbdAmount.getSymbol().equals(AssetSymbolType.GBG)) {
             throw new InvalidParameterException("The sbd amount must contain SBD.");
         } else if (sbdAmount.getAmount() + this.getSteemAmount().getAmount() < 0) {
             throw new InvalidParameterException("An escrow must transfer a non-zero amount.");
@@ -326,7 +326,7 @@ public class EscrowTransferOperation extends AbstractEscrowOperation {
             throw new InvalidParameterException("The steem amount can't be null.");
         } else if (steemAmount.getAmount() < 0) {
             throw new InvalidParameterException("The steem amount cannot be negative.");
-        } else if (!steemAmount.getSymbol().equals(AssetSymbolType.SBD)) {
+        } else if (!steemAmount.getSymbol().equals(AssetSymbolType.GBG)) {
             throw new InvalidParameterException("The steem amount must contain STEEM.");
         } else if (steemAmount.getAmount() + this.getSbdAmount().getAmount() < 0) {
             throw new InvalidParameterException("An escrow must transfer a non-zero amount.");
@@ -358,7 +358,7 @@ public class EscrowTransferOperation extends AbstractEscrowOperation {
             throw new InvalidParameterException("The fee can't be null.");
         } else if (fee.getAmount() < 0) {
             throw new InvalidParameterException("The fee cannot be negative.");
-        } else if (!fee.getSymbol().equals(AssetSymbolType.STEEM) && !fee.getSymbol().equals(AssetSymbolType.SBD)) {
+        } else if (!fee.getSymbol().equals(AssetSymbolType.GOLOS) && !fee.getSymbol().equals(AssetSymbolType.GBG)) {
             throw new InvalidParameterException("The fee must be STEEM or SBD.");
         }
 

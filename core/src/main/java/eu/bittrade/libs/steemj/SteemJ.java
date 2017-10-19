@@ -2441,7 +2441,7 @@ public class SteemJ {
             }
             jsonMetadataBuilder.append("],");
         }
-        jsonMetadataBuilder.append("\"app\":\"steemj/0.4.0\",\"format\":\"markdown\"}");
+        jsonMetadataBuilder.append("\"app\":\"golos4J/0.0.1\",\"format\":\"markdown\"}");
 
         CommentOperation commentOperation = new CommentOperation(parentAuthor, parentPermlink,
                 authorThatPublishsThePost, permlink, title, content, jsonMetadataBuilder.toString());
@@ -2451,7 +2451,7 @@ public class SteemJ {
         boolean allowVotes = true;
         boolean allowCurationRewards = true;
         short percentSteemDollars = (short) 10000;
-        Asset maxAcceptedPayout = new Asset(1000000000, AssetSymbolType.SBD);
+        Asset maxAcceptedPayout = new Asset(1000000000, AssetSymbolType.GOLOS);
 
         BeneficiaryRouteType beneficiaryRouteType = new BeneficiaryRouteType();
         beneficiaryRouteType.setAccount(new AccountName("steemj"));
@@ -2585,7 +2585,7 @@ public class SteemJ {
         boolean allowVotes = true;
         boolean allowCurationRewards = true;
         short percentSteemDollars = (short) 10000;
-        Asset maxAcceptedPayout = new Asset(1000000000, AssetSymbolType.SBD);
+        Asset maxAcceptedPayout = new Asset(1000000000, AssetSymbolType.GBG);
 
         BeneficiaryRouteType beneficiaryRouteType = new BeneficiaryRouteType();
         beneficiaryRouteType.setAccount(new AccountName("steemj"));

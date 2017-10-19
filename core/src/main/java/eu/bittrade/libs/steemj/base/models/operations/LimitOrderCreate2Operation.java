@@ -192,10 +192,10 @@ public class LimitOrderCreate2Operation extends AbstractLimitOrderOperation {
             throw new InvalidParameterException("The sell asset must be the base of the price.");
         } else if (this.getExchangeRate() != null && this.getExchangeRate().multiply(amountToSell).getAmount() <= 0) {
             throw new InvalidParameterException("The Amount to sell cannot round to 0 when traded.");
-        } else if (this.getExchangeRate() != null && ((amountToSell.getSymbol().equals(AssetSymbolType.STEEM)
-                && this.getExchangeRate().getQuote().getSymbol().equals(AssetSymbolType.SBD))
-                || (amountToSell.getSymbol().equals(AssetSymbolType.SBD)
-                        && this.getExchangeRate().getQuote().getSymbol().equals(AssetSymbolType.STEEM)))) {
+        } else if (this.getExchangeRate() != null && ((amountToSell.getSymbol().equals(AssetSymbolType.GOLOS)
+                && this.getExchangeRate().getQuote().getSymbol().equals(AssetSymbolType.GBG))
+                || (amountToSell.getSymbol().equals(AssetSymbolType.GBG)
+                        && this.getExchangeRate().getQuote().getSymbol().equals(AssetSymbolType.GOLOS)))) {
             throw new InvalidParameterException("Limit order must be for the STEEM:SBD market.");
         }
 

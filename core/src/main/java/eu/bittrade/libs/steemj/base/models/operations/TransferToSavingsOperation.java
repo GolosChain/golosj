@@ -70,8 +70,8 @@ public class TransferToSavingsOperation extends AbstractTransferOperation {
     public void setAmount(Asset amount) {
         if (amount == null) {
             throw new InvalidParameterException("The amount can't be null.");
-        } else if (!amount.getSymbol().equals(AssetSymbolType.STEEM)
-                && !amount.getSymbol().equals(AssetSymbolType.SBD)) {
+        } else if (!amount.getSymbol().equals(AssetSymbolType.GOLOS)
+                && !amount.getSymbol().equals(AssetSymbolType.GBG)) {
             throw new InvalidParameterException("The amount must be of type STEEM or SBD.");
         } else if (amount.getAmount() <= 0) {
             throw new InvalidParameterException("Must transfer a nonzero amount.");

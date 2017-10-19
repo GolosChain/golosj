@@ -103,8 +103,8 @@ public class EscrowReleaseOperation extends AbstractEscrowOperation {
      */
     public EscrowReleaseOperation(AccountName from, AccountName to, AccountName agent, long escrowId, AccountName who,
             AccountName receiver) {
-        this(from, to, agent, escrowId, who, receiver, new Asset(0, AssetSymbolType.SBD),
-                new Asset(0, AssetSymbolType.STEEM));
+        this(from, to, agent, escrowId, who, receiver, new Asset(0, AssetSymbolType.GBG),
+                new Asset(0, AssetSymbolType.GOLOS));
     }
 
     /**
@@ -278,7 +278,7 @@ public class EscrowReleaseOperation extends AbstractEscrowOperation {
             throw new InvalidParameterException("The sbd amount can't be null.");
         } else if (sbdAmount.getAmount() < 0) {
             throw new InvalidParameterException("The sbd amount cannot be negative.");
-        } else if (!sbdAmount.getSymbol().equals(AssetSymbolType.SBD)) {
+        } else if (!sbdAmount.getSymbol().equals(AssetSymbolType.GBG)) {
             throw new InvalidParameterException("The sbd amount must contain SBD.");
         } else if (sbdAmount.getAmount() + this.getSteemAmount().getAmount() < 0) {
             throw new InvalidParameterException("An escrow must release a non-zero amount.");
@@ -312,7 +312,7 @@ public class EscrowReleaseOperation extends AbstractEscrowOperation {
             throw new InvalidParameterException("The steem amount can't be null.");
         } else if (steemAmount.getAmount() < 0) {
             throw new InvalidParameterException("The steem amount cannot be negative.");
-        } else if (!steemAmount.getSymbol().equals(AssetSymbolType.SBD)) {
+        } else if (!steemAmount.getSymbol().equals(AssetSymbolType.GBG)) {
             throw new InvalidParameterException("The steem amount must contain STEEM.");
         } else if (steemAmount.getAmount() + this.getSbdAmount().getAmount() < 0) {
             throw new InvalidParameterException("An escrow must release a non-zero amount.");

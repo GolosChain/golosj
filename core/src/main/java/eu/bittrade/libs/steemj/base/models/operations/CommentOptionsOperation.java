@@ -125,7 +125,7 @@ public class CommentOptionsOperation extends Operation {
      */
     public CommentOptionsOperation(AccountName author, Permlink permlink, Short percentSteemDollars,
             List<CommentOptionsExtension> extensions) {
-        this(author, permlink, new Asset(1000000000, AssetSymbolType.SBD), percentSteemDollars, true, true, extensions);
+        this(author, permlink, new Asset(1000000000, AssetSymbolType.GOLOS), percentSteemDollars, true, true, extensions);
     }
 
     /**
@@ -261,7 +261,7 @@ public class CommentOptionsOperation extends Operation {
     public void setMaxAcceptedPayout(Asset maxAcceptedPayout) {
         if (maxAcceptedPayout == null) {
             throw new InvalidParameterException("The maximal accepted payout can't be null.");
-        } else if (!maxAcceptedPayout.getSymbol().equals(AssetSymbolType.SBD)) {
+        } else if (!maxAcceptedPayout.getSymbol().equals(AssetSymbolType.GBG)) {
             throw new InvalidParameterException("The maximal accepted payout must be in SBD.");
         } else if (maxAcceptedPayout.getAmount() < 0) {
             throw new InvalidParameterException("Cannot accept less than 0 payout.");
