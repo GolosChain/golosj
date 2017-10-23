@@ -206,7 +206,6 @@ public class PublicMethodsTest {
     @Test
     public void testGetContentReplies() throws Exception {
         final List<Discussion> replies = golos4J.getDatabaseMethods().getContentReplies(ACCOUNT, PERMLINK);
-
         assertNotNull("expect replies", replies);
         assertThat("expect replies greater than zero", replies.size(), greaterThan(0));
     }
