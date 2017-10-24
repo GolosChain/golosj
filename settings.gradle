@@ -1,4 +1,4 @@
 rootProject.name = 'steemj-parent'
 include ':steemj-core'
 
-project(':steemj-core').projectDir = "$rootDir/core" as File
+project(':steemj-core').projectDir = "./core" as File
