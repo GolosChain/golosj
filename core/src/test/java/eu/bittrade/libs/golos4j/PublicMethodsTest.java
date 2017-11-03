@@ -1,17 +1,6 @@
 package eu.bittrade.libs.golos4j;
 
 
-import eu.bittrade.libs.steemj.Golos4J;
-import eu.bittrade.libs.steemj.apis.follow.enums.FollowType;
-import eu.bittrade.libs.steemj.apis.follow.model.*;
-import eu.bittrade.libs.steemj.base.models.*;
-import eu.bittrade.libs.steemj.base.models.operations.AccountCreateOperation;
-import eu.bittrade.libs.steemj.base.models.operations.Operation;
-import eu.bittrade.libs.steemj.base.models.operations.VoteOperation;
-import eu.bittrade.libs.steemj.enums.AssetSymbolType;
-import eu.bittrade.libs.steemj.enums.DiscussionSortType;
-import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
-import eu.bittrade.libs.steemj.exceptions.SteemResponseError;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.hamcrest.MatcherAssert;
@@ -26,10 +15,56 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import eu.bittrade.libs.steemj.Golos4J;
+import eu.bittrade.libs.steemj.apis.follow.enums.FollowType;
+import eu.bittrade.libs.steemj.apis.follow.model.AccountReputation;
+import eu.bittrade.libs.steemj.apis.follow.model.BlogEntry;
+import eu.bittrade.libs.steemj.apis.follow.model.CommentBlogEntry;
+import eu.bittrade.libs.steemj.apis.follow.model.CommentFeedEntry;
+import eu.bittrade.libs.steemj.apis.follow.model.FeedEntry;
+import eu.bittrade.libs.steemj.apis.follow.model.FollowApiObject;
+import eu.bittrade.libs.steemj.apis.follow.model.FollowCountApiObject;
+import eu.bittrade.libs.steemj.apis.follow.model.PostsPerAuthorPair;
+import eu.bittrade.libs.steemj.base.models.AccountName;
+import eu.bittrade.libs.steemj.base.models.AppliedOperation;
+import eu.bittrade.libs.steemj.base.models.Asset;
+import eu.bittrade.libs.steemj.base.models.BlockHeader;
+import eu.bittrade.libs.steemj.base.models.ChainProperties;
+import eu.bittrade.libs.steemj.base.models.Config;
+import eu.bittrade.libs.steemj.base.models.Discussion;
+import eu.bittrade.libs.steemj.base.models.DiscussionQuery;
+import eu.bittrade.libs.steemj.base.models.ExtendedAccount;
+import eu.bittrade.libs.steemj.base.models.GlobalProperties;
+import eu.bittrade.libs.steemj.base.models.LiquidityBalance;
+import eu.bittrade.libs.steemj.base.models.Permlink;
+import eu.bittrade.libs.steemj.base.models.ScheduledHardfork;
+import eu.bittrade.libs.steemj.base.models.SignedBlockWithInfo;
+import eu.bittrade.libs.steemj.base.models.SteemVersionInfo;
+import eu.bittrade.libs.steemj.base.models.TrendingTag;
+import eu.bittrade.libs.steemj.base.models.Vote;
+import eu.bittrade.libs.steemj.base.models.VoteState;
+import eu.bittrade.libs.steemj.base.models.Witness;
+import eu.bittrade.libs.steemj.base.models.WitnessSchedule;
+import eu.bittrade.libs.steemj.base.models.operations.AccountCreateOperation;
+import eu.bittrade.libs.steemj.base.models.operations.Operation;
+import eu.bittrade.libs.steemj.base.models.operations.VoteOperation;
+import eu.bittrade.libs.steemj.enums.AssetSymbolType;
+import eu.bittrade.libs.steemj.enums.DiscussionSortType;
+import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
+import eu.bittrade.libs.steemj.exceptions.SteemResponseError;
+
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.greaterThanOrEqualTo;
+import static org.hamcrest.Matchers.instanceOf;
+import static org.hamcrest.Matchers.isEmptyOrNullString;
+import static org.hamcrest.Matchers.not;
 import static org.hamcrest.core.IsEqual.equalTo;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class PublicMethodsTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(PublicMethodsTest.class);
@@ -60,6 +95,14 @@ public class PublicMethodsTest {
         assertThat(appliedOperationsOnlyVirtual.get(0).getTrxInBlock(), equalTo(0));
         assertThat(appliedOperationsOnlyVirtual.get(0).getVirtualOp(), equalTo(0L));
         MatcherAssert.assertThat(appliedOperationsOnlyVirtual.get(0).getOp(), instanceOf(VoteOperation.class));
+    }
+
+    @Test
+    public void getProfileImagePath() throws Exception {
+        String avatar = golos4J.getDatabaseMethods().getAccountAvatar(new AccountName("kvg"));
+
+        assertNotNull(avatar);
+        System.out.println(avatar);
     }
 
     @Test

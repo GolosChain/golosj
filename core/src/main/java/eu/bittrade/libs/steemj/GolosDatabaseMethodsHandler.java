@@ -1,7 +1,39 @@
 package eu.bittrade.libs.steemj;
 
 
-import eu.bittrade.libs.steemj.base.models.*;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Nonnull;
+
+import eu.bittrade.libs.steemj.base.models.AccountName;
+import eu.bittrade.libs.steemj.base.models.AppliedOperation;
+import eu.bittrade.libs.steemj.base.models.BlockHeader;
+import eu.bittrade.libs.steemj.base.models.ChainProperties;
+import eu.bittrade.libs.steemj.base.models.Config;
+import eu.bittrade.libs.steemj.base.models.Discussion;
+import eu.bittrade.libs.steemj.base.models.DiscussionQuery;
+import eu.bittrade.libs.steemj.base.models.ExtendedAccount;
+import eu.bittrade.libs.steemj.base.models.ExtendedLimitOrder;
+import eu.bittrade.libs.steemj.base.models.FeedHistory;
+import eu.bittrade.libs.steemj.base.models.GlobalProperties;
+import eu.bittrade.libs.steemj.base.models.LiquidityBalance;
+import eu.bittrade.libs.steemj.base.models.OrderBook;
+import eu.bittrade.libs.steemj.base.models.Permlink;
+import eu.bittrade.libs.steemj.base.models.Price;
+import eu.bittrade.libs.steemj.base.models.ProfileImage;
+import eu.bittrade.libs.steemj.base.models.RewardFund;
+import eu.bittrade.libs.steemj.base.models.ScheduledHardfork;
+import eu.bittrade.libs.steemj.base.models.SignedBlockWithInfo;
+import eu.bittrade.libs.steemj.base.models.SignedTransaction;
+import eu.bittrade.libs.steemj.base.models.TrendingTag;
+import eu.bittrade.libs.steemj.base.models.Vote;
+import eu.bittrade.libs.steemj.base.models.VoteState;
+import eu.bittrade.libs.steemj.base.models.Witness;
+import eu.bittrade.libs.steemj.base.models.WitnessSchedule;
 import eu.bittrade.libs.steemj.communication.BlockAppliedCallback;
 import eu.bittrade.libs.steemj.communication.CommunicationHandler;
 import eu.bittrade.libs.steemj.communication.dto.RequestWrapperDTO;
@@ -12,13 +44,6 @@ import eu.bittrade.libs.steemj.enums.RewardFundType;
 import eu.bittrade.libs.steemj.enums.SteemApis;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
-
-import javax.annotation.Nonnull;
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Created by yuri yurivladdurain@gmail.com
@@ -264,5 +289,20 @@ class GolosDatabaseMethodsHandler implements DatabaseMethods {
     @Override
     public RewardFund getRewardFund(RewardFundType rewordFundType) throws SteemCommunicationException {
         return steemJ.getRewardFund(rewordFundType);
+    }
+
+    @Override
+    public String getAccountAvatar(AccountName name) throws SteemCommunicationException {
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
+        requestObject.setSteemApi(SteemApis.DATABASE_API);
+        requestObject.setApiMethod(RequestMethods.GET_STATE);
+        String[] parameters = {"@" + name.getName(), "{ truncate_body: 12 }"};
+        requestObject.setAdditionalParameters(parameters);
+
+        List<ProfileImage> response = communicationHandler.performRequest(requestObject, ProfileImage.class);
+        if (!response.isEmpty()) {
+            return response.get(0).getProfilePath();
+        }
+        return null;
     }
 }

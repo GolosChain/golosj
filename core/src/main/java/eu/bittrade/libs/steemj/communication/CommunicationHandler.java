@@ -73,7 +73,7 @@ public class CommunicationHandler extends Endpoint implements MessageHandler.Who
                     return true;
                 }
             });
-            client.getProperties().put(ClientProperties.SSL_ENGINE_CONFIGURATOR, sslEngineConfigurator);
+           client.getProperties().put(ClientProperties.SSL_ENGINE_CONFIGURATOR, sslEngineConfigurator);
         }
 
         client.setDefaultMaxSessionIdleTimeout(SteemJConfig.getInstance().getSocketTimeout());

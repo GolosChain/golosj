@@ -38,4 +38,5 @@ public class SteemJReconnectHandler extends ReconnectHandler {
     public long getDelay() {
         return 0;
     }
+
 }

@@ -1,16 +1,40 @@
 package eu.bittrade.libs.steemj;
 
-import eu.bittrade.libs.steemj.base.models.*;
+import java.text.ParseException;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import eu.bittrade.libs.steemj.base.models.AccountName;
+import eu.bittrade.libs.steemj.base.models.AppliedOperation;
+import eu.bittrade.libs.steemj.base.models.BlockHeader;
+import eu.bittrade.libs.steemj.base.models.ChainProperties;
+import eu.bittrade.libs.steemj.base.models.Config;
+import eu.bittrade.libs.steemj.base.models.Discussion;
+import eu.bittrade.libs.steemj.base.models.DiscussionQuery;
+import eu.bittrade.libs.steemj.base.models.ExtendedAccount;
+import eu.bittrade.libs.steemj.base.models.ExtendedLimitOrder;
+import eu.bittrade.libs.steemj.base.models.FeedHistory;
+import eu.bittrade.libs.steemj.base.models.GlobalProperties;
+import eu.bittrade.libs.steemj.base.models.LiquidityBalance;
+import eu.bittrade.libs.steemj.base.models.OrderBook;
+import eu.bittrade.libs.steemj.base.models.Permlink;
+import eu.bittrade.libs.steemj.base.models.Price;
+import eu.bittrade.libs.steemj.base.models.RewardFund;
+import eu.bittrade.libs.steemj.base.models.ScheduledHardfork;
+import eu.bittrade.libs.steemj.base.models.SignedBlockWithInfo;
+import eu.bittrade.libs.steemj.base.models.SignedTransaction;
+import eu.bittrade.libs.steemj.base.models.TrendingTag;
+import eu.bittrade.libs.steemj.base.models.Vote;
+import eu.bittrade.libs.steemj.base.models.VoteState;
+import eu.bittrade.libs.steemj.base.models.Witness;
+import eu.bittrade.libs.steemj.base.models.WitnessSchedule;
 import eu.bittrade.libs.steemj.communication.BlockAppliedCallback;
 import eu.bittrade.libs.steemj.enums.DiscussionSortType;
 import eu.bittrade.libs.steemj.enums.RewardFundType;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.text.ParseException;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Created by yuri yurivladdurain@gmail.com
@@ -39,9 +63,9 @@ public interface DatabaseMethods {
     /**
      * Get all operations performed by the specified account.
      *
-     * @param accountName The user name of the account.
-     * @param lastIndex        The starting point.
-     * @param backwardDepth       The maximum number of entries.
+     * @param accountName   The user name of the account.
+     * @param lastIndex     The starting point.
+     * @param backwardDepth The maximum number of entries.
      * @return A map containing the activities. The key is the id of the
      * activity.
      * @throws SteemCommunicationException <ul>
@@ -138,8 +162,8 @@ public interface DatabaseMethods {
     /**
      * Get the details of a specific post.
      *
-     * @param author The authors name.
-     * @param permlink   The permlink of the article.
+     * @param author   The authors name.
+     * @param permlink The permlink of the article.
      * @return The details of a specific post.
      * @throws SteemCommunicationException <ul>
      *                                     <li>If the server was not able to answer the request in the
@@ -153,7 +177,7 @@ public interface DatabaseMethods {
      *                                     </ul>
      */
     @Nullable
-    Discussion getContent(@Nonnull AccountName author,@Nonnull Permlink permlink) throws SteemCommunicationException;
+    Discussion getContent(@Nonnull AccountName author, @Nonnull Permlink permlink) throws SteemCommunicationException;
 
 
     /**
@@ -194,7 +218,7 @@ public interface DatabaseMethods {
      *                                     </ul>
      */
     @Nonnull
-    List<VoteState> getActiveVotes(@Nonnull AccountName author,@Nonnull Permlink permlink) throws SteemCommunicationException;
+    List<VoteState> getActiveVotes(@Nonnull AccountName author, @Nonnull Permlink permlink) throws SteemCommunicationException;
 
     /**
      * Get the account names of the active witnesses.
@@ -327,7 +351,7 @@ public interface DatabaseMethods {
      *                                     </ul>
      */
     @Nonnull
-    List<Discussion> getDiscussionsBy(@Nonnull DiscussionQuery discussionQuery,@Nonnull DiscussionSortType sortBy)
+    List<Discussion> getDiscussionsBy(@Nonnull DiscussionQuery discussionQuery, @Nonnull DiscussionSortType sortBy)
             throws SteemCommunicationException;
 
     /**
@@ -351,7 +375,7 @@ public interface DatabaseMethods {
      *                                     </ul>
      */
     @Nonnull
-    List<Discussion> getDiscussionsByAuthorBeforeDate(@Nonnull AccountName author,@Nonnull Permlink permlink, long date, int limit)
+    List<Discussion> getDiscussionsByAuthorBeforeDate(@Nonnull AccountName author, @Nonnull Permlink permlink, long date, int limit)
             throws SteemCommunicationException;
 
     /**
@@ -374,7 +398,8 @@ public interface DatabaseMethods {
      *                                     <li>If the Server returned an error object.</li>
      *                                     </ul>
      */
-    @Nonnull List<Discussion> getDiscussionsByAuthorBeforeDate(@Nonnull AccountName author,@Nonnull Permlink permlink, String date, int limit)
+    @Nonnull
+    List<Discussion> getDiscussionsByAuthorBeforeDate(@Nonnull AccountName author, @Nonnull Permlink permlink, String date, int limit)
             throws SteemCommunicationException, ParseException;
 
     /**
@@ -576,7 +601,7 @@ public interface DatabaseMethods {
      *                                     </ul>
      */
     @Nonnull
-    List<Discussion> getRepliesByLastUpdate(@Nonnull AccountName username,@Nonnull Permlink permlink, int limit)
+    List<Discussion> getRepliesByLastUpdate(@Nonnull AccountName username, @Nonnull Permlink permlink, int limit)
             throws SteemCommunicationException;
 
     /**
@@ -829,4 +854,7 @@ public interface DatabaseMethods {
      *                                     </ul>
      */
     void setBlockAppliedCallback(@Nonnull BlockAppliedCallback blockAppliedCallback) throws SteemCommunicationException;
+
+
+    String getAccountAvatar(AccountName name) throws SteemCommunicationException;
 }
