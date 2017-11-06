@@ -40,6 +40,7 @@ import eu.bittrade.libs.steemj.base.models.Permlink;
 import eu.bittrade.libs.steemj.base.models.ScheduledHardfork;
 import eu.bittrade.libs.steemj.base.models.SignedBlockWithInfo;
 import eu.bittrade.libs.steemj.base.models.SteemVersionInfo;
+import eu.bittrade.libs.steemj.base.models.Story;
 import eu.bittrade.libs.steemj.base.models.TrendingTag;
 import eu.bittrade.libs.steemj.base.models.Vote;
 import eu.bittrade.libs.steemj.base.models.VoteState;
@@ -505,4 +506,14 @@ public class PublicMethodsTest {
         assertThat(blogAuthors.get(1).getAccount(), equalTo(new AccountName("ami")));
     }
 
+    @Test
+    public void testGetStory() throws Exception {
+        Story story = golos4J.getDatabaseMethods().getStoryByRoute("ru--yestafetaulybok",
+                new AccountName("pravda"),
+                new Permlink("obzor-estafety-ulybok-na-golose-nedelya-2"));
+
+        assertNotNull(story);
+        assertThat("there not null replies", story.getDiscussions().size() > 0);
+        assertThat("there not null accounts", story.getInvolvedAccounts().size() > 0);
+    }
 }

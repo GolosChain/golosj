@@ -26,6 +26,7 @@ import eu.bittrade.libs.steemj.base.models.RewardFund;
 import eu.bittrade.libs.steemj.base.models.ScheduledHardfork;
 import eu.bittrade.libs.steemj.base.models.SignedBlockWithInfo;
 import eu.bittrade.libs.steemj.base.models.SignedTransaction;
+import eu.bittrade.libs.steemj.base.models.Story;
 import eu.bittrade.libs.steemj.base.models.TrendingTag;
 import eu.bittrade.libs.steemj.base.models.Vote;
 import eu.bittrade.libs.steemj.base.models.VoteState;
@@ -857,4 +858,8 @@ public interface DatabaseMethods {
 
 
     String getAccountAvatar(AccountName name) throws SteemCommunicationException;
+
+    String getAccountAvatar(String blogName, AccountName authorName, Permlink permlink) throws SteemCommunicationException;
+
+    Story getStoryByRoute(String blogName, AccountName authorName, Permlink permlink) throws SteemCommunicationException;
 }

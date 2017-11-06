@@ -154,6 +154,8 @@ public class CommunicationHandler extends Endpoint implements MessageHandler.Who
                 throw new SteemResponseError(mapper.readValue(rawJsonResponse, SteemError.class));
             } catch (IOException ex) {
                 throw new SteemTransformationException("Could not transform the response into an object.", ex);
+            } catch (IllegalArgumentException ex) {
+                throw new SteemTransformationException("corrupted input", ex);
             }
 
         } catch (IOException | EncodeException | InterruptedException e) {

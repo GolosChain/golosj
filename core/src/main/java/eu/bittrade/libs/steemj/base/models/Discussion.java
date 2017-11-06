@@ -1,5 +1,6 @@
 package eu.bittrade.libs.steemj.base.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
@@ -12,6 +13,7 @@ import java.util.List;
  *
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Discussion extends Comment {
     private String url;
     @JsonProperty("root_title")
