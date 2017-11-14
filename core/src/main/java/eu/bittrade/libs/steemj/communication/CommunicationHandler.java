@@ -1,12 +1,14 @@
 package eu.bittrade.libs.steemj.communication;
 
 import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+
 import eu.bittrade.libs.steemj.base.models.SignedBlockHeader;
 import eu.bittrade.libs.steemj.base.models.error.SteemError;
 import eu.bittrade.libs.steemj.base.models.serializer.BooleanSerializer;
@@ -18,6 +20,7 @@ import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemResponseError;
 import eu.bittrade.libs.steemj.exceptions.SteemTimeoutException;
 import eu.bittrade.libs.steemj.exceptions.SteemTransformationException;
+
 import org.glassfish.tyrus.client.ClientManager;
 import org.glassfish.tyrus.client.ClientProperties;
 import org.glassfish.tyrus.client.SslContextConfigurator;
@@ -28,6 +31,7 @@ import org.slf4j.LoggerFactory;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSession;
 import javax.websocket.*;
+
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -73,7 +77,7 @@ public class CommunicationHandler extends Endpoint implements MessageHandler.Who
                     return true;
                 }
             });
-           client.getProperties().put(ClientProperties.SSL_ENGINE_CONFIGURATOR, sslEngineConfigurator);
+            client.getProperties().put(ClientProperties.SSL_ENGINE_CONFIGURATOR, sslEngineConfigurator);
         }
 
         client.setDefaultMaxSessionIdleTimeout(SteemJConfig.getInstance().getSocketTimeout());
@@ -257,7 +261,7 @@ public class CommunicationHandler extends Endpoint implements MessageHandler.Who
             SimpleModule simpleModule = new SimpleModule("BooleanAsString", new Version(1, 0, 0, null, null, null));
             simpleModule.addSerializer(Boolean.class, new BooleanSerializer());
             simpleModule.addSerializer(boolean.class, new BooleanSerializer());
-
+            mapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
             mapper.registerModule(simpleModule);
         }
 

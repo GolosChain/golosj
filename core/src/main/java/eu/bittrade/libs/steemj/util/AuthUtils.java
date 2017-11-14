@@ -41,7 +41,7 @@ public class AuthUtils {
         }
         for (PrivateKeyType role : roles) {
             final String seed = login + role.toString().toLowerCase() + password;
-            final String brainKey = StringUtils.join(seed.trim().split("/[\\t\\n\\v\\f\\r ]+/"), " ");
+            final String brainKey = StringUtils.join(seed.trim().split("[\\t\\n\\v\\f\\r]+"), " ");
             byte[] hashSha256 = null;
             try {
                 hashSha256 = messageDigest256.digest(brainKey.getBytes("UTF-8"));

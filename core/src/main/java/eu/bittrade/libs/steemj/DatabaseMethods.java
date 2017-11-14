@@ -862,4 +862,6 @@ public interface DatabaseMethods {
     String getAccountAvatar(String blogName, AccountName authorName, Permlink permlink) throws SteemCommunicationException;
 
     Story getStoryByRoute(String blogName, AccountName authorName, Permlink permlink) throws SteemCommunicationException;
+
+    List<Discussion> getUserFeed(AccountName userName) throws SteemCommunicationException;
 }

@@ -37,6 +37,7 @@ import eu.bittrade.libs.steemj.base.models.ExtendedAccount;
 import eu.bittrade.libs.steemj.base.models.GlobalProperties;
 import eu.bittrade.libs.steemj.base.models.LiquidityBalance;
 import eu.bittrade.libs.steemj.base.models.Permlink;
+import eu.bittrade.libs.steemj.base.models.PublicKey;
 import eu.bittrade.libs.steemj.base.models.ScheduledHardfork;
 import eu.bittrade.libs.steemj.base.models.SignedBlockWithInfo;
 import eu.bittrade.libs.steemj.base.models.SteemVersionInfo;
@@ -51,9 +52,12 @@ import eu.bittrade.libs.steemj.base.models.operations.Operation;
 import eu.bittrade.libs.steemj.base.models.operations.VoteOperation;
 import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 import eu.bittrade.libs.steemj.enums.DiscussionSortType;
+import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemResponseError;
+import eu.bittrade.libs.steemj.util.AuthUtils;
 
+import static eu.bittrade.libs.steemj.enums.PrivateKeyType.POSTING;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
@@ -136,6 +140,12 @@ public class PublicMethodsTest {
         assertEquals("expect main net", false, isTestNet);
         assertEquals("expect the null account to be null", "null", steemitNullAccount);
         assertEquals("expect the init miner name to be initminer", "cyberfounder", initMinerName);
+
+    }
+
+    @Test
+    public void testWifsGeneratin() throws Exception {
+        System.out.println(AuthUtils.generatePrivateWiFs("sdgsdg", "", new PrivateKeyType[]{POSTING}));
     }
 
     @Test
@@ -202,9 +212,9 @@ public class PublicMethodsTest {
 
     @Test
     public void testAccounts() throws Exception {
-        List<ExtendedAccount> accounts = golos4J.getDatabaseMethods().getAccounts(Collections.singletonList(new AccountName("golos.loto")));
+        List<ExtendedAccount> accounts = golos4J.getDatabaseMethods().getAccounts(Collections.singletonList(new AccountName("yuri-vlad")));
         assertEquals(1, accounts.size());
-
+        System.out.println("posting key is " + ((PublicKey) accounts.get(0).getPosting().getKeyAuths().keySet().toArray()[0]).getAddressFromPublicKey());
     }
 
     @Test
@@ -515,5 +525,11 @@ public class PublicMethodsTest {
         assertNotNull(story);
         assertThat("there not null replies", story.getDiscussions().size() > 0);
         assertThat("there not null accounts", story.getInvolvedAccounts().size() > 0);
+    }
+
+    @Test
+    public void getUserFeed() throws Exception {
+        List<Discussion> discussions = golos4J.getDatabaseMethods().getUserFeed(new AccountName("cepera"));
+        System.out.println(discussions);
     }
 }

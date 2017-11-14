@@ -44,6 +44,7 @@ public class SignedMethodsTest extends TestCase {
         String login2 = "yuri-vlad-second";
         String newPassword = "234sfdgkh1ezedsiU234wewe235ym8jhlq1unA0tlkJKfdhyn";
         Map<PrivateKeyType, String> keysNew = AuthUtils.generatePrivateWiFs(login2, newPassword, PrivateKeyType.values());
+        System.out.println(keysNew);
     }
 
     @Test
@@ -52,6 +53,7 @@ public class SignedMethodsTest extends TestCase {
         golos4J.addAccountUsingMasterPassword(new AccountName(login2), "234sfdgkh1ezedsiU234wewe235ym8jhlq1unA0tlkJKfdhyn");
         GolosIoFilePath filePath = golos4J.getGolosIoSpecificMethods().uploadFile(new AccountName(login2), new File(getClass().getClassLoader().getResource("ThemeColors.png").getFile()));
         assertNotNull(filePath);
+
         String value = filePath.getError() == null ? filePath.getUrlString() : filePath.getError();
         assertNotNull(value);
     }

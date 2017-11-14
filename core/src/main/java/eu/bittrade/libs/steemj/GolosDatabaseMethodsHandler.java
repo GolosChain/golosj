@@ -2,7 +2,44 @@ package eu.bittrade.libs.steemj;
 
 
 import com.fasterxml.jackson.databind.JsonNode;
-import eu.bittrade.libs.steemj.base.models.*;
+
+import java.io.IOException;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Nonnull;
+
+import eu.bittrade.libs.steemj.base.models.AccountName;
+import eu.bittrade.libs.steemj.base.models.AppliedOperation;
+import eu.bittrade.libs.steemj.base.models.BlockHeader;
+import eu.bittrade.libs.steemj.base.models.ChainProperties;
+import eu.bittrade.libs.steemj.base.models.Config;
+import eu.bittrade.libs.steemj.base.models.Discussion;
+import eu.bittrade.libs.steemj.base.models.DiscussionQuery;
+import eu.bittrade.libs.steemj.base.models.ExtendedAccount;
+import eu.bittrade.libs.steemj.base.models.ExtendedLimitOrder;
+import eu.bittrade.libs.steemj.base.models.FeedHistory;
+import eu.bittrade.libs.steemj.base.models.GlobalProperties;
+import eu.bittrade.libs.steemj.base.models.LiquidityBalance;
+import eu.bittrade.libs.steemj.base.models.OrderBook;
+import eu.bittrade.libs.steemj.base.models.Permlink;
+import eu.bittrade.libs.steemj.base.models.Price;
+import eu.bittrade.libs.steemj.base.models.ProfileImage;
+import eu.bittrade.libs.steemj.base.models.RewardFund;
+import eu.bittrade.libs.steemj.base.models.Route;
+import eu.bittrade.libs.steemj.base.models.ScheduledHardfork;
+import eu.bittrade.libs.steemj.base.models.SignedBlockWithInfo;
+import eu.bittrade.libs.steemj.base.models.SignedTransaction;
+import eu.bittrade.libs.steemj.base.models.Story;
+import eu.bittrade.libs.steemj.base.models.TrendingTag;
+import eu.bittrade.libs.steemj.base.models.UserFeed;
+import eu.bittrade.libs.steemj.base.models.Vote;
+import eu.bittrade.libs.steemj.base.models.VoteState;
+import eu.bittrade.libs.steemj.base.models.Witness;
+import eu.bittrade.libs.steemj.base.models.WitnessSchedule;
 import eu.bittrade.libs.steemj.communication.BlockAppliedCallback;
 import eu.bittrade.libs.steemj.communication.CommunicationHandler;
 import eu.bittrade.libs.steemj.communication.dto.RequestWrapperDTO;
@@ -13,14 +50,6 @@ import eu.bittrade.libs.steemj.enums.RewardFundType;
 import eu.bittrade.libs.steemj.enums.SteemApis;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
-
-import javax.annotation.Nonnull;
-import java.io.IOException;
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Created by yuri yurivladdurain@gmail.com
@@ -289,13 +318,17 @@ class GolosDatabaseMethodsHandler implements DatabaseMethods {
         for (ExtendedAccount account : story.getInvolvedAccounts()) {
             if (account.getName().getName().equals(authorName.getName())) {
                 try {
+                    if (account.getJsonMetadata() == null || account.getJsonMetadata().length() == 0)
+                        return null;
                     JsonNode node = CommunicationHandler.getObjectMapper().readTree(account.getJsonMetadata());
+                    if (!node.has("profile")) return null;
                     node = node.get("profile");
                     if (node != null)
                         node = node.get("profile_image");
                     if (node != null) return node.asText();
 
                 } catch (IOException e) {
+                    System.out.println("error parsing metadata " + account.getJsonMetadata());
                     e.printStackTrace();
                 }
             }
@@ -308,7 +341,7 @@ class GolosDatabaseMethodsHandler implements DatabaseMethods {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setSteemApi(SteemApis.DATABASE_API);
         requestObject.setApiMethod(RequestMethods.GET_STATE);
-        String[] parameters = {new Route(blogName, authorName, permlink).constructRoute()};
+        String[] parameters = {new Route(blogName, authorName, permlink).constructDiscussionRoute()};
         requestObject.setAdditionalParameters(parameters);
 
         List<Story> response = communicationHandler.performRequest(requestObject, Story.class);
@@ -316,6 +349,22 @@ class GolosDatabaseMethodsHandler implements DatabaseMethods {
             return response.get(0);
         }
 
+        return null;
+    }
+
+    //{"id":37,"method":"call","params":[0,"get_state",["@yuri-vlad-second/feed"]]}
+    @Override
+    public List<Discussion> getUserFeed(AccountName userName) throws SteemCommunicationException {
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
+        requestObject.setSteemApi(SteemApis.DATABASE_API);
+        requestObject.setApiMethod(RequestMethods.GET_STATE);
+        String[] parameters = {new Route(null, userName, null).constructBlogRoute()};
+        requestObject.setAdditionalParameters(parameters);
+
+        List<UserFeed> response = communicationHandler.performRequest(requestObject, UserFeed.class);
+        if (!response.isEmpty()) {
+            return response.get(0).getDiscussions();
+        }
         return null;
     }
 }

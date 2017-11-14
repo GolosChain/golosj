@@ -62,9 +62,9 @@ public class Golos4J {
             steemJConfig = SteemJConfig.getInstance();
             steemJConfig.setChainId("782a3039b478c839e4cb0c941ff4eaeb7df40bdd68bd441afd444b9da763de12");
             steemJConfig.setSteemitAddressPrefix(SteemitAddressPrefix.GLS);
-            steemJConfig.setResponseTimeout(45000);
+            steemJConfig.setResponseTimeout(90_000);
             try {
-                steemJConfig.setWebSocketEndpointURI(new URI("wss://ws.golos.io"));
+                steemJConfig.setWebSocketEndpointURI(new URI("wss://ws.golos.blog"));
             } catch (URISyntaxException e) {
                 e.printStackTrace();
             }
@@ -93,6 +93,7 @@ public class Golos4J {
     }
 
     public void addAccount(@Nonnull AccountName account, @Nonnull Set<ImmutablePair<PrivateKeyType, String>> keys, boolean setIsDefaultAccount) {
+        System.out.println("addAccount "+keys);
         steemJConfig.getPrivateKeyStorage().addAccount(account, new ArrayList<>(keys));
         if (setIsDefaultAccount) setDefaultAccount(account);
     }
