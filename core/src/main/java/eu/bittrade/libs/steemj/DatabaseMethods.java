@@ -13,7 +13,9 @@ import eu.bittrade.libs.steemj.base.models.BlockHeader;
 import eu.bittrade.libs.steemj.base.models.ChainProperties;
 import eu.bittrade.libs.steemj.base.models.Config;
 import eu.bittrade.libs.steemj.base.models.Discussion;
+import eu.bittrade.libs.steemj.base.models.DiscussionLight;
 import eu.bittrade.libs.steemj.base.models.DiscussionQuery;
+import eu.bittrade.libs.steemj.base.models.DiscussionWithComments;
 import eu.bittrade.libs.steemj.base.models.ExtendedAccount;
 import eu.bittrade.libs.steemj.base.models.ExtendedLimitOrder;
 import eu.bittrade.libs.steemj.base.models.FeedHistory;
@@ -26,7 +28,6 @@ import eu.bittrade.libs.steemj.base.models.RewardFund;
 import eu.bittrade.libs.steemj.base.models.ScheduledHardfork;
 import eu.bittrade.libs.steemj.base.models.SignedBlockWithInfo;
 import eu.bittrade.libs.steemj.base.models.SignedTransaction;
-import eu.bittrade.libs.steemj.base.models.Story;
 import eu.bittrade.libs.steemj.base.models.TrendingTag;
 import eu.bittrade.libs.steemj.base.models.Vote;
 import eu.bittrade.libs.steemj.base.models.VoteState;
@@ -353,6 +354,10 @@ public interface DatabaseMethods {
      */
     @Nonnull
     List<Discussion> getDiscussionsBy(@Nonnull DiscussionQuery discussionQuery, @Nonnull DiscussionSortType sortBy)
+            throws SteemCommunicationException;
+
+    @Nonnull
+    List<DiscussionLight> getDiscussionsLightBy(@Nonnull DiscussionQuery discussionQuery, @Nonnull DiscussionSortType sortBy)
             throws SteemCommunicationException;
 
     /**
@@ -861,7 +866,9 @@ public interface DatabaseMethods {
 
     String getAccountAvatar(String blogName, AccountName authorName, Permlink permlink) throws SteemCommunicationException;
 
-    Story getStoryByRoute(String blogName, AccountName authorName, Permlink permlink) throws SteemCommunicationException;
+    DiscussionWithComments getStoryByRoute(String blogName, AccountName authorName, Permlink permlink) throws SteemCommunicationException;
 
     List<Discussion> getUserFeed(AccountName userName) throws SteemCommunicationException;
+
+    List<DiscussionLight> getUserFeedLight(AccountName userName) throws SteemCommunicationException;
 }

@@ -43,6 +43,10 @@ public class MarketTrade {
 
     @Override
     public String toString() {
-        return ToStringBuilder.reflectionToString(this);
+        return "MarketTrade{" +
+                "date=" + date +
+                ", currentPays=" + currentPays +
+                ", openPays=" + openPays +
+                '}';
     }
 }

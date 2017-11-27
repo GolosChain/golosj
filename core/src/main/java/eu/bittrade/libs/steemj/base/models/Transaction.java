@@ -316,6 +316,12 @@ public class Transaction implements Serializable {
 
     @Override
     public String toString() {
-        return ToStringBuilder.reflectionToString(this);
+        return "Transaction{" +
+                "refBlockNum=" + refBlockNum +
+                ", refBlockPrefix=" + refBlockPrefix +
+                ", expirationDate=" + expirationDate +
+                ", operations=" + operations +
+                ", extensions=" + extensions +
+                '}';
     }
 }

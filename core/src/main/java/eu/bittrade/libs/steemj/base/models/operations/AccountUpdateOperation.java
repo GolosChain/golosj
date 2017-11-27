@@ -215,11 +215,6 @@ public class AccountUpdateOperation extends AbstractAccountOperation {
     }
 
     @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this);
-    }
-
-    @Override
     public Map<SignatureObject, List<PrivateKeyType>> getRequiredAuthorities(
             Map<SignatureObject, List<PrivateKeyType>> requiredAuthoritiesBase) {
         if (this.getOwner() != null) {
@@ -233,5 +228,12 @@ public class AccountUpdateOperation extends AbstractAccountOperation {
     public void validate(ValidationType validationType) {
         // TODO Auto-generated method stub
 
+    }
+
+    @Override
+    public String toString() {
+        return "AccountUpdateOperation{" +
+                "account=" + account +
+                '}';
     }
 }

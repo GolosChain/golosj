@@ -37,6 +37,10 @@ public class Order {
 
     @Override
     public String toString() {
-        return ToStringBuilder.reflectionToString(this);
+        return "Order{" +
+                "price=" + price +
+                ", steem=" + steem +
+                ", sbd=" + sbd +
+                '}';
     }
 }

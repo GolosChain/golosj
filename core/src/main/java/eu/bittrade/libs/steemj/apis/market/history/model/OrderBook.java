@@ -30,6 +30,9 @@ public class OrderBook {
 
     @Override
     public String toString() {
-        return ToStringBuilder.reflectionToString(this);
+        return "OrderBook{" +
+                "bids=" + bids +
+                ", asks=" + asks +
+                '}';
     }
 }

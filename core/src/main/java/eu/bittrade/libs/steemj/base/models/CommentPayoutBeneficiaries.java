@@ -61,11 +61,6 @@ public class CommentPayoutBeneficiaries extends CommentOptionsExtension {
     }
 
     @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this);
-    }
-
-    @Override
     public void validate(ValidationType validationType) {
         if (!validationType.equals(ValidationType.SKIP_VALIDATION)) {
             if (this.getBeneficiaries().isEmpty()) {
@@ -87,5 +82,12 @@ public class CommentPayoutBeneficiaries extends CommentOptionsExtension {
                 }
             }
         }
+    }
+
+    @Override
+    public String toString() {
+        return "CommentPayoutBeneficiaries{" +
+                "beneficiaries=" + beneficiaries +
+                '}';
     }
 }

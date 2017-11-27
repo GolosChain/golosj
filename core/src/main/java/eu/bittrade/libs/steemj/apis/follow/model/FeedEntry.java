@@ -73,6 +73,12 @@ public class FeedEntry {
 
     @Override
     public String toString() {
-        return ToStringBuilder.reflectionToString(this);
+        return "FeedEntry{" +
+                "author=" + author +
+                ", permlink=" + permlink +
+                ", reblogBy=" + reblogBy +
+                ", reblogOn=" + reblogOn +
+                ", entryId=" + entryId +
+                '}';
     }
 }

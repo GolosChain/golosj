@@ -1,24 +1,35 @@
 package eu.bittrade.libs.steemj;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.squareup.okhttp.*;
+import com.squareup.okhttp.MediaType;
+import com.squareup.okhttp.MultipartBuilder;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.RequestBody;
+import com.squareup.okhttp.Response;
+
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.bitcoinj.core.ECKey;
+import org.bitcoinj.core.Sha256Hash;
+import org.bitcoinj.core.Utils;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import javax.annotation.Nonnull;
+
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.GolosIoFilePath;
 import eu.bittrade.libs.steemj.configuration.SteemJConfig;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
-import org.apache.commons.lang3.ArrayUtils;
-import org.bitcoinj.core.ECKey;
-import org.bitcoinj.core.Sha256Hash;
-import org.bitcoinj.core.Utils;
-
-import javax.annotation.Nonnull;
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by yuri yurivladdurain@gmail.com .
@@ -44,9 +55,18 @@ class GolosIoSpecificMethodsHandler implements GolosIoSpecificMethods {
     @Override
     public GolosIoFilePath uploadFile(@Nonnull AccountName from, @Nonnull File fileToUplaod) throws IOException {
         String loginPathPart = from.getName();
-        ECKey key = config.getPrivateKeyStorage().getKeyForAccount(PrivateKeyType.POSTING, from);
-
-        byte[] fileBytes = Files.readAllBytes(Paths.get(fileToUplaod.toURI()));
+        List<ImmutablePair<PrivateKeyType, ECKey>> keys = config.getPrivateKeyStorage().getPrivateKeysPerAccounts().get(from);
+        ECKey key = null;
+        for (ImmutablePair<PrivateKeyType, ECKey> pair : keys) {
+            if (pair.getLeft() != PrivateKeyType.MEMO) {
+                key = pair.getRight();
+                break;
+            }
+        }
+        byte[] fileBytes = new byte[(int) fileToUplaod.length()];
+        FileInputStream fis = new FileInputStream(fileToUplaod);
+        fis.read(fileBytes);
+        fis.close();
         byte[] signingBytes = ArrayUtils.addAll("ImageSigningChallenge".getBytes(Charset.forName("utf-8")), fileBytes);
 
         Sha256Hash messageAsHash = Sha256Hash.wrap(Sha256Hash.hash(signingBytes));

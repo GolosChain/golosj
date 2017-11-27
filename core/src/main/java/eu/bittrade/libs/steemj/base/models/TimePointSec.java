@@ -140,11 +140,6 @@ public class TimePointSec implements ByteTransformable {
     }
 
     @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this);
-    }
-
-    @Override
     public boolean equals(Object otherTimePointSec) {
         if (this == otherTimePointSec)
             return true;
@@ -159,5 +154,12 @@ public class TimePointSec implements ByteTransformable {
         int hashCode = 1;
         hashCode = 31 * hashCode + (this.getDateTime() == null ? 0 : this.getDateTime().hashCode());
         return hashCode;
+    }
+
+    @Override
+    public String toString() {
+        return "TimePointSec{" +
+                "dateTime=" + dateTime +
+                '}';
     }
 }

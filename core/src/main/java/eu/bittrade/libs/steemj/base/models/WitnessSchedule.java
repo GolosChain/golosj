@@ -170,6 +170,22 @@ public class WitnessSchedule {
 
     @Override
     public String toString() {
-        return ToStringBuilder.reflectionToString(this);
+        return "WitnessSchedule{" +
+                "id=" + id +
+                ", currentVirtualTime=" + currentVirtualTime +
+                ", nextShuffleBlockNum=" + nextShuffleBlockNum +
+                ", currentShuffledWitnesses='" + currentShuffledWitnesses + '\'' +
+                ", numScheduledWitnesses=" + numScheduledWitnesses +
+                ", top19Weight=" + top19Weight +
+                ", hardforkRequiredWitnesses=" + hardforkRequiredWitnesses +
+                ", maxVotedWitnesses=" + maxVotedWitnesses +
+                ", maxRunnerWitnesses=" + maxRunnerWitnesses +
+                ", maxMinerWitnesses=" + maxMinerWitnesses +
+                ", timeshareWeight=" + timeshareWeight +
+                ", minerWeight=" + minerWeight +
+                ", witnessPayNormalizationFactor=" + witnessPayNormalizationFactor +
+                ", medianProps=" + medianProps +
+                ", majorityVersion='" + majorityVersion + '\'' +
+                '}';
     }
 }

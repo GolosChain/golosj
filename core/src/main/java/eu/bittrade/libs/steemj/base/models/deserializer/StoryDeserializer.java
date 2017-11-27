@@ -11,20 +11,19 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import eu.bittrade.libs.steemj.base.models.Account;
 import eu.bittrade.libs.steemj.base.models.Discussion;
 import eu.bittrade.libs.steemj.base.models.ExtendedAccount;
-import eu.bittrade.libs.steemj.base.models.Story;
+import eu.bittrade.libs.steemj.base.models.DiscussionWithComments;
 import eu.bittrade.libs.steemj.communication.CommunicationHandler;
 
 /**
  * Created by yuri on 06.11.17.
  */
 
-public class StoryDeserializer extends JsonDeserializer<Story> {
+public class StoryDeserializer extends JsonDeserializer<DiscussionWithComments> {
     @Override
-    public Story deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
-        Story story = new Story();
+    public DiscussionWithComments deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
+        DiscussionWithComments story = new DiscussionWithComments();
         TreeNode node = p.getCodec().readTree(p);
         TreeNode content = node.get("content");
         TreeNode currentRoute = node.get("current_route");

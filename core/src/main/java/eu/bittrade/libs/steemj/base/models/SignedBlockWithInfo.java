@@ -74,6 +74,10 @@ public class SignedBlockWithInfo extends SignedBlock {
 
     @Override
     public String toString() {
-        return ToStringBuilder.reflectionToString(this);
+        return "SignedBlockWithInfo{" +
+                "blockId=" + blockId +
+                ", signingKey=" + signingKey +
+                ", transactionIds=" + transactionIds +
+                '}';
     }
 }

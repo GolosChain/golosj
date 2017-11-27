@@ -126,11 +126,6 @@ public class AccountWitnessProxyOperation extends Operation {
     }
 
     @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this);
-    }
-
-    @Override
     public Map<SignatureObject, List<PrivateKeyType>> getRequiredAuthorities(
             Map<SignatureObject, List<PrivateKeyType>> requiredAuthoritiesBase) {
         return mergeRequiredAuthorities(requiredAuthoritiesBase, this.getAccount(), PrivateKeyType.ACTIVE);
@@ -140,5 +135,13 @@ public class AccountWitnessProxyOperation extends Operation {
     public void validate(ValidationType validationType) {
         // TODO Auto-generated method stub
 
+    }
+
+    @Override
+    public String toString() {
+        return "AccountWitnessProxyOperation{" +
+                "account=" + account +
+                ", proxy=" + proxy +
+                '}';
     }
 }

@@ -72,6 +72,16 @@ public class SetWithdrawVestingRouteOperation extends Operation {
         this.setAutoVest(autoVest);
     }
 
+    @Override
+    public String toString() {
+        return "SetWithdrawVestingRouteOperation{" +
+                "fromAccount=" + fromAccount +
+                ", toAccount=" + toAccount +
+                ", percent=" + percent +
+                ", autoVest=" + autoVest +
+                '}';
+    }
+
     /**
      * Like
      * {@link #SetWithdrawVestingRouteOperation(AccountName, AccountName, int, Boolean)},
@@ -211,11 +221,6 @@ public class SetWithdrawVestingRouteOperation extends Operation {
             throw new SteemInvalidTransactionException(
                     "A problem occured while transforming the operation into a byte array.", e);
         }
-    }
-
-    @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this);
     }
 
     @Override

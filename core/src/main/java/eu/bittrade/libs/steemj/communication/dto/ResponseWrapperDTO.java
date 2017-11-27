@@ -1,16 +1,14 @@
 package eu.bittrade.libs.steemj.communication.dto;
 
-import java.util.List;
-
-import org.apache.commons.lang3.builder.ToStringBuilder;
-
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.util.List;
 
 /**
  * As every response starts with an id and a result element, this wrapper class
  * can carry every kind of responses.
- * 
+ *
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class ResponseWrapperDTO<T> {
@@ -31,8 +29,15 @@ public class ResponseWrapperDTO<T> {
         return result;
     }
 
+    public boolean isEmpty() {
+        return result == null || result.size() == 0 || result.get(0) == null;
+    }
+
     @Override
     public String toString() {
-        return ToStringBuilder.reflectionToString(this);
+        return "ResponseWrapperDTO{" +
+                "responseId=" + responseId +
+                ", result=" + result +
+                '}';
     }
 }

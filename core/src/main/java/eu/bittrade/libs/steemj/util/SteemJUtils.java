@@ -1,9 +1,13 @@
 package eu.bittrade.libs.steemj.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import eu.bittrade.libs.steemj.configuration.SteemJConfig;
-import eu.bittrade.libs.steemj.exceptions.SteemFatalErrorException;
-import org.bitcoinj.core.*;
+
+import org.apache.commons.lang3.time.FastDateFormat;
+import org.bitcoinj.core.ECKey;
+import org.bitcoinj.core.NetworkParameters;
+import org.bitcoinj.core.Sha256Hash;
+import org.bitcoinj.core.Utils;
+import org.bitcoinj.core.VarInt;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,9 +20,17 @@ import java.nio.ByteOrder;
 import java.nio.charset.Charset;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import eu.bittrade.libs.steemj.configuration.SteemJConfig;
+import eu.bittrade.libs.steemj.exceptions.SteemFatalErrorException;
 
 /**
  * This class contains some utility methods used by SteemJ.
@@ -27,6 +39,18 @@ import java.util.regex.Pattern;
  */
 public class SteemJUtils {
     private static final Logger LOGGER = LoggerFactory.getLogger(SteemJUtils.class);
+    private static Calendar calendar = Calendar.getInstance();
+    private static FastDateFormat fdp = null;
+
+
+    private static SimpleDateFormat simpleDateFormat = new SimpleDateFormat(SteemJConfig.getInstance().getDateTimePattern(), Locale.getDefault());
+
+    static {
+        fdp = FastDateFormat.getInstance(SteemJConfig.getInstance().getDateTimePattern(),
+                TimeZone.getDefault(),
+                Locale.getDefault());
+        simpleDateFormat.setTimeZone(TimeZone.getDefault());
+    }
 
     /**
      * Add a private constructor to hide the implicit public one.
@@ -223,10 +247,8 @@ public class SteemJUtils {
      * @throws ParseException If the String could not be transformed.
      */
     public static long transformStringToTimestamp(String dateTime) throws ParseException {
-        Calendar calendar = Calendar.getInstance();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(SteemJConfig.getInstance().getDateTimePattern());
-        simpleDateFormat.setTimeZone(TimeZone.getTimeZone(SteemJConfig.getInstance().getTimeZoneId()));
-        calendar.setTime(simpleDateFormat.parse(dateTime + SteemJConfig.getInstance().getTimeZoneId()));
+        //  calendar.setTime(simpleDateFormat.parse(dateTime + SteemJConfig.getInstance().getTimeZoneId()));
+        calendar.setTime(fdp.parse(dateTime + SteemJConfig.getInstance().getTimeZoneId()));
         return calendar.getTimeInMillis();
     }
 
@@ -270,16 +292,12 @@ public class SteemJUtils {
      * Use this method to identify the correct key type (posting, active, owner,
      * memo) by iterating through the types and comparing the elliptic curves.
      *
-     * @param signature
-     *            The created signature of the message.
-     * @param messageAsHash
-     *            The hash value of the message.
-     * @param requiredPrivateKey
-     *            The private key which has been used to sign the message.
+     * @param signature          The created signature of the message.
+     * @param messageAsHash      The hash value of the message.
+     * @param requiredPrivateKey The private key which has been used to sign the message.
      * @return The key type indicator (0 = posting, 1 = active, 2 = owner, 3 =
-     *         memo).
-     * @throws SteemFatalErrorException
-     *             If no key type could have been identified.
+     * memo).
+     * @throws SteemFatalErrorException If no key type could have been identified.
      */
     public static int getKeyType(ECKey.ECDSASignature signature, Sha256Hash messageAsHash, ECKey requiredPrivateKey) {
         Integer recId = null;
@@ -316,16 +334,14 @@ public class SteemJUtils {
 
         return containedUrls;
     }
+
     /**
      * Create a signed transaction based on the given <code>keyType</code>,
      * <code>signature</code> and <code>requiredPrivateKey</code>.
      *
-     * @param keyType
-     *            The key type to set.
-     * @param signature
-     *            The signature used to sign a message.
-     * @param requiredPrivateKey
-     *            The signature of the message.
+     * @param keyType            The key type to set.
+     * @param signature          The signature used to sign a message.
+     * @param requiredPrivateKey The signature of the message.
      * @return The signed Transaction.
      */
     public static byte[] createSignedTransaction(int keyType, ECKey.ECDSASignature signature, ECKey requiredPrivateKey) {

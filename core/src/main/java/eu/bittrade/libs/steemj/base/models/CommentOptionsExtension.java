@@ -30,8 +30,5 @@ import eu.bittrade.libs.steemj.interfaces.Validatable;
 @JsonDeserialize(using = CommentOptionsExtensionDeserializer.class)
 @JsonSerialize(using = CommentOptionsExtensionSerializer.class)
 public abstract class CommentOptionsExtension implements ByteTransformable, Validatable {
-    @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this);
-    }
+
 }

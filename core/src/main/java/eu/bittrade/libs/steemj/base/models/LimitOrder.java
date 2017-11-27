@@ -92,6 +92,15 @@ public class LimitOrder {
 
     @Override
     public String toString() {
-        return ToStringBuilder.reflectionToString(this);
+        return "LimitOrder{" +
+                "id=" + id +
+                ", created=" + created +
+                ", expiration=" + expiration +
+                ", seller=" + seller +
+                ", forSale=" + forSale +
+                ", orderId=" + orderId +
+                ", sellPrice=" + sellPrice +
+                ", deferredFee=" + deferredFee +
+                '}';
     }
 }

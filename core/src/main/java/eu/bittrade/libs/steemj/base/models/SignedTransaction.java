@@ -1,15 +1,11 @@
 package eu.bittrade.libs.steemj.base.models;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.Serializable;
-import java.security.InvalidParameterException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.annotations.VisibleForTesting;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.bitcoinj.core.ECKey;
 import org.bitcoinj.core.ECKey.ECDSASignature;
 import org.bitcoinj.core.Sha256Hash;
@@ -17,9 +13,14 @@ import org.bitcoinj.core.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.common.annotations.VisibleForTesting;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import eu.bittrade.libs.steemj.base.models.operations.Operation;
 import eu.bittrade.libs.steemj.configuration.SteemJConfig;
@@ -31,7 +32,7 @@ import eu.bittrade.libs.steemj.util.SteemJUtils;
 
 /**
  * This class represents a Steem "signed_transaction" object.
- * 
+ *
  * @author <a href="http://Steemit.com/@dez1337">dez1337</a>
  */
 public class SignedTransaction extends Transaction implements ByteTransformable, Serializable {
@@ -45,35 +46,30 @@ public class SignedTransaction extends Transaction implements ByteTransformable,
      */
     @JsonCreator
     private SignedTransaction(@JsonProperty("ref_block_num") int refBlockNum,
-            @JsonProperty("ref_block_prefix") long refBlockPrefix,
-            @JsonProperty("expiration") TimePointSec expirationDate,
-            @JsonProperty("operations") List<Operation> operations,
-            @JsonProperty("extensions") List<FutureExtensions> extensions,
-            @JsonProperty("signatures") List<String> signatures) {
+                              @JsonProperty("ref_block_prefix") long refBlockPrefix,
+                              @JsonProperty("expiration") TimePointSec expirationDate,
+                              @JsonProperty("operations") List<Operation> operations,
+                              @JsonProperty("extensions") List<FutureExtensions> extensions,
+                              @JsonProperty("signatures") List<String> signatures) {
         super(refBlockNum, refBlockPrefix, expirationDate, operations, extensions);
         this.signatures = signatures;
     }
 
     /**
      * Create a new signed transaction object.
-     * 
-     * @param refBlockNum
-     *            The reference block number (see {@link #setRefBlockNum(int)}).
-     * @param refBlockPrefix
-     *            The reference block index (see
-     *            {@link #setRefBlockPrefix(long)}).
-     * @param expirationDate
-     *            Define until when the transaction has to be processed (see
-     *            {@link #setExpirationDate(TimePointSec)}).
-     * @param operations
-     *            A list of operations to process within this Transaction (see
-     *            {@link #setOperations(List)}).
-     * @param extensions
-     *            Extensions are currently not supported and will be ignored
-     *            (see {@link #setExtensions(List)}).
+     *
+     * @param refBlockNum    The reference block number (see {@link #setRefBlockNum(int)}).
+     * @param refBlockPrefix The reference block index (see
+     *                       {@link #setRefBlockPrefix(long)}).
+     * @param expirationDate Define until when the transaction has to be processed (see
+     *                       {@link #setExpirationDate(TimePointSec)}).
+     * @param operations     A list of operations to process within this Transaction (see
+     *                       {@link #setOperations(List)}).
+     * @param extensions     Extensions are currently not supported and will be ignored
+     *                       (see {@link #setExtensions(List)}).
      */
     public SignedTransaction(int refBlockNum, long refBlockPrefix, TimePointSec expirationDate,
-            List<Operation> operations, List<FutureExtensions> extensions) {
+                             List<Operation> operations, List<FutureExtensions> extensions) {
         super(refBlockNum, refBlockPrefix, expirationDate, operations, extensions);
         this.signatures = new ArrayList<>();
     }
@@ -84,16 +80,13 @@ public class SignedTransaction extends Transaction implements ByteTransformable,
      * {@link eu.bittrade.libs.steemj.base.models.BlockId} object as the
      * reference block and will also set the <code>expirationDate</code> to the
      * latest possible time.
-     * 
-     * @param blockId
-     *            The block reference (see {@link #setRefBlockNum(int)} and
-     *            {@link #setRefBlockPrefix(long)}).
-     * @param operations
-     *            A list of operations to process within this Transaction (see
-     *            {@link #setOperations(List)}).
-     * @param extensions
-     *            Extensions are currently not supported and will be ignored
-     *            (see {@link #setExtensions(List)}).
+     *
+     * @param blockId    The block reference (see {@link #setRefBlockNum(int)} and
+     *                   {@link #setRefBlockPrefix(long)}).
+     * @param operations A list of operations to process within this Transaction (see
+     *                   {@link #setOperations(List)}).
+     * @param extensions Extensions are currently not supported and will be ignored
+     *                   (see {@link #setExtensions(List)}).
      */
     public SignedTransaction(BlockId blockId, List<Operation> operations, List<FutureExtensions> extensions) {
         super(blockId, operations, extensions);
@@ -102,7 +95,7 @@ public class SignedTransaction extends Transaction implements ByteTransformable,
 
     /**
      * <b>This method is only used by JUnit-Tests</b>
-     * 
+     * <p>
      * Create a new signed transaction object.
      */
     @VisibleForTesting
@@ -113,7 +106,7 @@ public class SignedTransaction extends Transaction implements ByteTransformable,
 
     /**
      * Get the signatures for this transaction.
-     * 
+     *
      * @return An array of currently appended signatures.
      */
     @JsonProperty("signatures")
@@ -123,13 +116,12 @@ public class SignedTransaction extends Transaction implements ByteTransformable,
 
     /**
      * Verify that the signature is canonical.
-     * 
+     * <p>
      * Original implementation can be found <a href=
      * "https://github.com/kenCode-de/graphenej/blob/master/graphenej/src/main/java/de/bitsharesmunich/graphenej/Transaction.java"
      * >here</a>.
-     * 
-     * @param signature
-     *            A single signature in its byte representation.
+     *
+     * @param signature A single signature in its byte representation.
      * @return True if the signature is canonical or false if not.
      */
     private boolean isCanonical(byte[] signature) {
@@ -138,14 +130,11 @@ public class SignedTransaction extends Transaction implements ByteTransformable,
     }
 
     /**
-     *
      * Like {@link #sign(String) sign(String)}, but uses the default Steem chain
      * id.
      *
-     * @param skipValidation
-     *            Define if the validation should be skipped or not.
-     * @throws SteemInvalidTransactionException
-     *             If the transaction can not be signed.
+     * @param skipValidation Define if the validation should be skipped or not.
+     * @throws SteemInvalidTransactionException If the transaction can not be signed.
      */
     @VisibleForTesting
     protected void sign(boolean skipValidation) throws SteemInvalidTransactionException {
@@ -153,12 +142,10 @@ public class SignedTransaction extends Transaction implements ByteTransformable,
     }
 
     /**
-     *
      * Like {@link #sign(String) sign(String)}, but uses the default Steem chain
      * id.
      *
-     * @throws SteemInvalidTransactionException
-     *             If the transaction can not be signed.
+     * @throws SteemInvalidTransactionException If the transaction can not be signed.
      */
     public void sign() throws SteemInvalidTransactionException {
         sign(SteemJConfig.getInstance().getChainId(), false);
@@ -167,11 +154,9 @@ public class SignedTransaction extends Transaction implements ByteTransformable,
     /**
      * Use this method if you want to specify a different chainId than the
      * default one for STEEM. Otherwise use the {@link #sign() sign()} method.
-     * 
-     * @param chainId
-     *            The chain id that should be used during signing.
-     * @throws SteemInvalidTransactionException
-     *             If the transaction can not be signed.
+     *
+     * @param chainId The chain id that should be used during signing.
+     * @throws SteemInvalidTransactionException If the transaction can not be signed.
      */
     public void sign(String chainId) throws SteemInvalidTransactionException {
         sign(chainId, false);
@@ -180,13 +165,10 @@ public class SignedTransaction extends Transaction implements ByteTransformable,
     /**
      * Use this method if you want to specify a different chainId than the
      * default one for STEEM. Otherwise use the {@link #sign() sign()} method.
-     * 
-     * @param chainId
-     *            The chain id that should be used during signing.
-     * @param skipValidation
-     *            Define if the validation should be skipped or not.
-     * @throws SteemInvalidTransactionException
-     *             If the transaction can not be signed.
+     *
+     * @param chainId        The chain id that should be used during signing.
+     * @param skipValidation Define if the validation should be skipped or not.
+     * @throws SteemInvalidTransactionException If the transaction can not be signed.
      */
     protected void sign(String chainId, boolean skipValidation) throws SteemInvalidTransactionException {
         if (!skipValidation) {
@@ -227,9 +209,8 @@ public class SignedTransaction extends Transaction implements ByteTransformable,
 
     /**
      * @return The list of private keys required to sign this transaction.
-     * @throws SteemInvalidTransactionException
-     *             If the required private key is not present in the
-     *             {@link eu.bittrade.libs.steemj.configuration.PrivateKeyStorage}.
+     * @throws SteemInvalidTransactionException If the required private key is not present in the
+     *                                          {@link eu.bittrade.libs.steemj.configuration.PrivateKeyStorage}.
      */
     protected List<ECKey> getRequiredSignatureKeys() throws SteemInvalidTransactionException {
         List<ECKey> requiredSignatures = new ArrayList<>();
@@ -262,31 +243,37 @@ public class SignedTransaction extends Transaction implements ByteTransformable,
      * Fetch the requested private key for the given <code>accountName</code>
      * from the {@link eu.bittrade.libs.steemj.configuration.PrivateKeyStorage}
      * and merge it into the <code>requiredSignatures</code> list.
-     * 
-     * @param requiredSignatures
-     *            A list of already fetched keys. This list is used to make sure
-     *            that a key is not added twice.
-     * @param accountName
-     *            The account name to fetch the key for.
-     * @param privateKeyType
-     *            The key type to fetch.
+     *
+     * @param requiredSignatures A list of already fetched keys. This list is used to make sure
+     *                           that a key is not added twice.
+     * @param accountName        The account name to fetch the key for.
+     * @param privateKeyType     The key type to fetch.
      * @return The <code>requiredSignatures</code> including the
-     *         <code>privateKeyType</code> for <code>accountName</code>.
-     * @throws SteemInvalidTransactionException
-     *             If the required private key is not present in the
-     *             {@link eu.bittrade.libs.steemj.configuration.PrivateKeyStorage}.
+     * <code>privateKeyType</code> for <code>accountName</code>.
+     * @throws SteemInvalidTransactionException If the required private key is not present in the
+     *                                          {@link eu.bittrade.libs.steemj.configuration.PrivateKeyStorage}.
      */
     private List<ECKey> getRequiredSignatureKeyForAccount(List<ECKey> requiredSignatures, AccountName accountName,
-            PrivateKeyType privateKeyType) throws SteemInvalidTransactionException {
+                                                          PrivateKeyType privateKeyType) throws SteemInvalidTransactionException {
         ECKey privateKey;
-
-        try {
+        Map<PrivateKeyType, ECKey> keys = new HashMap<>();
+        for (ImmutablePair<PrivateKeyType, ECKey> pair : SteemJConfig.getInstance().getPrivateKeyStorage().getPrivateKeysPerAccounts().get(accountName)) {
+            keys.put(pair.getLeft(), pair.getRight());
+        }
+        if (keys.containsKey(privateKeyType)) privateKey = keys.get(privateKeyType);
+        else {
+            if (privateKeyType == PrivateKeyType.POSTING && keys.containsKey(PrivateKeyType.ACTIVE))
+                privateKey = keys.get(PrivateKeyType.ACTIVE);
+            else throw new SteemInvalidTransactionException(
+                    "Could not find private " + privateKeyType + " key for the user " + accountName.getName() + ".");
+        }
+       /* try {
             privateKey = SteemJConfig.getInstance().getPrivateKeyStorage().getKeyForAccount(privateKeyType,
                     accountName);
         } catch (InvalidParameterException ipe) {
             throw new SteemInvalidTransactionException(
                     "Could not find private " + privateKeyType + " key for the user " + accountName.getName() + ".");
-        }
+        }*/
 
         if (!requiredSignatures.contains(privateKey)) {
             requiredSignatures.add(privateKey);
@@ -299,12 +286,11 @@ public class SignedTransaction extends Transaction implements ByteTransformable,
      * This method creates a byte array based on a transaction object under the
      * use of a guide written by <a href="https://Steemit.com/Steem/@xeroc/">
      * Xeroc</a>. This method should only be used internally.
-     * 
+     * <p>
      * If a chainId is provided it will be added in front of the byte array.
-     * 
+     *
      * @return The serialized transaction object.
-     * @throws SteemInvalidTransactionException
-     *             If the transaction can not be signed.
+     * @throws SteemInvalidTransactionException If the transaction can not be signed.
      */
     @Override
     public byte[] toByteArray() throws SteemInvalidTransactionException {
@@ -314,13 +300,11 @@ public class SignedTransaction extends Transaction implements ByteTransformable,
     /**
      * Like {@link #toByteArray() toByteArray()}, but allows to define a Steem
      * chain id.
-     * 
-     * @param chainId
-     *            The HEX representation of the chain Id you want to use for
-     *            this transaction.
+     *
+     * @param chainId The HEX representation of the chain Id you want to use for
+     *                this transaction.
      * @return The serialized transaction object.
-     * @throws SteemInvalidTransactionException
-     *             If the transaction can not be signed.
+     * @throws SteemInvalidTransactionException If the transaction can not be signed.
      */
     protected byte[] toByteArray(String chainId) throws SteemInvalidTransactionException {
         try (ByteArrayOutputStream serializedTransaction = new ByteArrayOutputStream()) {
@@ -350,6 +334,8 @@ public class SignedTransaction extends Transaction implements ByteTransformable,
 
     @Override
     public String toString() {
-        return ToStringBuilder.reflectionToString(this);
+        return "SignedTransaction{" +
+                "signatures=" + signatures +
+                '}';
     }
 }

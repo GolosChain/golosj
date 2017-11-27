@@ -102,11 +102,6 @@ public class AccountName implements ByteTransformable, SignatureObject {
     }
 
     @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this);
-    }
-
-    @Override
     public boolean equals(Object otherAccount) {
         if (this == otherAccount)
             return true;
@@ -132,5 +127,12 @@ public class AccountName implements ByteTransformable, SignatureObject {
      */
     public boolean isEmpty() {
         return this.getName().isEmpty();
+    }
+
+    @Override
+    public String toString() {
+        return "AccountName{" +
+                "name='" + name + '\'' +
+                '}';
     }
 }

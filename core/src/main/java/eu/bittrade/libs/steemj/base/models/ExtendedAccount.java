@@ -1,6 +1,7 @@
 package eu.bittrade.libs.steemj.base.models;
 
 import java.math.BigInteger;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -211,6 +212,24 @@ public class ExtendedAccount extends Account {
 
     @Override
     public String toString() {
-        return ToStringBuilder.reflectionToString(this);
+        return "ExtendedAccount{" +
+                "vestingBalance=" + vestingBalance +
+                ", reputation=" + reputation +
+                ", transferHistory=" + transferHistory +
+                ", marketHistory=" + marketHistory +
+                ", postHistory=" + postHistory +
+                ", voteHistory=" + voteHistory +
+                ", otherHistory=" + otherHistory +
+                ", witnessVotes=" + witnessVotes +
+                ", tagsUsage=" + tagsUsage +
+                ", guestBloggers=" + guestBloggers +
+                ", openOrders=" + Arrays.toString(openOrders) +
+                ", comments=" + Arrays.toString(comments) +
+                ", blog=" + Arrays.toString(blog) +
+                ", feed=" + Arrays.toString(feed) +
+                ", recentReplies=" + Arrays.toString(recentReplies) +
+                ", recommended=" + Arrays.toString(recommended) +
+                ", blogCategory=" + Arrays.toString(blogCategory) +
+                '}';
     }
 }

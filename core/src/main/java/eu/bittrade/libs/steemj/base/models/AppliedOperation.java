@@ -36,6 +36,19 @@ public class AppliedOperation {
     private AppliedOperation() {
     }
 
+    @Override
+    public String toString() {
+        return "AppliedOperation{" +
+                "trxId=" + trxId +
+                ", block=" + block +
+                ", trxInBlock=" + trxInBlock +
+                ", opInTrx=" + opInTrx +
+                ", virtualOp=" + virtualOp +
+                ", timestamp=" + timestamp +
+                ", op=" + op +
+                '}';
+    }
+
     /**
      * Get the id of this transaction.
      * 
@@ -99,8 +112,4 @@ public class AppliedOperation {
         return op;
     }
 
-    @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this);
-    }
 }

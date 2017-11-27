@@ -38,6 +38,9 @@ public class ScheduledHardfork {
 
     @Override
     public String toString() {
-        return ToStringBuilder.reflectionToString(this);
+        return "ScheduledHardfork{" +
+                "hardforkVersion=" + hardforkVersion +
+                ", liveTime=" + liveTime +
+                '}';
     }
 }

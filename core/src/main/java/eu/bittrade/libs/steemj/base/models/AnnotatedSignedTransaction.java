@@ -54,6 +54,10 @@ public class AnnotatedSignedTransaction implements Serializable {
 
     @Override
     public String toString() {
-        return ToStringBuilder.reflectionToString(this);
+        return "AnnotatedSignedTransaction{" +
+                "transactionId=" + transactionId +
+                ", blockNum=" + blockNum +
+                ", transactionNum=" + transactionNum +
+                '}';
     }
 }

@@ -273,7 +273,13 @@ public class WitnessUpdateOperation extends Operation {
 
     @Override
     public String toString() {
-        return ToStringBuilder.reflectionToString(this);
+        return "WitnessUpdateOperation{" +
+                "owner=" + owner +
+                ", url=" + url +
+                ", blockSigningKey=" + blockSigningKey +
+                ", properties=" + properties +
+                ", fee=" + fee +
+                '}';
     }
 
     @Override

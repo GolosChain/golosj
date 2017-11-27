@@ -11,9 +11,10 @@ import java.io.IOException;
  * Created by yuri yurivladdurain@gmail.com .
  */
 
-public class ToStringDreserializer extends JsonDeserializer<String> {
+public class ToStringDeserializer extends JsonDeserializer<String> {
     @Override
     public String deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException, JsonProcessingException {
-        return jsonParser.getCodec().readTree(jsonParser).toString();
+        String s =  jsonParser.getCodec().readTree(jsonParser).toString();
+        return s;
     }
 }

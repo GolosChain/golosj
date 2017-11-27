@@ -84,6 +84,14 @@ public class TrendingTag {
 
     @Override
     public String toString() {
-        return ToStringBuilder.reflectionToString(this);
+        return "TrendingTag{" +
+                "name='" + name + '\'' +
+                ", totalChildrenRShares2='" + totalChildrenRShares2 + '\'' +
+                ", totalPayouts=" + totalPayouts +
+                ", netVotes=" + netVotes +
+                ", topPosts=" + topPosts +
+                ", comments=" + comments +
+                ", trending=" + trending +
+                '}';
     }
 }

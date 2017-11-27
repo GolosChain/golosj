@@ -2,6 +2,8 @@ package eu.bittrade.libs.steemj.base.models.error;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import java.util.Arrays;
+
 /**
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
@@ -29,6 +31,11 @@ public class SteemErrorData {
 
     @Override
     public String toString() {
-        return ToStringBuilder.reflectionToString(this);
+        return "SteemErrorData{" +
+                "code=" + code +
+                ", name='" + name + '\'' +
+                ", message='" + message + '\'' +
+                ", stack=" + Arrays.toString(stack) +
+                '}';
     }
 }

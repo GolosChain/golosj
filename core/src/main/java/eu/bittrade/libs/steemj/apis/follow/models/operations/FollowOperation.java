@@ -136,11 +136,6 @@ public class FollowOperation extends CustomJsonOperationPayload {
     }
 
     @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this);
-    }
-
-    @Override
     public void validate(ValidationType validationType) {
         if (validationType.equals(ValidationType.SKIP_VALIDATION)) {
             return;
@@ -153,5 +148,14 @@ public class FollowOperation extends CustomJsonOperationPayload {
         } else if (this.getFollower().equals(this.getFollowing())) {
             throw new InvalidParameterException("You cannot follow yourself.");
         }
+    }
+
+    @Override
+    public String toString() {
+        return "FollowOperation{" +
+                "follower=" + follower +
+                ", following=" + following +
+                ", what=" + what +
+                '}';
     }
 }

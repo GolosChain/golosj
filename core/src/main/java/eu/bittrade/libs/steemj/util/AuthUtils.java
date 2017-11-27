@@ -1,15 +1,12 @@
 package eu.bittrade.libs.steemj.util;
 
-import eu.bittrade.libs.steemj.base.models.PublicKey;
-import eu.bittrade.libs.steemj.enums.PrivateKeyType;
-import eu.bittrade.libs.steemj.enums.SteemitAddressPrefix;
 import org.apache.commons.lang3.ArrayUtils;
+import org.bitcoinj.core.AddressFormatException;
 import org.bitcoinj.core.Base58;
 import org.bitcoinj.core.ECKey;
 import org.spongycastle.crypto.digests.GeneralDigest;
 import org.spongycastle.crypto.digests.RIPEMD160Digest;
 
-import javax.annotation.Nonnull;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.security.MessageDigest;
@@ -17,6 +14,11 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.annotation.Nonnull;
+
+import eu.bittrade.libs.steemj.enums.PrivateKeyType;
+import eu.bittrade.libs.steemj.enums.SteemitAddressPrefix;
 
 /**
  * Created by yuri
@@ -127,7 +129,8 @@ public class AuthUtils {
             throw new IllegalArgumentException("key must be 51 chars length");
 
         final byte[] privateWifBytesAll = Base58.decode(privateWiFKey);
-        if (privateWifBytesAll[0] != (byte) 0x80) throw new IllegalArgumentException("wrong version, must be 0x80");
+        if (privateWifBytesAll[0] != (byte) 0x80)
+            throw new IllegalArgumentException("wrong version, must be 0x80");
         byte[] privateKeyBytes = ArrayUtils.subarray(privateWifBytesAll, 0, privateWifBytesAll.length - HASH_BYTES_LENGTH);
         final byte[] checkSum = ArrayUtils.subarray(privateWifBytesAll, privateWifBytesAll.length - HASH_BYTES_LENGTH, privateWifBytesAll.length);
         byte[] newCheckSum = generateChecksumSha256(privateKeyBytes);
@@ -135,7 +138,8 @@ public class AuthUtils {
             throw new IllegalArgumentException("Invalid WIF key (checksum miss-match)");
 
         privateKeyBytes = ArrayUtils.subarray(privateKeyBytes, 1, privateKeyBytes.length);
-        if (privateKeyBytes.length != 32) throw new IllegalArgumentException("key must be 32 bytes length");
+        if (privateKeyBytes.length != 32)
+            throw new IllegalArgumentException("key must be 32 bytes length");
     }
 
     public static void checkPublicWiF(@Nonnull String publicWifKey) throws IllegalArgumentException {
@@ -151,14 +155,24 @@ public class AuthUtils {
         byte[] newCheckSum = generateChecksumRipeMd160(publicKeyBytes);
         if (!Arrays.equals(checkSum, newCheckSum))
             throw new IllegalArgumentException("Invalid WIF key (checksum miss-match)");
-        if (publicKeyBytes.length != 33) throw new IllegalArgumentException("key must be 33 bytes length");
+        if (publicKeyBytes.length != 33)
+            throw new IllegalArgumentException("key must be 33 bytes length");
     }
 
     public static boolean isWiFsValid(@Nonnull String privateWiF, @Nonnull String publicWiF) {
         try {
             checkPrivateWiF(privateWiF);
             checkPublicWiF(publicWiF);
-            return (new PublicKey(privateWiF).getAddressFromPublicKey()).equals(publicWiF);
+            byte[] privKeyBytesAll = Base58.decode(privateWiF);
+            byte[] cleaned = ArrayUtils.subarray(privKeyBytesAll, 1, privKeyBytesAll.length - 4);
+            byte[] publicKey = ECKey.fromPrivate(cleaned).getPubKey();
+
+            byte[] pubPotential = Base58.decode(publicWiF.substring(3));
+            byte[] potentialCleaned = ArrayUtils.subarray(pubPotential, 0, pubPotential.length - 4);
+            return Arrays.equals(publicKey, potentialCleaned);
+        } catch (AddressFormatException e) {
+            e.printStackTrace();
+            return false;
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
             return false;

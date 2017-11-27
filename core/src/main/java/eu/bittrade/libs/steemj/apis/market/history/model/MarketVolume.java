@@ -33,6 +33,9 @@ public class MarketVolume {
 
     @Override
     public String toString() {
-        return ToStringBuilder.reflectionToString(this);
+        return "MarketVolume{" +
+                "steemVolume=" + steemVolume +
+                ", sbdVolume=" + sbdVolume +
+                '}';
     }
 }

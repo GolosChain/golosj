@@ -54,6 +54,9 @@ public class PostsPerAuthorPair {
 
     @Override
     public String toString() {
-        return ToStringBuilder.reflectionToString(this);
+        return "PostsPerAuthorPair{" +
+                "account=" + account +
+                ", numberOfPosts=" + numberOfPosts +
+                '}';
     }
 }

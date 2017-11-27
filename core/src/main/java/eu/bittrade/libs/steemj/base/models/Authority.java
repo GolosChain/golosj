@@ -61,6 +61,15 @@ public class Authority implements ByteTransformable, SignatureObject {
         this.setWeightThreshold(0);
     }
 
+    @Override
+    public String toString() {
+        return "Authority{" +
+                "weightThreshold=" + weightThreshold +
+                ", accountAuths=" + accountAuths +
+                ", keyAuths=" + keyAuths +
+                '}';
+    }
+
     /**
      * Constructor, that's create object, that needed for account creation.
      */
@@ -156,11 +165,6 @@ public class Authority implements ByteTransformable, SignatureObject {
             throw new SteemInvalidTransactionException(
                     "A problem occured while transforming an asset into a byte array.", e);
         }
-    }
-
-    @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this);
     }
 
     @Override

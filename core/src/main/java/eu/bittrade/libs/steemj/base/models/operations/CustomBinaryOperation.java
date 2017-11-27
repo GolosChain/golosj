@@ -282,11 +282,6 @@ public class CustomBinaryOperation extends Operation {
     }
 
     @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this);
-    }
-
-    @Override
     public Map<SignatureObject, List<PrivateKeyType>> getRequiredAuthorities(
             Map<SignatureObject, List<PrivateKeyType>> requiredAuthoritiesBase) {
         Map<SignatureObject, List<PrivateKeyType>> requiredAuthorities = requiredAuthoritiesBase;
@@ -307,5 +302,17 @@ public class CustomBinaryOperation extends Operation {
     public void validate(ValidationType validationType) {
         // TODO Auto-generated method stub
 
+    }
+
+    @Override
+    public String toString() {
+        return "CustomBinaryOperation{" +
+                "requiredOwnerAuths=" + requiredOwnerAuths +
+                ", requiredActiveAuths=" + requiredActiveAuths +
+                ", requiredPostingAuths=" + requiredPostingAuths +
+                ", requiredAuths=" + requiredAuths +
+                ", id='" + id + '\'' +
+                ", data='" + data + '\'' +
+                '}';
     }
 }

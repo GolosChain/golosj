@@ -72,11 +72,6 @@ public class HardforkVersionVote extends BlockHeaderExtensions {
     }
 
     @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this);
-    }
-
-    @Override
     public byte[] toByteArray() throws SteemInvalidTransactionException {
         try (ByteArrayOutputStream serializedHardforkVersionVoteExtension = new ByteArrayOutputStream()) {
             serializedHardforkVersionVoteExtension.write(this.getHfVersion().toByteArray());
@@ -87,5 +82,13 @@ public class HardforkVersionVote extends BlockHeaderExtensions {
             throw new SteemInvalidTransactionException(
                     "A problem occured while transforming the operation into a byte array.", e);
         }
+    }
+
+    @Override
+    public String toString() {
+        return "HardforkVersionVote{" +
+                "hfVersion=" + hfVersion +
+                ", hfTime=" + hfTime +
+                '}';
     }
 }

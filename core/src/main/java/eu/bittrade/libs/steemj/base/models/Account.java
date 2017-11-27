@@ -428,6 +428,70 @@ public class Account {
 
     @Override
     public String toString() {
-        return ToStringBuilder.reflectionToString(this);
+        return "Account{" +
+                "id=" + id +
+                ", name=" + name +
+                ", owner=" + owner +
+                ", active=" + active +
+                ", posting=" + posting +
+                ", memoKey=" + memoKey +
+                ", jsonMetadata='" + jsonMetadata + '\'' +
+                ", proxy=" + proxy +
+                ", lastOwnerUpdate=" + lastOwnerUpdate +
+                ", lastAccountUpdate=" + lastAccountUpdate +
+                ", created=" + created +
+                ", mined=" + mined +
+                ", ownerChallenged=" + ownerChallenged +
+                ", activeChallenged=" + activeChallenged +
+                ", lastOwnerProved=" + lastOwnerProved +
+                ", lastActiveProved=" + lastActiveProved +
+                ", recoveryAccount=" + recoveryAccount +
+                ", resetAccount=" + resetAccount +
+                ", lastAccountRecovery=" + lastAccountRecovery +
+                ", commentCount=" + commentCount +
+                ", lifetimeVoteCount=" + lifetimeVoteCount +
+                ", postCount=" + postCount +
+                ", canVote=" + canVote +
+                ", votingPower=" + votingPower +
+                ", lastVoteTime=" + lastVoteTime +
+                ", balance=" + balance +
+                ", savingsBalance=" + savingsBalance +
+                ", sbdBalance=" + sbdBalance +
+                ", sbdSeconds=" + sbdSeconds +
+                ", sbdSecondsLastUpdate=" + sbdSecondsLastUpdate +
+                ", sbdLastInterestPayment=" + sbdLastInterestPayment +
+                ", savingsSbdBalance=" + savingsSbdBalance +
+                ", savingsSbdSeconds=" + savingsSbdSeconds +
+                ", savingsSbdSecondsLastUpdate=" + savingsSbdSecondsLastUpdate +
+                ", savingsSbdLastInterestPayment=" + savingsSbdLastInterestPayment +
+                ", savingWithdrawRequests=" + savingWithdrawRequests +
+                ", rewardSdbBalance=" + rewardSdbBalance +
+                ", rewardSteemBalance=" + rewardSteemBalance +
+                ", rewardVestingBalance=" + rewardVestingBalance +
+                ", rewardVestingSteem=" + rewardVestingSteem +
+                ", curationRewards=" + curationRewards +
+                ", postingRewards=" + postingRewards +
+                ", vestingShares=" + vestingShares +
+                ", delegatedVestingShares=" + delegatedVestingShares +
+                ", receivedVestingShares=" + receivedVestingShares +
+                ", vestingWithdrawRate=" + vestingWithdrawRate +
+                ", nextVestingWithdrawal=" + nextVestingWithdrawal +
+                ", withdrwan=" + withdrwan +
+                ", toWithdraw=" + toWithdraw +
+                ", withdrawRoutes=" + withdrawRoutes +
+                ", proxiedVsfVotes=" + proxiedVsfVotes +
+                ", witnessesVotedFor=" + witnessesVotedFor +
+                ", averageBandwidth=" + averageBandwidth +
+                ", lifetimeBandwidth=" + lifetimeBandwidth +
+                ", lastBandwidthUpdate=" + lastBandwidthUpdate +
+                ", averageMarketBandwidth=" + averageMarketBandwidth +
+                ", lifetimeMarketBandwidth=" + lifetimeMarketBandwidth +
+                ", lastMarketBandwidthUpdate=" + lastMarketBandwidthUpdate +
+                ", lastPost=" + lastPost +
+                ", lastRootPost=" + lastRootPost +
+                ", postBandwidth=" + postBandwidth +
+                ", newAverageBandwidth=" + newAverageBandwidth +
+                ", newAverageMarketBandwidth=" + newAverageMarketBandwidth +
+                '}';
     }
 }

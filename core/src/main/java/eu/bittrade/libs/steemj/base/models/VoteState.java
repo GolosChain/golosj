@@ -73,6 +73,13 @@ public class VoteState {
 
     @Override
     public String toString() {
-        return ToStringBuilder.reflectionToString(this);
+        return "VoteState{" +
+                "voter=" + voter +
+                ", weight=" + weight +
+                ", rshares=" + rshares +
+                ", percent=" + percent +
+                ", reputation=" + reputation +
+                ", time=" + time +
+                '}';
     }
 }

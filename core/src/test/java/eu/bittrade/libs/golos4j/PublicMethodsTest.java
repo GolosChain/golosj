@@ -32,7 +32,9 @@ import eu.bittrade.libs.steemj.base.models.BlockHeader;
 import eu.bittrade.libs.steemj.base.models.ChainProperties;
 import eu.bittrade.libs.steemj.base.models.Config;
 import eu.bittrade.libs.steemj.base.models.Discussion;
+import eu.bittrade.libs.steemj.base.models.DiscussionLight;
 import eu.bittrade.libs.steemj.base.models.DiscussionQuery;
+import eu.bittrade.libs.steemj.base.models.DiscussionWithComments;
 import eu.bittrade.libs.steemj.base.models.ExtendedAccount;
 import eu.bittrade.libs.steemj.base.models.GlobalProperties;
 import eu.bittrade.libs.steemj.base.models.LiquidityBalance;
@@ -41,7 +43,6 @@ import eu.bittrade.libs.steemj.base.models.PublicKey;
 import eu.bittrade.libs.steemj.base.models.ScheduledHardfork;
 import eu.bittrade.libs.steemj.base.models.SignedBlockWithInfo;
 import eu.bittrade.libs.steemj.base.models.SteemVersionInfo;
-import eu.bittrade.libs.steemj.base.models.Story;
 import eu.bittrade.libs.steemj.base.models.TrendingTag;
 import eu.bittrade.libs.steemj.base.models.Vote;
 import eu.bittrade.libs.steemj.base.models.VoteState;
@@ -105,6 +106,16 @@ public class PublicMethodsTest {
     @Test
     public void getProfileImagePath() throws Exception {
         String avatar = golos4J.getDatabaseMethods().getAccountAvatar(new AccountName("kvg"));
+
+        assertNotNull(avatar);
+        System.out.println(avatar);
+    }
+
+    @Test
+    public void getProfileImagePathTwo() throws Exception {
+        String avatar = golos4J.getDatabaseMethods().getAccountAvatar("ru--apvot50-50",
+                new AccountName("onur1s"),
+                new Permlink("50-50-kak-ispolzovat-torgovye-kanaly"));
 
         assertNotNull(avatar);
         System.out.println(avatar);
@@ -285,6 +296,33 @@ public class PublicMethodsTest {
         discussionQuery.setTruncateBody(100);
         for (final DiscussionSortType type : sortTypes) {
             final List<Discussion> discussions = golos4J.getDatabaseMethods().getDiscussionsBy(discussionQuery, type);
+            assertNotNull("expect discussions", discussions);
+            assertThat("expect discussions in " + type + " greater than zero", discussions.size(),
+                    greaterThanOrEqualTo(0));
+        }
+    }
+
+    @Test
+    public void testGetDiscussionLightBy() throws Exception {
+
+        final DiscussionSortType[] sortTypes = new DiscussionSortType[]
+                {
+                        DiscussionSortType.GET_DISCUSSIONS_BY_TRENDING,
+                        DiscussionSortType.GET_DISCUSSIONS_BY_CREATED,
+                        DiscussionSortType.GET_DISCUSSIONS_BY_ACTIVE,
+                        DiscussionSortType.GET_DISCUSSIONS_BY_CASHOUT,
+                        DiscussionSortType.GET_DISCUSSIONS_BY_VOTES,
+                        DiscussionSortType.GET_DISCUSSIONS_BY_CHILDREN,
+                        DiscussionSortType.GET_DISCUSSIONS_BY_HOT,
+                        DiscussionSortType.GET_DISCUSSIONS_BY_CASHOUT,
+                        DiscussionSortType.GET_DISCUSSIONS_BY_TRENDING30
+                };
+
+        DiscussionQuery discussionQuery = new DiscussionQuery();
+        discussionQuery.setLimit(1);
+        discussionQuery.setTruncateBody(100);
+        for (final DiscussionSortType type : sortTypes) {
+            final List<DiscussionLight> discussions = golos4J.getDatabaseMethods().getDiscussionsLightBy(discussionQuery, type);
             assertNotNull("expect discussions", discussions);
             assertThat("expect discussions in " + type + " greater than zero", discussions.size(),
                     greaterThanOrEqualTo(0));
@@ -518,7 +556,7 @@ public class PublicMethodsTest {
 
     @Test
     public void testGetStory() throws Exception {
-        Story story = golos4J.getDatabaseMethods().getStoryByRoute("ru--yestafetaulybok",
+        DiscussionWithComments story = golos4J.getDatabaseMethods().getStoryByRoute("ru--yestafetaulybok",
                 new AccountName("pravda"),
                 new Permlink("obzor-estafety-ulybok-na-golose-nedelya-2"));
 
@@ -530,6 +568,27 @@ public class PublicMethodsTest {
     @Test
     public void getUserFeed() throws Exception {
         List<Discussion> discussions = golos4J.getDatabaseMethods().getUserFeed(new AccountName("cepera"));
-        System.out.println(discussions);
+        assertNotNull(discussions);
+        assertTrue(discussions.size() > 1);
+
     }
+
+    @Test
+    public void getUserFeedLight() throws Exception {
+        List<DiscussionLight> discussions = golos4J.getDatabaseMethods().getUserFeedLight(new AccountName("cepera"));
+        assertNotNull(discussions);
+        assertTrue(discussions.size() > 0);
+    }
+
+    @Test
+    public void testGetAvatarByName() throws Exception {
+        String avatar = golos4J.getDatabaseMethods().getAccountAvatar(new AccountName("andrvik"));
+        assertNotNull(avatar);
+        avatar = golos4J.getDatabaseMethods().getAccountAvatar("ru--prave",
+                new AccountName("andrvik"),
+                new Permlink("pravo-deputaty-gotovyat-predvybornyi-portfel-svezhii-obzor-zakonoproektov-ot-dumskikh-frakcii"));
+        assertNotNull(avatar);
+    }
+
+
 }

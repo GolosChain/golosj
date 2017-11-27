@@ -135,6 +135,19 @@ public class Discussion extends Comment {
 
     @Override
     public String toString() {
-        return ToStringBuilder.reflectionToString(this);
+        return "Discussion{" +
+                "url='" + url + '\'' +
+                ", rootTitle='" + rootTitle + '\'' +
+                ", pendingPayoutValue=" + pendingPayoutValue +
+                ", totalPendingPayoutValue=" + totalPendingPayoutValue +
+                ", activeVotes=" + activeVotes +
+                ", replies=" + replies +
+                ", authorReputation=" + authorReputation +
+                ", promoted=" + promoted +
+                ", bodyLength='" + bodyLength + '\'' +
+                ", rebloggedBy=" + rebloggedBy +
+                ", firstRebloggedBy=" + firstRebloggedBy +
+                ", firstRebloggedOn=" + firstRebloggedOn +
+                '}';
     }
 }

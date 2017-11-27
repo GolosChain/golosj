@@ -49,6 +49,10 @@ public class Block extends SignedBlockWithInfo {
 
     @Override
     public String toString() {
-        return ToStringBuilder.reflectionToString(this);
+        return "Block{" +
+                "id=" + id +
+                ", refPrefix=" + refPrefix +
+                ", blockNum=" + blockNum +
+                '}';
     }
 }

@@ -132,11 +132,6 @@ public class Asset implements ByteTransformable {
     }
 
     @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this);
-    }
-
-    @Override
     public boolean equals(Object otherAsset) {
         if (this == otherAsset)
             return true;
@@ -145,6 +140,15 @@ public class Asset implements ByteTransformable {
         Asset other = (Asset) otherAsset;
         return (this.getAmount().equals(other.getAmount()) && this.getSymbol().equals(other.getSymbol())
                 && this.getPrecision().equals(other.getPrecision()));
+    }
+
+    @Override
+    public String toString() {
+        return "Asset{" +
+                "amount=" + amount +
+                ", symbol=" + symbol +
+                ", precision=" + precision +
+                '}';
     }
 
     @Override

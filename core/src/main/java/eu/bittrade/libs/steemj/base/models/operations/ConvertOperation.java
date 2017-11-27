@@ -173,11 +173,6 @@ public class ConvertOperation extends Operation {
     }
 
     @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this);
-    }
-
-    @Override
     public Map<SignatureObject, List<PrivateKeyType>> getRequiredAuthorities(
             Map<SignatureObject, List<PrivateKeyType>> requiredAuthoritiesBase) {
         return mergeRequiredAuthorities(requiredAuthoritiesBase, this.getOwner(), PrivateKeyType.ACTIVE);
@@ -187,5 +182,14 @@ public class ConvertOperation extends Operation {
     public void validate(ValidationType validationType) {
         // TODO Auto-generated method stub
 
+    }
+
+    @Override
+    public String toString() {
+        return "ConvertOperation{" +
+                "owner=" + owner +
+                ", requestId=" + requestId +
+                ", amount=" + amount +
+                '}';
     }
 }

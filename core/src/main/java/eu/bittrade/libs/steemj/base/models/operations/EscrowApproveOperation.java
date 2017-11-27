@@ -196,13 +196,16 @@ public class EscrowApproveOperation extends AbstractEscrowOperation {
     }
 
     @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this);
-    }
-
-    @Override
     public void validate(ValidationType validationType) {
         // TODO Auto-generated method stub
 
+    }
+
+    @Override
+    public String toString() {
+        return "EscrowApproveOperation{" +
+                "who=" + who +
+                ", approve=" + approve +
+                '}';
     }
 }

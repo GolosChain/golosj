@@ -132,11 +132,6 @@ public class Price implements ByteTransformable {
     }
 
     @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this);
-    }
-
-    @Override
     public boolean equals(Object otherObject) {
         if (this == otherObject)
             return true;
@@ -152,5 +147,13 @@ public class Price implements ByteTransformable {
         hashCode = 31 * hashCode + (this.getBase() == null ? 0 : this.getBase().hashCode());
         hashCode = 31 * hashCode + (this.getQuote() == null ? 0 : this.getQuote().hashCode());
         return hashCode;
+    }
+
+    @Override
+    public String toString() {
+        return "Price{" +
+                "base=" + base +
+                ", quote=" + quote +
+                '}';
     }
 }

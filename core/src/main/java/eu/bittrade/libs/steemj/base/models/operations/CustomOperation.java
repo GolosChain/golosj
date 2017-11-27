@@ -167,11 +167,6 @@ public class CustomOperation extends Operation {
     }
 
     @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this);
-    }
-
-    @Override
     public Map<SignatureObject, List<PrivateKeyType>> getRequiredAuthorities(
             Map<SignatureObject, List<PrivateKeyType>> requiredAuthoritiesBase) {
         return mergeRequiredAuthorities(requiredAuthoritiesBase, this.getRequiredAuths(), PrivateKeyType.ACTIVE);
@@ -181,5 +176,14 @@ public class CustomOperation extends Operation {
     public void validate(ValidationType validationType) {
         // TODO Auto-generated method stub
 
+    }
+
+    @Override
+    public String toString() {
+        return "CustomOperation{" +
+                "requiredAuths=" + requiredAuths +
+                ", id=" + id +
+                ", data='" + data + '\'' +
+                '}';
     }
 }

@@ -213,6 +213,17 @@ public class DiscussionQuery {
 
     @Override
     public String toString() {
-        return ToStringBuilder.reflectionToString(this);
+        return "DiscussionQuery{" +
+                "tag='" + tag + '\'' +
+                ", limit=" + limit +
+                ", filterTags=" + filterTags +
+                ", selectAuthors=" + selectAuthors +
+                ", selectTags=" + selectTags +
+                ", truncateBody=" + truncateBody +
+                ", startAuthor=" + startAuthor +
+                ", startPermlink=" + startPermlink +
+                ", parentAuthor=" + parentAuthor +
+                ", parentPermlink=" + parentPermlink +
+                '}';
     }
 }

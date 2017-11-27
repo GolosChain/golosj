@@ -1,5 +1,18 @@
 package eu.bittrade.libs.steemj;
 
+import org.apache.commons.lang3.tuple.ImmutablePair;
+
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.communication.CommunicationHandler;
 import eu.bittrade.libs.steemj.configuration.PrivateKeyStorage;
@@ -7,13 +20,6 @@ import eu.bittrade.libs.steemj.configuration.SteemJConfig;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.enums.SteemitAddressPrefix;
 import eu.bittrade.libs.steemj.util.AuthUtils;
-import org.apache.commons.lang3.tuple.ImmutablePair;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.*;
 
 /**
  * Created by yuri yurivladdurain@gmail.com .
@@ -62,7 +68,8 @@ public class Golos4J {
             steemJConfig = SteemJConfig.getInstance();
             steemJConfig.setChainId("782a3039b478c839e4cb0c941ff4eaeb7df40bdd68bd441afd444b9da763de12");
             steemJConfig.setSteemitAddressPrefix(SteemitAddressPrefix.GLS);
-            steemJConfig.setResponseTimeout(90_000);
+            steemJConfig.setResponseTimeout(240_000);
+            steemJConfig.setSocketTimeout(240_000);
             try {
                 steemJConfig.setWebSocketEndpointURI(new URI("wss://ws.golos.blog"));
             } catch (URISyntaxException e) {
@@ -93,7 +100,6 @@ public class Golos4J {
     }
 
     public void addAccount(@Nonnull AccountName account, @Nonnull Set<ImmutablePair<PrivateKeyType, String>> keys, boolean setIsDefaultAccount) {
-        System.out.println("addAccount "+keys);
         steemJConfig.getPrivateKeyStorage().addAccount(account, new ArrayList<>(keys));
         if (setIsDefaultAccount) setDefaultAccount(account);
     }

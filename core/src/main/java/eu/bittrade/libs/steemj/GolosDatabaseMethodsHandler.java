@@ -1,9 +1,6 @@
 package eu.bittrade.libs.steemj;
 
 
-import com.fasterxml.jackson.databind.JsonNode;
-
-import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -14,11 +11,14 @@ import javax.annotation.Nonnull;
 
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.AppliedOperation;
+import eu.bittrade.libs.steemj.base.models.Avatars;
 import eu.bittrade.libs.steemj.base.models.BlockHeader;
 import eu.bittrade.libs.steemj.base.models.ChainProperties;
 import eu.bittrade.libs.steemj.base.models.Config;
 import eu.bittrade.libs.steemj.base.models.Discussion;
+import eu.bittrade.libs.steemj.base.models.DiscussionLight;
 import eu.bittrade.libs.steemj.base.models.DiscussionQuery;
+import eu.bittrade.libs.steemj.base.models.DiscussionWithComments;
 import eu.bittrade.libs.steemj.base.models.ExtendedAccount;
 import eu.bittrade.libs.steemj.base.models.ExtendedLimitOrder;
 import eu.bittrade.libs.steemj.base.models.FeedHistory;
@@ -33,9 +33,9 @@ import eu.bittrade.libs.steemj.base.models.Route;
 import eu.bittrade.libs.steemj.base.models.ScheduledHardfork;
 import eu.bittrade.libs.steemj.base.models.SignedBlockWithInfo;
 import eu.bittrade.libs.steemj.base.models.SignedTransaction;
-import eu.bittrade.libs.steemj.base.models.Story;
 import eu.bittrade.libs.steemj.base.models.TrendingTag;
 import eu.bittrade.libs.steemj.base.models.UserFeed;
+import eu.bittrade.libs.steemj.base.models.UserFeedLight;
 import eu.bittrade.libs.steemj.base.models.Vote;
 import eu.bittrade.libs.steemj.base.models.VoteState;
 import eu.bittrade.libs.steemj.base.models.Witness;
@@ -204,6 +204,18 @@ class GolosDatabaseMethodsHandler implements DatabaseMethods {
         return out;
     }
 
+    @Nonnull
+    @Override
+    public List<DiscussionLight> getDiscussionsLightBy(@Nonnull DiscussionQuery discussionQuery, @Nonnull DiscussionSortType sortBy) throws SteemCommunicationException {
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
+        requestObject.setApiMethod(RequestMethods.valueOf(sortBy.name()));
+        requestObject.setSteemApi(SteemApis.DATABASE_API);
+        Object[] parameters = {discussionQuery};
+        requestObject.setAdditionalParameters(parameters);
+        List<DiscussionLight> out = communicationHandler.performRequest(requestObject, DiscussionLight.class);
+        return out;
+    }
+
     @Override
     public List<ExtendedLimitOrder> getOpenOrders(AccountName accountName) throws SteemCommunicationException {
         return steemJ.getOpenOrders(accountName);
@@ -306,7 +318,7 @@ class GolosDatabaseMethodsHandler implements DatabaseMethods {
         requestObject.setAdditionalParameters(parameters);
 
         List<ProfileImage> response = communicationHandler.performRequest(requestObject, ProfileImage.class);
-        if (!response.isEmpty()) {
+        if (!response.isEmpty() && response.get(0) != null) {
             return response.get(0).getProfilePath();
         }
         return null;
@@ -314,37 +326,28 @@ class GolosDatabaseMethodsHandler implements DatabaseMethods {
 
     @Override
     public String getAccountAvatar(String blogName, AccountName authorName, Permlink permlink) throws SteemCommunicationException {
-        Story story = getStoryByRoute(blogName, authorName, permlink);
-        for (ExtendedAccount account : story.getInvolvedAccounts()) {
-            if (account.getName().getName().equals(authorName.getName())) {
-                try {
-                    if (account.getJsonMetadata() == null || account.getJsonMetadata().length() == 0)
-                        return null;
-                    JsonNode node = CommunicationHandler.getObjectMapper().readTree(account.getJsonMetadata());
-                    if (!node.has("profile")) return null;
-                    node = node.get("profile");
-                    if (node != null)
-                        node = node.get("profile_image");
-                    if (node != null) return node.asText();
-
-                } catch (IOException e) {
-                    System.out.println("error parsing metadata " + account.getJsonMetadata());
-                    e.printStackTrace();
-                }
-            }
-        }
-        return null;
-    }
-
-    @Override
-    public Story getStoryByRoute(String blogName, AccountName authorName, Permlink permlink) throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setSteemApi(SteemApis.DATABASE_API);
         requestObject.setApiMethod(RequestMethods.GET_STATE);
         String[] parameters = {new Route(blogName, authorName, permlink).constructDiscussionRoute()};
         requestObject.setAdditionalParameters(parameters);
 
-        List<Story> response = communicationHandler.performRequest(requestObject, Story.class);
+        List<Avatars> response = communicationHandler.performRequest(requestObject, Avatars.class);
+        if (!response.isEmpty()) {
+            return response.get(0).accountAvatars.get(authorName.getName());
+        }
+        return null;
+    }
+
+    @Override
+    public DiscussionWithComments getStoryByRoute(String blogName, AccountName authorName, Permlink permlink) throws SteemCommunicationException {
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
+        requestObject.setSteemApi(SteemApis.DATABASE_API);
+        requestObject.setApiMethod(RequestMethods.GET_STATE);
+        String[] parameters = {new Route(blogName, authorName, permlink).constructDiscussionRoute()};
+        requestObject.setAdditionalParameters(parameters);
+
+        List<DiscussionWithComments> response = communicationHandler.performRequest(requestObject, DiscussionWithComments.class);
         if (!response.isEmpty()) {
             return response.get(0);
         }
@@ -364,6 +367,21 @@ class GolosDatabaseMethodsHandler implements DatabaseMethods {
         List<UserFeed> response = communicationHandler.performRequest(requestObject, UserFeed.class);
         if (!response.isEmpty()) {
             return response.get(0).getDiscussions();
+        }
+        return null;
+    }
+
+    @Override
+    public List<DiscussionLight> getUserFeedLight(AccountName userName) throws SteemCommunicationException {
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
+        requestObject.setSteemApi(SteemApis.DATABASE_API);
+        requestObject.setApiMethod(RequestMethods.GET_STATE);
+        String[] parameters = {new Route(null, userName, null).constructBlogRoute()};
+        requestObject.setAdditionalParameters(parameters);
+
+        List<UserFeedLight> response = communicationHandler.performRequest(requestObject, UserFeedLight.class);
+        if (!response.isEmpty()) {
+            return response.get(0).discussions;
         }
         return null;
     }

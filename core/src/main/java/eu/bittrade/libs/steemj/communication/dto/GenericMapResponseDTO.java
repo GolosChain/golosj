@@ -52,6 +52,9 @@ public class GenericMapResponseDTO<K, V> {
 
     @Override
     public String toString() {
-        return ToStringBuilder.reflectionToString(this);
+        return "GenericMapResponseDTO{" +
+                "responseId=" + responseId +
+                ", result=" + result +
+                '}';
     }
 }

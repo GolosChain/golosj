@@ -47,6 +47,10 @@ public class SteemVersionInfo {
 
     @Override
     public String toString() {
-        return ToStringBuilder.reflectionToString(this);
+        return "SteemVersionInfo{" +
+                "blockchainVersion='" + blockchainVersion + '\'' +
+                ", steemRevision='" + steemRevision + '\'' +
+                ", fcRevision='" + fcRevision + '\'' +
+                '}';
     }
 }

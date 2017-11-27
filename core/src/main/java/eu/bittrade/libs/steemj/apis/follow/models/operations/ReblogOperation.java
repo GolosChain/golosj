@@ -124,11 +124,6 @@ public class ReblogOperation extends CustomJsonOperationPayload {
     }
 
     @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this);
-    }
-
-    @Override
     public void validate(ValidationType validationType) {
         if (validationType.equals(ValidationType.SKIP_VALIDATION)) {
             return;
@@ -143,5 +138,14 @@ public class ReblogOperation extends CustomJsonOperationPayload {
         } else if (this.getAccount().equals(this.getAuthor())) {
             throw new InvalidParameterException("You cannot reblog your own content.");
         }
+    }
+
+    @Override
+    public String toString() {
+        return "ReblogOperation{" +
+                "account=" + account +
+                ", author=" + author +
+                ", permlink=" + permlink +
+                '}';
     }
 }

@@ -48,6 +48,10 @@ public class FeedHistory {
 
     @Override
     public String toString() {
-        return ToStringBuilder.reflectionToString(this);
+        return "FeedHistory{" +
+                "id=" + id +
+                ", currentPrice=" + currentPrice +
+                ", priceHistory=" + priceHistory +
+                '}';
     }
 }

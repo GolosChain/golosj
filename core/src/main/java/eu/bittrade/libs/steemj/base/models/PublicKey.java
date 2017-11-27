@@ -155,7 +155,10 @@ public class PublicKey implements ByteTransformable {
 
     @Override
     public String toString() {
-        return ToStringBuilder.reflectionToString(this);
+        return "PublicKey{" +
+                "publicKey=" + publicKey +
+                ", prefix='" + prefix + '\'' +
+                '}';
     }
 
     @Override

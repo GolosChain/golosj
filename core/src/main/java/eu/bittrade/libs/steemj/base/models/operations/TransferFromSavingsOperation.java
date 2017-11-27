@@ -65,6 +65,16 @@ public class TransferFromSavingsOperation extends AbstractTransferOperation {
         this.setMemo(memo);
     }
 
+    @Override
+    public String toString() {
+        return "TransferFromSavingsOperation{" +
+                "from=" + from +
+                ", to=" + to +
+                ", amount=" + amount +
+                ", memo='" + memo + '\'' +
+                '}';
+    }
+
     /**
      * Like
      * {@link #TransferFromSavingsOperation(AccountName, AccountName, Asset, long, String)},
@@ -171,11 +181,6 @@ public class TransferFromSavingsOperation extends AbstractTransferOperation {
             throw new SteemInvalidTransactionException(
                     "A problem occured while transforming the operation into a byte array.", e);
         }
-    }
-
-    @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this);
     }
 
     @Override

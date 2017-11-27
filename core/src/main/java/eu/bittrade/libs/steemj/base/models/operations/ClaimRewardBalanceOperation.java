@@ -233,11 +233,6 @@ public class ClaimRewardBalanceOperation extends Operation {
     }
 
     @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this);
-    }
-
-    @Override
     public Map<SignatureObject, List<PrivateKeyType>> getRequiredAuthorities(
             Map<SignatureObject, List<PrivateKeyType>> requiredAuthoritiesBase) {
         return mergeRequiredAuthorities(requiredAuthoritiesBase, this.getAccount(), PrivateKeyType.POSTING);
@@ -247,5 +242,15 @@ public class ClaimRewardBalanceOperation extends Operation {
     public void validate(ValidationType validationType) {
         // TODO Auto-generated method stub
 
+    }
+
+    @Override
+    public String toString() {
+        return "ClaimRewardBalanceOperation{" +
+                "account=" + account +
+                ", rewardSteem=" + rewardSteem +
+                ", rewardSbd=" + rewardSbd +
+                ", rewardVests=" + rewardVests +
+                '}';
     }
 }

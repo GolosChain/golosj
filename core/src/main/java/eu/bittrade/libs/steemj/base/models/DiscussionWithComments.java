@@ -13,12 +13,12 @@ import eu.bittrade.libs.steemj.base.models.deserializer.StoryDeserializer;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonDeserialize(using = StoryDeserializer.class)
-public class Story {
+public class DiscussionWithComments {
     private String currentRoute = "";
     private List<Discussion> discussions = new ArrayList<>();
     private List<ExtendedAccount> involvedAccounts = new ArrayList<>();
 
-    public Story() {
+    public DiscussionWithComments() {
     }
 
     public List<Discussion> getDiscussions() {
@@ -47,8 +47,9 @@ public class Story {
 
     @Override
     public String toString() {
-        return "Story{" +
-                "discussions=" + discussions +
+        return "DiscussionWithComments{" +
+                "currentRoute='" + currentRoute + '\'' +
+                ", discussions=" + discussions +
                 ", involvedAccounts=" + involvedAccounts +
                 '}';
     }

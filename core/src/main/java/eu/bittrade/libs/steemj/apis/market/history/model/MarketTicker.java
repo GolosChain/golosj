@@ -69,6 +69,13 @@ public class MarketTicker {
 
     @Override
     public String toString() {
-        return ToStringBuilder.reflectionToString(this);
+        return "MarketTicker{" +
+                "latest=" + latest +
+                ", lowestAsk=" + lowestAsk +
+                ", highestBid=" + highestBid +
+                ", percentChange=" + percentChange +
+                ", steemVolume=" + steemVolume +
+                ", sbdVolume=" + sbdVolume +
+                '}';
     }
 }

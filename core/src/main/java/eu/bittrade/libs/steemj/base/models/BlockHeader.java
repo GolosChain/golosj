@@ -106,15 +106,21 @@ public class BlockHeader implements ByteTransformable {
     }
 
     @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this);
-    }
-
-    @Override
     public byte[] toByteArray() throws SteemInvalidTransactionException {
         // TODO Auto-generated method stub
         // serializedRecoverAccountOperation
         // .write(SteemJUtils.transformIntToVarIntByteArray(this.getExtensions().size()));
         return null;
+    }
+
+    @Override
+    public String toString() {
+        return "BlockHeader{" +
+                "previous=" + previous +
+                ", timestamp=" + timestamp +
+                ", witness='" + witness + '\'' +
+                ", transactionMerkleRoot=" + transactionMerkleRoot +
+                ", extensions=" + extensions +
+                '}';
     }
 }

@@ -72,6 +72,12 @@ public class BlogEntry {
 
     @Override
     public String toString() {
-        return ToStringBuilder.reflectionToString(this);
+        return "BlogEntry{" +
+                "author=" + author +
+                ", permlink=" + permlink +
+                ", blog=" + blog +
+                ", reblogOn=" + reblogOn +
+                ", entryId=" + entryId +
+                '}';
     }
 }

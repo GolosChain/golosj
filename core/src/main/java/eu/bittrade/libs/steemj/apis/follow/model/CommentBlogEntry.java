@@ -66,6 +66,11 @@ public class CommentBlogEntry {
 
     @Override
     public String toString() {
-        return ToStringBuilder.reflectionToString(this);
+        return "CommentBlogEntry{" +
+                "comment=" + comment +
+                ", blog=" + blog +
+                ", reblogOn=" + reblogOn +
+                ", entryId=" + entryId +
+                '}';
     }
 }

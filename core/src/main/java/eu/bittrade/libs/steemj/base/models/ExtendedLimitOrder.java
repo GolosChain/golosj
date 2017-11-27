@@ -39,6 +39,9 @@ public class ExtendedLimitOrder extends LimitOrder {
 
     @Override
     public String toString() {
-        return ToStringBuilder.reflectionToString(this);
+        return "ExtendedLimitOrder{" +
+                "realPrice=" + realPrice +
+                ", rewarded=" + rewarded +
+                '}';
     }
 }

@@ -316,6 +316,37 @@ public class GlobalProperties {
 
     @Override
     public String toString() {
-        return ToStringBuilder.reflectionToString(this);
+        return "GlobalProperties{" +
+                "id=" + id +
+                ", headBlockNumber=" + headBlockNumber +
+                ", voteRegenerationPerDay=" + voteRegenerationPerDay +
+                ", headBlockId=" + headBlockId +
+                ", time=" + time +
+                ", currentWitness=" + currentWitness +
+                ", totalPow=" + totalPow +
+                ", numPowWitnesses=" + numPowWitnesses +
+                ", virtualSupply=" + virtualSupply +
+                ", currentSupply=" + currentSupply +
+                ", confidentialSupply=" + confidentialSupply +
+                ", currentSdbSupply=" + currentSdbSupply +
+                ", confientialSdbSupply=" + confientialSdbSupply +
+                ", totalVestingFundSteem=" + totalVestingFundSteem +
+                ", totalVestingShares=" + totalVestingShares +
+                ", totalRewardFundSteem=" + totalRewardFundSteem +
+                ", totalRewardShares2=" + totalRewardShares2 +
+                ", pendingRewardedVestingShares=" + pendingRewardedVestingShares +
+                ", pendingRewardedVestingSteem=" + pendingRewardedVestingSteem +
+                ", sdbInterestRate=" + sdbInterestRate +
+                ", sdbPrintRate=" + sdbPrintRate +
+                ", maximumBlockSize=" + maximumBlockSize +
+                ", currentAslot=" + currentAslot +
+                ", recentSlotsFilled=" + recentSlotsFilled +
+                ", participationCount=" + participationCount +
+                ", lastIrreversibleBlockNum=" + lastIrreversibleBlockNum +
+                ", votePowerReserveRate=" + votePowerReserveRate +
+                ", currentReserveRatio=" + currentReserveRatio +
+                ", avarageBlockSize=" + avarageBlockSize +
+                ", maxVirtualBandwidth='" + maxVirtualBandwidth + '\'' +
+                '}';
     }
 }

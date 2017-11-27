@@ -62,6 +62,14 @@ public class WithdrawVestingOperation extends Operation {
         this.setVestingShares(vestingShares);
     }
 
+    @Override
+    public String toString() {
+        return "WithdrawVestingOperation{" +
+                "account=" + account +
+                ", vestingShares=" + vestingShares +
+                '}';
+    }
+
     /**
      * Get the account name of the account that the withdraw vesting operation
      * has been executed for.
@@ -129,11 +137,6 @@ public class WithdrawVestingOperation extends Operation {
             throw new SteemInvalidTransactionException(
                     "A problem occured while transforming the operation into a byte array.", e);
         }
-    }
-
-    @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this);
     }
 
     @Override

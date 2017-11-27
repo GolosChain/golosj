@@ -23,6 +23,8 @@ public class SignedBlock extends SignedBlockHeader {
 
     @Override
     public String toString() {
-        return ToStringBuilder.reflectionToString(this);
+        return "SignedBlock{" +
+                "transactions=" + transactions +
+                '}';
     }
 }

@@ -31,6 +31,9 @@ public class LiquidityBalance {
 
     @Override
     public String toString() {
-        return ToStringBuilder.reflectionToString(this);
+        return "LiquidityBalance{" +
+                "account=" + account +
+                ", weight=" + weight +
+                '}';
     }
 }

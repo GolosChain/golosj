@@ -56,6 +56,16 @@ public class TransferOperation extends AbstractTransferOperation {
         this.setMemo(memo);
     }
 
+    @Override
+    public String toString() {
+        return "TransferOperation{" +
+                "from=" + from +
+                ", to=" + to +
+                ", amount=" + amount +
+                ", memo='" + memo + '\'' +
+                '}';
+    }
+
     /**
      * Set the <code>amount</code> of that will be send.
      * 
@@ -117,11 +127,6 @@ public class TransferOperation extends AbstractTransferOperation {
             throw new SteemInvalidTransactionException(
                     "A problem occured while transforming the operation into a byte array.", e);
         }
-    }
-
-    @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this);
     }
 
     @Override

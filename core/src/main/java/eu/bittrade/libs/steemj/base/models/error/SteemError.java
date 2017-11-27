@@ -23,6 +23,9 @@ public class SteemError {
 
     @Override
     public String toString() {
-        return ToStringBuilder.reflectionToString(this);
+        return "SteemError{" +
+                "responseId=" + responseId +
+                ", steemErrorDetails=" + steemErrorDetails +
+                '}';
     }
 }

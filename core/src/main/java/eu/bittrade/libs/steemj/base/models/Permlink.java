@@ -90,11 +90,6 @@ public class Permlink implements ByteTransformable {
     }
 
     @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this);
-    }
-
-    @Override
     public boolean equals(Object otherPermlink) {
         if (this == otherPermlink)
             return true;
@@ -102,6 +97,13 @@ public class Permlink implements ByteTransformable {
             return false;
         Permlink other = (Permlink) otherPermlink;
         return this.getLink().equals(other.getLink());
+    }
+
+    @Override
+    public String toString() {
+        return "Permlink{" +
+                "link='" + link + '\'' +
+                '}';
     }
 
     @Override

@@ -50,6 +50,9 @@ public class GenericArrayResponseDTO<T> {
 
     @Override
     public String toString() {
-        return ToStringBuilder.reflectionToString(this);
+        return "GenericArrayResponseDTO{" +
+                "responseId=" + responseId +
+                ", result=" + result +
+                '}';
     }
 }

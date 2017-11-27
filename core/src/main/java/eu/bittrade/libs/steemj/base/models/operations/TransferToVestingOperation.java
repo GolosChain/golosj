@@ -130,7 +130,11 @@ public class TransferToVestingOperation extends AbstractTransferOperation {
 
     @Override
     public String toString() {
-        return ToStringBuilder.reflectionToString(this);
+        return "TransferToVestingOperation{" +
+                "from=" + from +
+                ", to=" + to +
+                ", amount=" + amount +
+                '}';
     }
 
     @Override

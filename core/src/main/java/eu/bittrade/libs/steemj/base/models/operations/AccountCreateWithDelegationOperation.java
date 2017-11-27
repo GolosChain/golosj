@@ -180,13 +180,16 @@ public class AccountCreateWithDelegationOperation extends AbstractAccountCreateO
     }
 
     @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this);
-    }
-
-    @Override
     public void validate(ValidationType validationType) {
         // TODO Auto-generated method stub
 
+    }
+
+    @Override
+    public String toString() {
+        return "AccountCreateWithDelegationOperation{" +
+                "delegation=" + delegation +
+                ", extensions=" + extensions +
+                '}';
     }
 }

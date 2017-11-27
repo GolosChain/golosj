@@ -68,6 +68,12 @@ public class Order {
 
     @Override
     public String toString() {
-        return ToStringBuilder.reflectionToString(this);
+        return "Order{" +
+                "created=" + created +
+                ", orderPrice=" + orderPrice +
+                ", realPrice=" + realPrice +
+                ", steem=" + steem +
+                ", sbd=" + sbd +
+                '}';
     }
 }

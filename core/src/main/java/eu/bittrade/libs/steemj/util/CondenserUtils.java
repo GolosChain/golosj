@@ -106,7 +106,7 @@ public class CondenserUtils {
         List<String> links = extractLinksFromContent(content);
 
         for (String link : links) {
-            if (link.matches("/(https?:\\/\\/.*\\.(?:png|jpg))/i")) {
+            if (link.matches("(https?:\\/\\/.*\\.(?:png|jpg))")) {
                 imageArray.add(link);
             } else {
                 linksArray.add(link);

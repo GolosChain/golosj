@@ -1,5 +1,6 @@
 package eu.bittrade.libs.steemj.base.models.error;
 
+import java.util.Arrays;
 import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -56,6 +57,15 @@ public class SteemData {
 
     @Override
     public String toString() {
-        return ToStringBuilder.reflectionToString(this);
+        return "SteemData{" +
+                "name='" + name + '\'' +
+                ", what='" + what + '\'' +
+                ", id='" + id + '\'' +
+                ", posting=" + Arrays.toString(posting) +
+                ", type='" + type + '\'' +
+                ", api=" + api +
+                ", callMethod='" + callMethod + '\'' +
+                ", callParams=" + Arrays.toString(callParams) +
+                '}';
     }
 }

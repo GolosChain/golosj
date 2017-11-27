@@ -28,6 +28,15 @@ public class ChainProperties implements ByteTransformable {
     @JsonProperty("sbd_interest_rate")
     private int sdbInterestRate;
 
+    @Override
+    public String toString() {
+        return "ChainProperties{" +
+                "accountCreationFee=" + accountCreationFee +
+                ", maximumBlockSize=" + maximumBlockSize +
+                ", sdbInterestRate=" + sdbInterestRate +
+                '}';
+    }
+
     /**
      * Create a new ChainProperties object.
      * 
@@ -136,8 +145,4 @@ public class ChainProperties implements ByteTransformable {
         }
     }
 
-    @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this);
-    }
 }

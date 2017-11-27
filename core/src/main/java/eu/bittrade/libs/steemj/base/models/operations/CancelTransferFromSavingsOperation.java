@@ -144,11 +144,6 @@ public class CancelTransferFromSavingsOperation extends Operation {
     }
 
     @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this);
-    }
-
-    @Override
     public Map<SignatureObject, List<PrivateKeyType>> getRequiredAuthorities(
             Map<SignatureObject, List<PrivateKeyType>> requiredAuthoritiesBase) {
         return mergeRequiredAuthorities(requiredAuthoritiesBase, this.getFrom(), PrivateKeyType.ACTIVE);
@@ -158,5 +153,13 @@ public class CancelTransferFromSavingsOperation extends Operation {
     public void validate(ValidationType validationType) {
         // TODO Auto-generated method stub
 
+    }
+
+    @Override
+    public String toString() {
+        return "CancelTransferFromSavingsOperation{" +
+                "from=" + from +
+                ", requestId=" + requestId +
+                '}';
     }
 }

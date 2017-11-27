@@ -119,6 +119,17 @@ public class RewardFund {
 
     @Override
     public String toString() {
-        return ToStringBuilder.reflectionToString(this);
+        return "RewardFund{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", rewardBalance=" + rewardBalance +
+                ", recentClaims=" + recentClaims +
+                ", lastUpdate=" + lastUpdate +
+                ", contentConstant=" + contentConstant +
+                ", percentCurationRewards=" + percentCurationRewards +
+                ", percentContentRewards=" + percentContentRewards +
+                ", authorRewardCurve=" + authorRewardCurve +
+                ", curationRewardCurve=" + curationRewardCurve +
+                '}';
     }
 }

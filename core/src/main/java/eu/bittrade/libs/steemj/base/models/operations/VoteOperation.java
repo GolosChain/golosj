@@ -58,6 +58,16 @@ public class VoteOperation extends Operation {
         this.setWeight(weight);
     }
 
+    @Override
+    public String toString() {
+        return "VoteOperation{" +
+                "voter=" + voter +
+                ", author=" + author +
+                ", permlink=" + permlink +
+                ", weight=" + weight +
+                '}';
+    }
+
     /**
      * Like {@link #VoteOperation(AccountName, AccountName, Permlink, short)},
      * but will use a default weight of '0'.
@@ -204,11 +214,6 @@ public class VoteOperation extends Operation {
             throw new SteemInvalidTransactionException(
                     "A problem occured while transforming the operation into a byte array.", e);
         }
-    }
-
-    @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this);
     }
 
     @Override

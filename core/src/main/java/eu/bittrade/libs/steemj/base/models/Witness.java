@@ -255,6 +255,28 @@ public class Witness {
 
     @Override
     public String toString() {
-        return ToStringBuilder.reflectionToString(this);
+        return "Witness{" +
+                "id=" + id +
+                ", owner=" + owner +
+                ", created=" + created +
+                ", url=" + url +
+                ", totalMissed=" + totalMissed +
+                ", lastAslot=" + lastAslot +
+                ", lastConfirmedBlockNum=" + lastConfirmedBlockNum +
+                ", powWorker=" + powWorker +
+                ", signingKey=" + signingKey +
+                ", props=" + props +
+                ", sbdExchangeRate=" + sbdExchangeRate +
+                ", lastSbdExchangeUpdate=" + lastSbdExchangeUpdate +
+                ", votes=" + votes +
+                ", schedule=" + schedule +
+                ", virtualLastUpdate='" + virtualLastUpdate + '\'' +
+                ", virtualPosition='" + virtualPosition + '\'' +
+                ", virtualScheduledTime=" + virtualScheduledTime +
+                ", lastWork=" + lastWork +
+                ", runningVersion=" + runningVersion +
+                ", hardforkVersionVote=" + hardforkVersionVote +
+                ", hardforkTimeVote=" + hardforkTimeVote +
+                '}';
     }
 }

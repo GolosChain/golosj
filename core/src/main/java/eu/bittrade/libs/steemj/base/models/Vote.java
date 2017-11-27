@@ -61,6 +61,12 @@ public class Vote {
 
     @Override
     public String toString() {
-        return ToStringBuilder.reflectionToString(this);
+        return "Vote{" +
+                "authorperm='" + authorperm + '\'' +
+                ", weight=" + weight +
+                ", rshares=" + rshares +
+                ", percent=" + percent +
+                ", time=" + time +
+                '}';
     }
 }

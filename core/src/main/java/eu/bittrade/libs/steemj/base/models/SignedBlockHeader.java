@@ -41,6 +41,8 @@ public class SignedBlockHeader extends BlockHeader implements ByteTransformable 
 
     @Override
     public String toString() {
-        return ToStringBuilder.reflectionToString(this);
+        return "SignedBlockHeader{" +
+                "witnessSignature='" + witnessSignature + '\'' +
+                '}';
     }
 }

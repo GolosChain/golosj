@@ -242,11 +242,6 @@ public class CustomJsonOperation extends Operation {
     }
 
     @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this);
-    }
-
-    @Override
     public Map<SignatureObject, List<PrivateKeyType>> getRequiredAuthorities(
             Map<SignatureObject, List<PrivateKeyType>> requiredAuthoritiesBase) {
         Map<SignatureObject, List<PrivateKeyType>> requiredAuthorities = requiredAuthoritiesBase;
@@ -262,5 +257,15 @@ public class CustomJsonOperation extends Operation {
     @Override
     public void validate(ValidationType validationType) {
 
+    }
+
+    @Override
+    public String toString() {
+        return "CustomJsonOperation{" +
+                "requiredAuths=" + requiredAuths +
+                ", requiredPostingAuths=" + requiredPostingAuths +
+                ", id='" + id + '\'' +
+                ", json='" + json + '\'' +
+                '}';
     }
 }

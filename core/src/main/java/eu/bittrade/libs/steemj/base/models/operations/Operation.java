@@ -202,6 +202,8 @@ public abstract class Operation implements ByteTransformable, Validatable {
 
     @Override
     public String toString() {
-        return ToStringBuilder.reflectionToString(this);
+        return "Operation{" +
+                "virtual=" + virtual +
+                '}';
     }
 }

@@ -25,8 +25,5 @@ import eu.bittrade.libs.steemj.interfaces.ByteTransformable;
 @JsonSerialize(using = BlockHeaderExtensionsSerializer.class)
 @JsonDeserialize(using = BlockHeaderExtensionsDeserializer.class)
 public abstract class BlockHeaderExtensions implements ByteTransformable {
-    @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this);
-    }
+
 }

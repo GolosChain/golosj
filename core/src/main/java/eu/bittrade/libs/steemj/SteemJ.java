@@ -1,27 +1,7 @@
 package eu.bittrade.libs.steemj;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import eu.bittrade.libs.steemj.apis.follow.FollowApi;
-import eu.bittrade.libs.steemj.apis.follow.enums.FollowType;
-import eu.bittrade.libs.steemj.apis.follow.model.*;
-import eu.bittrade.libs.steemj.apis.market.history.MarketHistoryApi;
-import eu.bittrade.libs.steemj.apis.market.history.model.Bucket;
-import eu.bittrade.libs.steemj.apis.market.history.model.MarketTicker;
-import eu.bittrade.libs.steemj.apis.market.history.model.MarketTrade;
-import eu.bittrade.libs.steemj.apis.market.history.model.MarketVolume;
-import eu.bittrade.libs.steemj.base.models.*;
-import eu.bittrade.libs.steemj.base.models.operations.*;
-import eu.bittrade.libs.steemj.communication.BlockAppliedCallback;
-import eu.bittrade.libs.steemj.communication.CallbackHub;
-import eu.bittrade.libs.steemj.communication.CommunicationHandler;
-import eu.bittrade.libs.steemj.communication.dto.RequestWrapperDTO;
-import eu.bittrade.libs.steemj.configuration.SteemJConfig;
-import eu.bittrade.libs.steemj.enums.*;
-import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
-import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
-import eu.bittrade.libs.steemj.exceptions.SteemTransformationException;
-import eu.bittrade.libs.steemj.util.CondenserUtils;
-import eu.bittrade.libs.steemj.util.SteemJUtils;
+
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.bitcoinj.core.ECKey;
 import org.bitcoinj.core.Sha256Hash;
@@ -31,7 +11,82 @@ import org.slf4j.LoggerFactory;
 import java.security.InvalidParameterException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.TimeZone;
+import java.util.UUID;
+
+import eu.bittrade.libs.steemj.apis.follow.FollowApi;
+import eu.bittrade.libs.steemj.apis.follow.enums.FollowType;
+import eu.bittrade.libs.steemj.apis.follow.model.AccountReputation;
+import eu.bittrade.libs.steemj.apis.follow.model.BlogEntry;
+import eu.bittrade.libs.steemj.apis.follow.model.CommentBlogEntry;
+import eu.bittrade.libs.steemj.apis.follow.model.CommentFeedEntry;
+import eu.bittrade.libs.steemj.apis.follow.model.FeedEntry;
+import eu.bittrade.libs.steemj.apis.follow.model.FollowApiObject;
+import eu.bittrade.libs.steemj.apis.follow.model.FollowCountApiObject;
+import eu.bittrade.libs.steemj.apis.follow.model.PostsPerAuthorPair;
+import eu.bittrade.libs.steemj.apis.market.history.MarketHistoryApi;
+import eu.bittrade.libs.steemj.apis.market.history.model.Bucket;
+import eu.bittrade.libs.steemj.apis.market.history.model.MarketTicker;
+import eu.bittrade.libs.steemj.apis.market.history.model.MarketTrade;
+import eu.bittrade.libs.steemj.apis.market.history.model.MarketVolume;
+import eu.bittrade.libs.steemj.base.models.AccountName;
+import eu.bittrade.libs.steemj.base.models.AppliedOperation;
+import eu.bittrade.libs.steemj.base.models.Asset;
+import eu.bittrade.libs.steemj.base.models.BlockHeader;
+import eu.bittrade.libs.steemj.base.models.ChainProperties;
+import eu.bittrade.libs.steemj.base.models.Config;
+import eu.bittrade.libs.steemj.base.models.Discussion;
+import eu.bittrade.libs.steemj.base.models.DiscussionQuery;
+import eu.bittrade.libs.steemj.base.models.ExtendedAccount;
+import eu.bittrade.libs.steemj.base.models.ExtendedLimitOrder;
+import eu.bittrade.libs.steemj.base.models.FeedHistory;
+import eu.bittrade.libs.steemj.base.models.GlobalProperties;
+import eu.bittrade.libs.steemj.base.models.LiquidityBalance;
+import eu.bittrade.libs.steemj.base.models.OrderBook;
+import eu.bittrade.libs.steemj.base.models.Permlink;
+import eu.bittrade.libs.steemj.base.models.Price;
+import eu.bittrade.libs.steemj.base.models.PublicKey;
+import eu.bittrade.libs.steemj.base.models.RewardFund;
+import eu.bittrade.libs.steemj.base.models.ScheduledHardfork;
+import eu.bittrade.libs.steemj.base.models.SignedBlockWithInfo;
+import eu.bittrade.libs.steemj.base.models.SignedTransaction;
+import eu.bittrade.libs.steemj.base.models.SteemVersionInfo;
+import eu.bittrade.libs.steemj.base.models.TimePointSec;
+import eu.bittrade.libs.steemj.base.models.TrendingTag;
+import eu.bittrade.libs.steemj.base.models.Vote;
+import eu.bittrade.libs.steemj.base.models.VoteState;
+import eu.bittrade.libs.steemj.base.models.Witness;
+import eu.bittrade.libs.steemj.base.models.WitnessSchedule;
+import eu.bittrade.libs.steemj.base.models.operations.CommentOperation;
+import eu.bittrade.libs.steemj.base.models.operations.CommentOptionsOperation;
+import eu.bittrade.libs.steemj.base.models.operations.CustomJsonOperation;
+import eu.bittrade.libs.steemj.base.models.operations.DeleteCommentOperation;
+import eu.bittrade.libs.steemj.base.models.operations.Operation;
+import eu.bittrade.libs.steemj.base.models.operations.VoteOperation;
+import eu.bittrade.libs.steemj.communication.BlockAppliedCallback;
+import eu.bittrade.libs.steemj.communication.CallbackHub;
+import eu.bittrade.libs.steemj.communication.CommunicationHandler;
+import eu.bittrade.libs.steemj.communication.dto.RequestWrapperDTO;
+import eu.bittrade.libs.steemj.configuration.SteemJConfig;
+import eu.bittrade.libs.steemj.enums.AssetSymbolType;
+import eu.bittrade.libs.steemj.enums.DiscussionSortType;
+import eu.bittrade.libs.steemj.enums.PrivateKeyType;
+import eu.bittrade.libs.steemj.enums.RequestMethods;
+import eu.bittrade.libs.steemj.enums.RewardFundType;
+import eu.bittrade.libs.steemj.enums.SteemApis;
+import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
+import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
+import eu.bittrade.libs.steemj.exceptions.SteemTransformationException;
+import eu.bittrade.libs.steemj.util.CondenserUtils;
+import eu.bittrade.libs.steemj.util.SteemJUtils;
+
+import static gcardone.junidecode.Junidecode.unidecode;
+
 
 /**
  * This class is a wrapper for the Steem web socket API and provides all
@@ -2241,7 +2296,7 @@ public class SteemJ {
 
         // Generate the permanent link from the title by replacing all unallowed
         // characters.
-        Permlink permlink = new Permlink(title.toLowerCase().replaceAll("[^a-z0-9-]+", ""));
+        Permlink permlink = new Permlink(unidecode(title.toLowerCase()).replaceAll("[^a-z0-9-]+", ""));
         // On new posts the parentPermlink is the main tag.
         Permlink parentPermlink = new Permlink(tags[0]);
         // One new posts the parentAuthor is empty.
@@ -2259,7 +2314,7 @@ public class SteemJ {
         short percentSteemDollars = (short) 10000;
         Asset maxAcceptedPayout = new Asset(1000000000, AssetSymbolType.GBG);
 
-        BeneficiaryRouteType beneficiaryRouteType = new BeneficiaryRouteType(SteemJConfig.getSteemJAccount(),
+      /*  BeneficiaryRouteType beneficiaryRouteType = new BeneficiaryRouteType(SteemJConfig.getSteemJAccount(),
                 SteemJConfig.getInstance().getSteemJWeight());
 
         ArrayList<BeneficiaryRouteType> beneficiaryRouteTypes = new ArrayList<>();
@@ -2269,11 +2324,11 @@ public class SteemJ {
         commentPayoutBeneficiaries.setBeneficiaries(beneficiaryRouteTypes);
 
         ArrayList<CommentOptionsExtension> commentOptionsExtensions = new ArrayList<>();
-        commentOptionsExtensions.add(commentPayoutBeneficiaries);
+        commentOptionsExtensions.add(commentPayoutBeneficiaries);*/
 
         CommentOptionsOperation commentOptionsOperation = new CommentOptionsOperation(authorThatPublishsThePost,
                 permlink, maxAcceptedPayout, percentSteemDollars, allowVotes, allowCurationRewards,
-                commentOptionsExtensions);
+                null);
 
         operations.add(commentOptionsOperation);
 
@@ -2344,7 +2399,7 @@ public class SteemJ {
         short percentSteemDollars = (short) 10000;
         Asset maxAcceptedPayout = new Asset(1000000000, AssetSymbolType.GBG);
 
-        BeneficiaryRouteType beneficiaryRouteType = new BeneficiaryRouteType(SteemJConfig.getSteemJAccount(),
+      /*  BeneficiaryRouteType beneficiaryRouteType = new BeneficiaryRouteType(SteemJConfig.getSteemJAccount(),
                 SteemJConfig.getInstance().getSteemJWeight());
 
         ArrayList<BeneficiaryRouteType> beneficiaryRouteTypes = new ArrayList<>();
@@ -2354,11 +2409,11 @@ public class SteemJ {
         commentPayoutBeneficiaries.setBeneficiaries(beneficiaryRouteTypes);
 
         ArrayList<CommentOptionsExtension> commentOptionsExtensions = new ArrayList<>();
-        commentOptionsExtensions.add(commentPayoutBeneficiaries);
+        commentOptionsExtensions.add(commentPayoutBeneficiaries);*/
 
         CommentOptionsOperation commentOptionsOperation = new CommentOptionsOperation(authorThatPublishsTheComment,
                 permlink, maxAcceptedPayout, percentSteemDollars, allowVotes, allowCurationRewards,
-                commentOptionsExtensions);
+                null);
 
         operations.add(commentOptionsOperation);
 

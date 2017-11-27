@@ -96,13 +96,22 @@ public class AccountCreateOperation extends AbstractAccountCreateOperation {
     }
 
     @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this);
-    }
-
-    @Override
     public void validate(ValidationType validationType) {
         // TODO Auto-generated method stub
 
+    }
+
+    @Override
+    public String toString() {
+        return "AccountCreateOperation{" +
+                "owner=" + owner +
+                ", active=" + active +
+                ", posting=" + posting +
+                ", memoKey=" + memoKey +
+                ", jsonMetadata='" + jsonMetadata + '\'' +
+                ", fee=" + fee +
+                ", creator=" + creator +
+                ", newAccountName=" + newAccountName +
+                '}';
     }
 }

@@ -47,6 +47,10 @@ public class FollowCountApiObject {
 
     @Override
     public String toString() {
-        return ToStringBuilder.reflectionToString(this);
+        return "FollowCountApiObject{" +
+                "account=" + account +
+                ", followerCount=" + followerCount +
+                ", followingCount=" + followingCount +
+                '}';
     }
 }

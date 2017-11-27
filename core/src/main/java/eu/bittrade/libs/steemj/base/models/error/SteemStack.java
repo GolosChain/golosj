@@ -24,6 +24,10 @@ public class SteemStack {
 
     @Override
     public String toString() {
-        return ToStringBuilder.reflectionToString(this);
+        return "SteemStack{" +
+                "context=" + context +
+                ", format='" + format + '\'' +
+                ", data=" + data +
+                '}';
     }
 }

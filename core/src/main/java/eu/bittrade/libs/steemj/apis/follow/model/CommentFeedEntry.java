@@ -67,6 +67,11 @@ public class CommentFeedEntry {
 
     @Override
     public String toString() {
-        return ToStringBuilder.reflectionToString(this);
+        return "CommentFeedEntry{" +
+                "comment=" + comment +
+                ", reblogBy=" + reblogBy +
+                ", reblogOn=" + reblogOn +
+                ", entryId=" + entryId +
+                '}';
     }
 }

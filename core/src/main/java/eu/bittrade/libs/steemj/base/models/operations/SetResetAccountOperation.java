@@ -62,6 +62,15 @@ public class SetResetAccountOperation extends Operation {
         this.setResetAccount(resetAccount);
     }
 
+    @Override
+    public String toString() {
+        return "SetResetAccountOperation{" +
+                "account=" + account +
+                ", currentResetAccount=" + currentResetAccount +
+                ", resetAccount=" + resetAccount +
+                '}';
+    }
+
     /**
      * Get the account which the "set reset account operation" has been executed
      * for.
@@ -166,11 +175,6 @@ public class SetResetAccountOperation extends Operation {
             throw new SteemInvalidTransactionException(
                     "A problem occured while transforming the operation into a byte array.", e);
         }
-    }
-
-    @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this);
     }
 
     @Override

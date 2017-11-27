@@ -195,11 +195,6 @@ public class ChangeRecoveryAccountOperation extends Operation {
     }
 
     @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this);
-    }
-
-    @Override
     public Map<SignatureObject, List<PrivateKeyType>> getRequiredAuthorities(
             Map<SignatureObject, List<PrivateKeyType>> requiredAuthoritiesBase) {
         return mergeRequiredAuthorities(requiredAuthoritiesBase, this.getAccountToRecover(), PrivateKeyType.OWNER);
@@ -209,5 +204,14 @@ public class ChangeRecoveryAccountOperation extends Operation {
     public void validate(ValidationType validationType) {
         // TODO Auto-generated method stub
 
+    }
+
+    @Override
+    public String toString() {
+        return "ChangeRecoveryAccountOperation{" +
+                "accountToRecover=" + accountToRecover +
+                ", newRecoveryAccount=" + newRecoveryAccount +
+                ", extensions=" + extensions +
+                '}';
     }
 }

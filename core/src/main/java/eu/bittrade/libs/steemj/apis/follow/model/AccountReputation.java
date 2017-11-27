@@ -34,6 +34,9 @@ public class AccountReputation {
 
     @Override
     public String toString() {
-        return ToStringBuilder.reflectionToString(this);
+        return "AccountReputation{" +
+                "account=" + account +
+                ", reputation=" + reputation +
+                '}';
     }
 }

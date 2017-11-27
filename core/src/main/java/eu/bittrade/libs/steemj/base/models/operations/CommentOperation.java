@@ -356,11 +356,6 @@ public class CommentOperation extends Operation {
     }
 
     @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this);
-    }
-
-    @Override
     public Map<SignatureObject, List<PrivateKeyType>> getRequiredAuthorities(
             Map<SignatureObject, List<PrivateKeyType>> requiredAuthoritiesBase) {
         return mergeRequiredAuthorities(requiredAuthoritiesBase, this.getAuthor(), PrivateKeyType.POSTING);
@@ -370,5 +365,18 @@ public class CommentOperation extends Operation {
     public void validate(ValidationType validationType) {
         // TODO Auto-generated method stub
 
+    }
+
+    @Override
+    public String toString() {
+        return "CommentOperation{" +
+                "parentAuthor=" + parentAuthor +
+                ", parentPermlink=" + parentPermlink +
+                ", author=" + author +
+                ", permlink=" + permlink +
+                ", title='" + title + '\'' +
+                ", body='" + body + '\'' +
+                ", jsonMetadata='" + jsonMetadata + '\'' +
+                '}';
     }
 }

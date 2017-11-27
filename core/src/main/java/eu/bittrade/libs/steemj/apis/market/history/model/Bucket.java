@@ -160,6 +160,20 @@ public class Bucket {
 
     @Override
     public String toString() {
-        return ToStringBuilder.reflectionToString(this);
+        return "Bucket{" +
+                "id=" + id +
+                ", open=" + open +
+                ", seconds=" + seconds +
+                ", highSteem=" + highSteem +
+                ", highSbd=" + highSbd +
+                ", lowSteem=" + lowSteem +
+                ", lowSbd=" + lowSbd +
+                ", openSteem=" + openSteem +
+                ", openSbd=" + openSbd +
+                ", closeSteem=" + closeSteem +
+                ", closeSbd=" + closeSbd +
+                ", steemVolume=" + steemVolume +
+                ", sbdVolume=" + sbdVolume +
+                '}';
     }
 }

@@ -172,11 +172,6 @@ public class DelegateVestingSharesOperation extends Operation {
     }
 
     @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this);
-    }
-
-    @Override
     public Map<SignatureObject, List<PrivateKeyType>> getRequiredAuthorities(
             Map<SignatureObject, List<PrivateKeyType>> requiredAuthoritiesBase) {
         return mergeRequiredAuthorities(requiredAuthoritiesBase, this.getDelegator(), PrivateKeyType.ACTIVE);
@@ -186,5 +181,14 @@ public class DelegateVestingSharesOperation extends Operation {
     public void validate(ValidationType validationType) {
         // TODO Auto-generated method stub
 
+    }
+
+    @Override
+    public String toString() {
+        return "DelegateVestingSharesOperation{" +
+                "delegator=" + delegator +
+                ", delegatee=" + delegatee +
+                ", vestingShares=" + vestingShares +
+                '}';
     }
 }

@@ -48,6 +48,14 @@ public class BeneficiaryRouteType implements ByteTransformable, Validatable {
     public BeneficiaryRouteType() {
     }
 
+    @Override
+    public String toString() {
+        return "BeneficiaryRouteType{" +
+                "account=" + account +
+                ", weight=" + weight +
+                '}';
+    }
+
     /**
      * Get the account who is the beneficiary of this comment.
      * 
@@ -111,11 +119,6 @@ public class BeneficiaryRouteType implements ByteTransformable, Validatable {
             throw new SteemInvalidTransactionException(
                     "A problem occured while transforming the operation into a byte array.", e);
         }
-    }
-
-    @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this);
     }
 
     @Override

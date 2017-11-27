@@ -1,6 +1,7 @@
 package eu.bittrade.libs.steemj.base.models;
 
 import java.math.BigInteger;
+import java.util.Arrays;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
@@ -354,6 +355,43 @@ public class Comment {
 
     @Override
     public String toString() {
-        return ToStringBuilder.reflectionToString(this);
+        return "Comment{" +
+                "id=" + id +
+                ", category='" + category + '\'' +
+                ", parentAuthor=" + parentAuthor +
+                ", parentPermlink=" + parentPermlink +
+                ", author=" + author +
+                ", permlink=" + permlink +
+                ", title='" + title + '\'' +
+                ", body='" + body + '\'' +
+                ", jsonMetadata='" + jsonMetadata + '\'' +
+                ", lastUpdate=" + lastUpdate +
+                ", created=" + created +
+                ", active=" + active +
+                ", lastPayout=" + lastPayout +
+                ", depth=" + depth +
+                ", children=" + children +
+                ", childrenRshares2='" + childrenRshares2 + '\'' +
+                ", netRshares=" + netRshares +
+                ", absRshares=" + absRshares +
+                ", voteRshares=" + voteRshares +
+                ", childrenAbsRshares=" + childrenAbsRshares +
+                ", cashoutTime=" + cashoutTime +
+                ", maxCashoutTime=" + maxCashoutTime +
+                ", totalVoteWeight=" + totalVoteWeight +
+                ", rewardWeight=" + rewardWeight +
+                ", totalPayoutValue=" + totalPayoutValue +
+                ", curatorPayoutValue=" + curatorPayoutValue +
+                ", authorRewards=" + authorRewards +
+                ", netVotes=" + netVotes +
+                ", rootComment=" + rootComment +
+                ", mode='" + mode + '\'' +
+                ", maxAcceptedPayout=" + maxAcceptedPayout +
+                ", percentSteemDollars=" + percentSteemDollars +
+                ", allowReplies=" + allowReplies +
+                ", allowVotes=" + allowVotes +
+                ", allowCurationRewards=" + allowCurationRewards +
+                ", beneficiaries=" + Arrays.toString(beneficiaries) +
+                '}';
     }
 }

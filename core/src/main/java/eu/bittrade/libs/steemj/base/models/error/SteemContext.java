@@ -49,6 +49,14 @@ public class SteemContext {
 
     @Override
     public String toString() {
-        return ToStringBuilder.reflectionToString(this);
+        return "SteemContext{" +
+                "level='" + level + '\'' +
+                ", file='" + file + '\'' +
+                ", line=" + line +
+                ", method='" + method + '\'' +
+                ", hostname='" + hostname + '\'' +
+                ", threadName='" + threadName + '\'' +
+                ", timestamp=" + timestamp +
+                '}';
     }
 }
