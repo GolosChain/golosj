@@ -334,6 +334,8 @@ class GolosDatabaseMethodsHandler implements DatabaseMethods {
 
         List<Avatars> response = communicationHandler.performRequest(requestObject, Avatars.class);
         if (!response.isEmpty()) {
+            Avatars a = response.get(0);
+            if (a == null)return null;
             return response.get(0).accountAvatars.get(authorName.getName());
         }
         return null;

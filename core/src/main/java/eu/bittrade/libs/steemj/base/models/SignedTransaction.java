@@ -196,7 +196,7 @@ public class SignedTransaction extends Transaction implements ByteTransformable,
                  * performance (thanks to ray66rus).
                  */
                 if (isCanonical(SteemJUtils.createSignedTransaction(0, signature, requiredPrivateKey))) {
-                    this.getExpirationDate().setDateTime(this.getExpirationDate().getDateTimeAsTimestamp() + 1);
+                    this.getExpirationDate().setDateTime(this.getExpirationDate().getDateTimeAsTimestamp() + 2);
                 } else {
                     isCanonical = true;
                     int keyType = SteemJUtils.getKeyType(signature, messageAsHash, requiredPrivateKey);

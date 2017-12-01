@@ -3,13 +3,7 @@ package eu.bittrade.libs.steemj.base.models;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.annotations.VisibleForTesting;
-import eu.bittrade.libs.steemj.base.models.operations.Operation;
-import eu.bittrade.libs.steemj.configuration.SteemJConfig;
-import eu.bittrade.libs.steemj.enums.PrivateKeyType;
-import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
-import eu.bittrade.libs.steemj.interfaces.SignatureObject;
-import eu.bittrade.libs.steemj.util.NumbersUtils;
-import org.apache.commons.lang3.builder.ToStringBuilder;
+
 import org.bitcoinj.core.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,10 +12,19 @@ import java.io.Serializable;
 import java.security.InvalidParameterException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.TimeZone;
+
+import eu.bittrade.libs.steemj.base.models.operations.Operation;
+import eu.bittrade.libs.steemj.configuration.SteemJConfig;
+import eu.bittrade.libs.steemj.enums.PrivateKeyType;
+import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
+import eu.bittrade.libs.steemj.interfaces.SignatureObject;
+import eu.bittrade.libs.steemj.util.NumbersUtils;
 
 /**
  * This class represents a Steem "transaction" object.
@@ -106,10 +109,12 @@ public class Transaction implements Serializable {
     public Transaction(BlockId blockId, List<Operation> operations, List<FutureExtensions> extensions) {
         this.setRefBlockNum(blockId.getNumberFromHash());
         this.setRefBlockPrefix(blockId.getHashValue());
-        this.setExpirationDate(new TimePointSec(
-                System.currentTimeMillis() + SteemJConfig.getInstance().getMaximumExpirationDateOffset() - 60000L));
         this.setOperations(operations);
         this.setExtensions(extensions);
+        Calendar c = Calendar.getInstance();
+        c.setTimeZone(TimeZone.getTimeZone("GMT"));
+        this.setExpirationDate(new TimePointSec(
+                c.getTimeInMillis() + SteemJConfig.getInstance().getMaximumExpirationDateOffset() - 600_000L));
     }
 
     /**

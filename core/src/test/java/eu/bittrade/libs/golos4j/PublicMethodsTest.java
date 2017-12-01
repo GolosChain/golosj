@@ -222,7 +222,7 @@ public class PublicMethodsTest {
     }
 
     @Test
-    public void testAccounts() throws Exception {
+    public void testAccounts() throws Exception {//0,000268379
         List<ExtendedAccount> accounts = golos4J.getDatabaseMethods().getAccounts(Collections.singletonList(new AccountName("yuri-vlad")));
         assertEquals(1, accounts.size());
         System.out.println("posting key is " + ((PublicKey) accounts.get(0).getPosting().getKeyAuths().keySet().toArray()[0]).getAddressFromPublicKey());

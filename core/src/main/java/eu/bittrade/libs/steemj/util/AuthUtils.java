@@ -43,7 +43,7 @@ public class AuthUtils {
         }
         for (PrivateKeyType role : roles) {
             final String seed = login + role.toString().toLowerCase() + password;
-            final String brainKey = StringUtils.join(seed.trim().split("[\\t\\n\\v\\f\\r]+"), " ");
+            final String brainKey = StringUtils.join(seed.trim().split("[\\s]+"), " ");
             byte[] hashSha256 = null;
             try {
                 hashSha256 = messageDigest256.digest(brainKey.getBytes("UTF-8"));
@@ -71,7 +71,7 @@ public class AuthUtils {
         }
         for (PrivateKeyType role : roles) {
             final String seed = login + role.toString().toLowerCase() + password;
-            final String brainKey = StringUtils.join(seed.trim().split("/[\\t\\n\\v\\f\\r ]+/"), " ");
+            final String brainKey = StringUtils.join(seed.trim().split("[\\s]+"), " ");
             byte[] hashSha256 = null;
             try {
                 hashSha256 = messageDigest256.digest(brainKey.getBytes("UTF-8"));
@@ -84,24 +84,6 @@ public class AuthUtils {
         }
         return out;
     }
-/*
-
-    public static GolosPublicWiF fromPrivate(@Nonnull GolosPrivateWif privateWif) throws GolosTransformationException {
-
-        try {
-            checkPrivateWiF(privateWif.getPrivateWiF());
-        } catch (IllegalArgumentException e) {
-            throw new GolosTransformationException(e.getMessage(), e);
-        }
-
-        final byte[] privateWifBytesWithHashAndVesrionNumber = Base58.decode(privateWif.getPrivateWiF());
-        byte[] privateKeyBytes = ArrayUtils.subarray(privateWifBytesWithHashAndVesrionNumber, 1, privateWifBytesWithHashAndVesrionNumber.length - HASH_BYTES_LENGTH);
-
-        ECKey ecKey = ECKey.fromPrivate(privateKeyBytes);
-        byte[] addy = ArrayUtils.addAll(ecKey.getPubKey(), generateChecksumRipeMd160(ecKey.getPubKey()));
-        return new GolosPublicWiF(GolosAddressPrefix.GLS.toString() + Base58.encode(addy));
-    }
-*/
 
     public static byte[] generateChecksumSha256(@Nonnull byte[] in) {
         MessageDigest messageDigest256 = null;
@@ -170,10 +152,7 @@ public class AuthUtils {
             byte[] pubPotential = Base58.decode(publicWiF.substring(3));
             byte[] potentialCleaned = ArrayUtils.subarray(pubPotential, 0, pubPotential.length - 4);
             return Arrays.equals(publicKey, potentialCleaned);
-        } catch (AddressFormatException e) {
-            e.printStackTrace();
-            return false;
-        } catch (IllegalArgumentException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return false;
         }

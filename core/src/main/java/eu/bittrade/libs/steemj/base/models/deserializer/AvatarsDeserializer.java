@@ -26,6 +26,7 @@ public class AvatarsDeserializer extends JsonDeserializer<Avatars> {
         ObjectCodec codec = jsonParser.getCodec();
         TreeNode rootNode = codec.readTree(jsonParser);
         TreeNode accs = rootNode.get("accounts");
+        if (accs == null) return null;
         Iterator<String> iter = accs.fieldNames();
         while (iter.hasNext()) {
             String s = iter.next();
@@ -37,7 +38,7 @@ public class AvatarsDeserializer extends JsonDeserializer<Avatars> {
             ObjectNode node = (ObjectNode) CommunicationHandler.getObjectMapper().readTree(profileText);
             if (node == null) {
                 out.put(s, null);
-            }else  {
+            } else {
                 TreeNode profile = node.get("profile");
                 if (profile == null) out.put(s, null);
                 else {

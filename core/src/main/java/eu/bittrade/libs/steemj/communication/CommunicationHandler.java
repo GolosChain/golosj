@@ -163,6 +163,7 @@ public class CommunicationHandler extends Endpoint implements MessageHandler.Who
                 // TODO: Find a better solution for errors in general.
                 throw new SteemResponseError(mapper.readValue(rawJsonResponse, SteemError.class));
             } catch (IOException ex) {
+                ex.printStackTrace();
                 throw new SteemTransformationException("Could not transform the response into an object.", ex);
             } catch (IllegalArgumentException ex) {
                 throw new SteemTransformationException("corrupted input", ex);
@@ -170,6 +171,8 @@ public class CommunicationHandler extends Endpoint implements MessageHandler.Who
 
         } catch (IOException | EncodeException | InterruptedException e) {
             throw new SteemCommunicationException("Could not send the message to the Steem Node.", e);
+        } catch (NullPointerException e) {
+            throw new SteemCommunicationException("Could convert nu;l object to response", e);
         }
     }
 
@@ -202,6 +205,7 @@ public class CommunicationHandler extends Endpoint implements MessageHandler.Who
      */
     private void sendMessageSynchronously(RequestWrapperDTO requestObject)
             throws IOException, EncodeException, SteemTimeoutException, InterruptedException {
+        System.out.println("send message sync from " + Thread.currentThread().getName());
         responseCountDownLatch = new CountDownLatch(1);
 
         session.getBasicRemote().sendObject(requestObject);
@@ -268,6 +272,7 @@ public class CommunicationHandler extends Endpoint implements MessageHandler.Who
             simpleModule.addSerializer(Boolean.class, new BooleanSerializer());
             simpleModule.addSerializer(boolean.class, new BooleanSerializer());
             mapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
+            mapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
             mapper.registerModule(simpleModule);
             mapper.setNodeFactory(new SteemJNodeFactory());
         }
