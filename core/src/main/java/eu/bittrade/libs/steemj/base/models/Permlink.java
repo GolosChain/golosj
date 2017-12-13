@@ -71,8 +71,7 @@ public class Permlink implements ByteTransformable {
         } else {
             if (!link.isEmpty()) {
                 if (link.length() < 0 || link.length() > 256) {
-                    throw new InvalidParameterException(
-                            "A permlink needs to have a minimum length of 0 and a maximum length of 256.");
+                    this.link = link.substring(256);
                 } else if (!link.matches("^[a-z0-9\\-]{0,256}")) {
                     throw new InvalidParameterException(
                             "The provided permlink contains invalid characters. Only 'a-z', '0-9' and '-' are allowed. "

@@ -2385,7 +2385,7 @@ public class SteemJ {
         // UUID.
         Permlink permlink = new Permlink("re-" + authorOfThePostOrCommentToReplyTo.getName() + "-"
                 + permlinkOfThePostOrCommentToReplyTo.getLink() + "-" + System.currentTimeMillis() + "t"
-                + UUID.randomUUID().toString() + "uid");
+                + UUID.randomUUID().toString().substring(8) + "uid");
 
         String jsonMetadata = CondenserUtils.generateSteemitMetadata(content, tags, "golos4J/0.0.1", "markdown");
 

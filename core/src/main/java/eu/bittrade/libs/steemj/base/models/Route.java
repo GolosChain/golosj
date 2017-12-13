@@ -36,7 +36,7 @@ public class Route {
     public String constructDiscussionRoute() {
         if (blogName == null || permlink == null)
             throw new IllegalStateException("blogname and permlink must be not null for discussion route");
-        return blogName.replace("-", "--") + "/@" + authorName.getName() + "/" + permlink.getLink();
+        return blogName + "/@" + authorName.getName() + "/" + permlink.getLink();
     }
 
     @Nonnull

@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.AppliedOperation;
@@ -106,6 +107,18 @@ class GolosDatabaseMethodsHandler implements DatabaseMethods {
     @Override
     public Discussion getContent(AccountName authorName, Permlink permlink) throws SteemCommunicationException {
         return steemJ.getContent(authorName, permlink);
+    }
+
+    @Nullable
+    @Override
+    public DiscussionLight getContentLight(@Nonnull AccountName author, @Nonnull Permlink permlink) throws SteemCommunicationException {
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
+        requestObject.setApiMethod(RequestMethods.GET_CONTENT);
+        requestObject.setSteemApi(SteemApis.DATABASE_API);
+        String[] parameters = {author.getName(), permlink.getLink()};
+        requestObject.setAdditionalParameters(parameters);
+
+        return communicationHandler.performRequest(requestObject, DiscussionLight.class).get(0);
     }
 
     @Override
@@ -335,7 +348,7 @@ class GolosDatabaseMethodsHandler implements DatabaseMethods {
         List<Avatars> response = communicationHandler.performRequest(requestObject, Avatars.class);
         if (!response.isEmpty()) {
             Avatars a = response.get(0);
-            if (a == null)return null;
+            if (a == null) return null;
             return response.get(0).accountAvatars.get(authorName.getName());
         }
         return null;

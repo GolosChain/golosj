@@ -68,7 +68,7 @@ public class Golos4J {
             steemJConfig = SteemJConfig.getInstance();
             steemJConfig.setChainId("782a3039b478c839e4cb0c941ff4eaeb7df40bdd68bd441afd444b9da763de12");
             steemJConfig.setSteemitAddressPrefix(SteemitAddressPrefix.GLS);
-            steemJConfig.setResponseTimeout(120_000);
+            steemJConfig.setResponseTimeout(180_000);
             steemJConfig.setSocketTimeout(180_000);
             try {
                 steemJConfig.setWebSocketEndpointURI(new URI("wss://ws.golos.blog"));

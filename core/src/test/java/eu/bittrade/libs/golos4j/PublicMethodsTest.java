@@ -105,7 +105,7 @@ public class PublicMethodsTest {
 
     @Test
     public void getProfileImagePath() throws Exception {
-        String avatar = golos4J.getDatabaseMethods().getAccountAvatar(new AccountName("kvg"));
+        String avatar = golos4J.getDatabaseMethods().getAccountAvatar(new AccountName("jevgenika"));
 
         assertNotNull(avatar);
         System.out.println(avatar);
@@ -590,5 +590,21 @@ public class PublicMethodsTest {
         assertNotNull(avatar);
     }
 
+    @Test
+    public void getFeedTest() throws Exception {
+        DiscussionQuery query = new DiscussionQuery();
+        query.setSelectAuthors(Collections.singletonList(new AccountName("yuri-vlad-second")));
+        //  query.setStartAuthor(new AccountName("yuri-vlad-second"));
+        query.setLimit(20);
+        query.setTruncateBody(10);
+        List<DiscussionLight> discussions = golos4J.getDatabaseMethods().getDiscussionsLightBy(query, DiscussionSortType.GET_DISCUSSIONS_BY_BLOG);
+        System.out.println(discussions);
+    }
 
+    @Test
+    public void testGetStoryWithoutBlog() throws Exception {
+        DiscussionLight d = golos4J.getDatabaseMethods().getContentLight(new AccountName("sinte"),
+                new Permlink("o-socialnykh-psikhopatakh-chast-3-o-tikhonyakh-mechtatelyakh-stesnitelnykh"));
+        System.out.println(d);
+    }
 }

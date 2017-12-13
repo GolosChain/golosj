@@ -9,6 +9,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import javax.annotation.Nullable;
+
 /**
  * This class represents the Steem "discussion_query" object.
  * 
@@ -17,16 +19,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonInclude(Include.NON_NULL)
 public class DiscussionQuery {
     private String tag;
-    private int limit;
+    private Integer limit;
     @JsonProperty("filter_tags")
     private List<String> filterTags;
     @JsonProperty("select_authors")
     private List<AccountName> selectAuthors;
     @JsonProperty("select_tags")
-    private List<AccountName> selectTags;
+    private List<String> selectTags;
     // Original type is uint32_t.
     @JsonProperty("truncate_body")
-    private long truncateBody;
+    private Integer truncateBody;
     @JsonProperty("start_author")
     private AccountName startAuthor;
     @JsonProperty("start_permlink")
@@ -66,7 +68,8 @@ public class DiscussionQuery {
     /**
      * @return the limit
      */
-    public int getLimit() {
+    @Nullable
+    public Integer getLimit() {
         return limit;
     }
 
@@ -77,8 +80,8 @@ public class DiscussionQuery {
      * @throws InvalidParameterException
      *             If the given <code>limit</code> is higher than 100.
      */
-    public void setLimit(int limit) {
-        if (limit > 100) {
+    public void setLimit(Integer limit) {
+        if (limit!= null && limit > 100) {
             throw new InvalidParameterException("The limit needs to be smaller than 100.");
         }
 
@@ -122,7 +125,7 @@ public class DiscussionQuery {
      * 
      * @return the selectTags
      */
-    public List<AccountName> getSelectTags() {
+    public List<String> getSelectTags() {
         return selectTags;
     }
 
@@ -132,14 +135,15 @@ public class DiscussionQuery {
      * @param selectTags
      *            the selectTags to set
      */
-    public void setSelectTags(List<AccountName> selectTags) {
+    public void setSelectTags(List<String> selectTags) {
         this.selectTags = selectTags;
     }
 
     /**
      * @return the truncateBody
      */
-    public long getTruncateBody() {
+    @Nullable
+    public Integer getTruncateBody() {
         return truncateBody;
     }
 
@@ -147,7 +151,7 @@ public class DiscussionQuery {
      * @param truncateBody
      *            the truncateBody to set
      */
-    public void setTruncateBody(long truncateBody) {
+    public void setTruncateBody(Integer truncateBody) {
         this.truncateBody = truncateBody;
     }
 

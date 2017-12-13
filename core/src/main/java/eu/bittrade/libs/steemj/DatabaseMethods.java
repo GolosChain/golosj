@@ -181,6 +181,8 @@ public interface DatabaseMethods {
     @Nullable
     Discussion getContent(@Nonnull AccountName author, @Nonnull Permlink permlink) throws SteemCommunicationException;
 
+    @Nullable
+    DiscussionLight getContentLight(@Nonnull AccountName author, @Nonnull Permlink permlink) throws SteemCommunicationException;
 
     /**
      * TODO: Check what this method is supposed to do. In a fist test it seems

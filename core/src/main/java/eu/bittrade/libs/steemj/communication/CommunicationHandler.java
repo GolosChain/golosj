@@ -61,6 +61,7 @@ public class CommunicationHandler extends Endpoint implements MessageHandler.Who
     private ClientManager client;
     private Session session;
     private String rawJsonResponse;
+    private RequestWrapperDTO lastRequestObject;
 
     /**
      * Initialize the Connection Handler.
@@ -101,7 +102,16 @@ public class CommunicationHandler extends Endpoint implements MessageHandler.Who
 
     @Override
     public void onClose(Session session, CloseReason closeReason) {
-        LOGGER.info("Connection has been closed.", closeReason);
+        LOGGER.error("Connection has been closed.", closeReason);
+        LOGGER.error("reason  = " + closeReason);
+        if ((closeReason.getCloseCode().getCode() == 1006
+                && responseCountDownLatch != null
+                && responseCountDownLatch.getCount() == 1) || closeReason.getCloseCode().getCode() == 1000)
+            try {
+                connect();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
     }
 
     @Override
@@ -207,20 +217,30 @@ public class CommunicationHandler extends Endpoint implements MessageHandler.Who
             throws IOException, EncodeException, SteemTimeoutException, InterruptedException {
         System.out.println("send message sync from " + Thread.currentThread().getName());
         responseCountDownLatch = new CountDownLatch(1);
-
+        lastRequestObject = requestObject;
         session.getBasicRemote().sendObject(requestObject);
 
         // Wait until we received a response from the Server.
         if (SteemJConfig.getInstance().getResponseTimeout() == 0) {
             responseCountDownLatch.await();
         } else {
-            if (!responseCountDownLatch.await(SteemJConfig.getInstance().getResponseTimeout(), TimeUnit.MILLISECONDS)) {
-                String errorMessage = "Timeout occured. The WebSocket server was not able to answer in "
-                        + SteemJConfig.getInstance().getResponseTimeout() + " millisecond(s).";
-
-                LOGGER.error(errorMessage);
-                throw new SteemTimeoutException(errorMessage);
+            long timeout = 30_000L;
+            int trysCount = (int) (SteemJConfig.getInstance().getResponseTimeout() / timeout);
+            for (int i = 0; i < trysCount; i++) {
+                if (!responseCountDownLatch.await(timeout, TimeUnit.MILLISECONDS)) {
+                    session.close();
+                    session.getBasicRemote().sendObject(requestObject);
+                } else {
+                    return;
+                }
             }
+            //    if (!responseCountDownLatch.await(SteemJConfig.getInstance().getResponseTimeout(), TimeUnit.MILLISECONDS)) {
+            String errorMessage = "Timeout occured. The WebSocket server was not able to answer in "
+                    + SteemJConfig.getInstance().getResponseTimeout() + " millisecond(s).";
+
+            LOGGER.error(errorMessage);
+            throw new SteemTimeoutException(errorMessage);
+            //  }
         }
     }
 
