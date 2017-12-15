@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -606,5 +607,18 @@ public class PublicMethodsTest {
         DiscussionLight d = golos4J.getDatabaseMethods().getContentLight(new AccountName("sinte"),
                 new Permlink("o-socialnykh-psikhopatakh-chast-3-o-tikhonyakh-mechtatelyakh-stesnitelnykh"));
         System.out.println(d);
+    }
+
+    @Test
+    public void getAvatartest() throws Exception {
+        long pre = System.currentTimeMillis();
+        ArrayList<AccountName> list = new ArrayList<>();
+        list.add(new AccountName("jevgenika"));
+        list.add(new AccountName("yuri-vlad"));
+        list.add(new AccountName("yuri-vlad-second"));
+        List<ExtendedAccount> extendedAccount =
+                golos4J.getDatabaseMethods().getAccounts(list);
+        long after = System.currentTimeMillis();
+        System.out.println(after - pre);
     }
 }
