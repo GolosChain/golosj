@@ -1,36 +1,43 @@
 package eu.bittrade.libs.steemj.base.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
+import org.apache.commons.lang3.tuple.Pair;
+
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.deser.std.NumberDeserializers;
 import eu.bittrade.libs.steemj.base.models.deserializer.BigIntegerAppliedOperationsDeserializer;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.tuple.Pair;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * This class represents a Steem "extended_account" object.
- * 
+ *
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ExtendedAccount extends Account {
-    /** Convert vesting_shares to vesting Steem. */
+    /**
+     * Convert vesting_shares to vesting Steem.
+     */
     @JsonProperty("vesting_balance")
     private Asset vestingBalance;
     // Original type is "share_type" which is a "safe<int64_t>".
     private long reputation;
     // The original tpye is map<uint64_t,applied_operation>
-    /** Transfer to/from vesting. */
+    /**
+     * Transfer to/from vesting.
+     */
     @JsonProperty("transfer_history")
     @JsonDeserialize(using = BigIntegerAppliedOperationsDeserializer.class)
     private Map<BigInteger, AppliedOperation> transferHistory;
     // The original tpye is map<uint64_t,applied_operation>
-    /** Limit order / cancel / fill. */
+    /**
+     * Limit order / cancel / fill.
+     */
     @JsonProperty("market_history")
     @JsonDeserialize(using = BigIntegerAppliedOperationsDeserializer.class)
     private Map<BigInteger, AppliedOperation> marketHistory;
@@ -59,23 +66,33 @@ public class ExtendedAccount extends Account {
     @JsonProperty("open_orders")
     private Object[] openOrders;
     // Original type is "optional<vector<string>>".
-    /** Permlinks for this user. */
+    /**
+     * Permlinks for this user.
+     */
     @JsonProperty("comments")
     private Object[] comments;
     // Original type is "optional<vector<string>>".
-    /** Blog posts for this user. */
+    /**
+     * Blog posts for this user.
+     */
     @JsonProperty("blog")
     private Object[] blog;
     // Original type is "optional<vector<string>>".
-    /** Feed posts for this user. */
+    /**
+     * Feed posts for this user.
+     */
     @JsonProperty("feed")
     private Object[] feed;
     // Original type is "optional<vector<string>>".
-    /** Blog posts for this user. */
+    /**
+     * Blog posts for this user.
+     */
     @JsonProperty("recent_replies")
     private Object[] recentReplies;
     // Original type is "optional<vector<string>>".
-    /** Posts recommened for this user. */
+    /**
+     * Posts recommened for this user.
+     */
     @JsonProperty("recommended")
     private Object[] recommended;
     /**

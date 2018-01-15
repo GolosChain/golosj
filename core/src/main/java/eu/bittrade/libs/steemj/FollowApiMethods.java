@@ -78,7 +78,7 @@ public interface FollowApiMethods {
      *             </ul>
      */
     List<FollowApiObject> getFollowing(AccountName follower, AccountName startFollowing, FollowType type,
-                                              short limit)  throws SteemCommunicationException;
+                                              Short limit)  throws SteemCommunicationException;
 
     /**
      * Get the amount of accounts following the given <code>account</code> and

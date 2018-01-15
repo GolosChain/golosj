@@ -594,10 +594,10 @@ public class PublicMethodsTest {
     @Test
     public void getFeedTest() throws Exception {
         DiscussionQuery query = new DiscussionQuery();
-        query.setSelectAuthors(Collections.singletonList(new AccountName("yuri-vlad-second")));
+        query.setSelectAuthors(Collections.singletonList(new AccountName("nick.kharchenko")));
         //  query.setStartAuthor(new AccountName("yuri-vlad-second"));
         query.setLimit(20);
-        query.setTruncateBody(10);
+        query.setTruncateBody(1025);
         List<DiscussionLight> discussions = golos4J.getDatabaseMethods().getDiscussionsLightBy(query, DiscussionSortType.GET_DISCUSSIONS_BY_BLOG);
         System.out.println(discussions);
     }

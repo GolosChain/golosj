@@ -218,20 +218,32 @@ public class CommunicationHandler extends Endpoint implements MessageHandler.Who
         System.out.println("send message sync from " + Thread.currentThread().getName());
         responseCountDownLatch = new CountDownLatch(1);
         lastRequestObject = requestObject;
+
         session.getBasicRemote().sendObject(requestObject);
 
         // Wait until we received a response from the Server.
         if (SteemJConfig.getInstance().getResponseTimeout() == 0) {
             responseCountDownLatch.await();
         } else {
-            long timeout = 30_000L;
+            long timeout = 25_000L;
             int trysCount = (int) (SteemJConfig.getInstance().getResponseTimeout() / timeout);
             for (int i = 0; i < trysCount; i++) {
-                if (!responseCountDownLatch.await(timeout, TimeUnit.MILLISECONDS)) {
-                    session.close();
+                try {
+                    if (!responseCountDownLatch.await(timeout, TimeUnit.MILLISECONDS)) {
+                        session.close();
+                        session.getBasicRemote().sendObject(requestObject);
+                    } else {
+                        return;
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    if (!session.isOpen()) try {
+                        connect();
+                    } catch (SteemCommunicationException e1) {
+                        e1.printStackTrace();
+                    }
                     session.getBasicRemote().sendObject(requestObject);
-                } else {
-                    return;
+                    trysCount++;
                 }
             }
             //    if (!responseCountDownLatch.await(SteemJConfig.getInstance().getResponseTimeout(), TimeUnit.MILLISECONDS)) {
