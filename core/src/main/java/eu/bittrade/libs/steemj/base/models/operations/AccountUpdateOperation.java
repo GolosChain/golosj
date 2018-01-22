@@ -9,6 +9,7 @@ import java.util.Map;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.libs.steemj.base.models.AccountName;
@@ -26,6 +27,7 @@ import eu.bittrade.libs.steemj.util.SteemJUtils;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class AccountUpdateOperation extends AbstractAccountOperation {
     @JsonProperty("account")
     private AccountName account;

@@ -38,6 +38,7 @@ import eu.bittrade.libs.steemj.base.models.DiscussionQuery;
 import eu.bittrade.libs.steemj.base.models.DiscussionWithComments;
 import eu.bittrade.libs.steemj.base.models.ExtendedAccount;
 import eu.bittrade.libs.steemj.base.models.GlobalProperties;
+import eu.bittrade.libs.steemj.base.models.GolosProfile;
 import eu.bittrade.libs.steemj.base.models.LiquidityBalance;
 import eu.bittrade.libs.steemj.base.models.Permlink;
 import eu.bittrade.libs.steemj.base.models.PublicKey;
@@ -50,8 +51,10 @@ import eu.bittrade.libs.steemj.base.models.VoteState;
 import eu.bittrade.libs.steemj.base.models.Witness;
 import eu.bittrade.libs.steemj.base.models.WitnessSchedule;
 import eu.bittrade.libs.steemj.base.models.operations.AccountCreateOperation;
+import eu.bittrade.libs.steemj.base.models.operations.AccountUpdateOperation;
 import eu.bittrade.libs.steemj.base.models.operations.Operation;
 import eu.bittrade.libs.steemj.base.models.operations.VoteOperation;
+import eu.bittrade.libs.steemj.communication.CommunicationHandler;
 import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 import eu.bittrade.libs.steemj.enums.DiscussionSortType;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
@@ -621,4 +624,5 @@ public class PublicMethodsTest {
         long after = System.currentTimeMillis();
         System.out.println(after - pre);
     }
+
 }

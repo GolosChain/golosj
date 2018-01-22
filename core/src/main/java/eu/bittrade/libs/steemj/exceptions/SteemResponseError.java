@@ -25,4 +25,11 @@ public class SteemResponseError extends SteemCommunicationException {
     public SteemError getError() {
         return steemError;
     }
+
+    @Override
+    public String toString() {
+        return "SteemResponseError{" +
+                "steemError=" + steemError +
+                '}';
+    }
 }

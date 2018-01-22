@@ -2302,7 +2302,7 @@ public class SteemJ {
         // One new posts the parentAuthor is empty.
         AccountName parentAuthor = new AccountName("");
 
-        String jsonMetadata = CondenserUtils.generateSteemitMetadata(content, tags, "golos4J/0.0.1", "markdown");
+        String jsonMetadata = CondenserUtils.generateSteemitMetadata(content, tags, "golos4J/0.0.2", "markdown");
 
         CommentOperation commentOperation = new CommentOperation(parentAuthor, parentPermlink,
                 authorThatPublishsThePost, permlink, title, content, jsonMetadata);
@@ -2383,11 +2383,15 @@ public class SteemJ {
 
         // Generate the permanent link by adding the current timestamp and a
         // UUID.
-        Permlink permlink = new Permlink("re-" + authorOfThePostOrCommentToReplyTo.getName() + "-"
+        String permlinkString = ("re-" + authorOfThePostOrCommentToReplyTo.getName() + "-"
                 + permlinkOfThePostOrCommentToReplyTo.getLink() + "-" + System.currentTimeMillis() + "t"
-                + UUID.randomUUID().toString().substring(8) + "uid");
+                + UUID.randomUUID().toString().substring(8) + "uid").toLowerCase();
+        if (permlinkString.matches("^[a-z0-9\\-]{0,256}")) {
+            permlinkString = "re-" + UUID.randomUUID().toString();
+        }
+        Permlink permlink = new Permlink(permlinkString);
 
-        String jsonMetadata = CondenserUtils.generateSteemitMetadata(content, tags, "golos4J/0.0.1", "markdown");
+        String jsonMetadata = CondenserUtils.generateSteemitMetadata(content, tags, "golos4J/0.0.2", "markdown");
 
         CommentOperation commentOperation = new CommentOperation(authorOfThePostOrCommentToReplyTo,
                 permlinkOfThePostOrCommentToReplyTo, authorThatPublishsTheComment, permlink, "", content, jsonMetadata);
@@ -2468,7 +2472,7 @@ public class SteemJ {
         AccountName parentAuthor = new AccountName("");
         Permlink parentPermlink = new Permlink(tags[0]);
 
-        String jsonMetadata = CondenserUtils.generateSteemitMetadata(content, tags, "golos4J/0.0.1", "markdown");
+        String jsonMetadata = CondenserUtils.generateSteemitMetadata(content, tags, "golos4J/0.0.2", "markdown");
 
         CommentOperation commentOperation = new CommentOperation(parentAuthor, parentPermlink, authorOfThePostToUpdate,
                 permlinkOfThePostToUpdate, title, content, jsonMetadata);
@@ -2529,7 +2533,7 @@ public class SteemJ {
         }
         ArrayList<Operation> operations = new ArrayList<>();
 
-        String jsonMetadata = CondenserUtils.generateSteemitMetadata(content, tags, "golos4J/0.0.1", "markdown");
+        String jsonMetadata = CondenserUtils.generateSteemitMetadata(content, tags, "golos4J/0.0.2", "markdown");
 
         CommentOperation commentOperation = new CommentOperation(parentAuthor, parentPermlink,
                 originalAuthorOfTheCommentToUpdate, originalPermlinkOfTheCommentToUpdate, "", content, jsonMetadata);

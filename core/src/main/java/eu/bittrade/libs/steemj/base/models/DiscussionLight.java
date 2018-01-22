@@ -9,6 +9,7 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import eu.bittrade.libs.steemj.base.models.deserializer.VoteLightDeserializer;
 import eu.bittrade.libs.steemj.base.models.deserializer.VotesDeseriaizer;
 import eu.bittrade.libs.steemj.util.ArrayMap;
 
@@ -26,8 +27,8 @@ public class DiscussionLight extends CommentLight {
     public Asset totalPendingPayoutValue;
     // Original type is vector<vote_state>.
     @JsonProperty("active_votes")
-    @JsonDeserialize(using = VotesDeseriaizer.class)
-    public ArrayMap<String, Integer> votes;
+    @JsonDeserialize(using = VoteLightDeserializer.class)
+    public List<VoteLight> votes;
     @JsonProperty("author_reputation")
     public long authorReputation;
     @JsonProperty("body_length")
@@ -40,4 +41,6 @@ public class DiscussionLight extends CommentLight {
     @JsonProperty("first_reblogged_on")
     @Nullable
     public Date firstRebloggedOn;
+    @JsonProperty("vote_rshares")
+    public long voteRshares;
 }
