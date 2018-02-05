@@ -3,11 +3,12 @@ package eu.bittrade.libs.steemj;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang3.tuple.ImmutablePair;
+
 
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.configuration.SteemJConfig;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
+import eu.bittrade.libs.steemj.util.ImmutablePair;
 
 /**
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>

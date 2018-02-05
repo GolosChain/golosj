@@ -9,7 +9,8 @@ import eu.bittrade.libs.steemj.configuration.SteemJConfig;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
-import org.apache.commons.lang3.tuple.ImmutablePair;
+import eu.bittrade.libs.steemj.util.ImmutablePair;
+
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;

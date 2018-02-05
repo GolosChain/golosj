@@ -2386,7 +2386,7 @@ public class SteemJ {
         String permlinkString = ("re-" + authorOfThePostOrCommentToReplyTo.getName() + "-"
                 + permlinkOfThePostOrCommentToReplyTo.getLink() + "-" + System.currentTimeMillis() + "t"
                 + UUID.randomUUID().toString().substring(8) + "uid").toLowerCase();
-        if (permlinkString.matches("^[a-z0-9\\-]{0,256}")) {
+        if (!permlinkString.matches("^[a-z0-9\\-]{0,256}")) {
             permlinkString = "re-" + UUID.randomUUID().toString();
         }
         Permlink permlink = new Permlink(permlinkString);

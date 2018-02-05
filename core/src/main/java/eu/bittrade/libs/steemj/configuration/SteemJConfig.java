@@ -9,7 +9,6 @@ import java.util.TimeZone;
 
 import javax.websocket.ClientEndpointConfig;
 
-import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,6 +16,7 @@ import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.enums.SteemitAddressPrefix;
 import eu.bittrade.libs.steemj.exceptions.SteemTimeoutException;
+import eu.bittrade.libs.steemj.util.ImmutablePair;
 
 /**
  * This class stores the configuration that is used for the communication to the

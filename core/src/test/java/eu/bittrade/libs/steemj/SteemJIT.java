@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang3.tuple.ImmutablePair;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.exparity.hamcrest.date.DateMatchers;
@@ -73,6 +73,7 @@ import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.enums.RewardFundType;
 import eu.bittrade.libs.steemj.exceptions.SteemResponseError;
 import eu.bittrade.libs.steemj.exceptions.SteemTransformationException;
+import eu.bittrade.libs.steemj.util.ImmutablePair;
 import eu.bittrade.libs.steemj.util.KeyGenerator;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
 

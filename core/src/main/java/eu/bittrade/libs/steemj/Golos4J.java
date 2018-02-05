@@ -1,6 +1,6 @@
 package eu.bittrade.libs.steemj;
 
-import org.apache.commons.lang3.tuple.ImmutablePair;
+
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -20,6 +20,7 @@ import eu.bittrade.libs.steemj.configuration.SteemJConfig;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.enums.SteemitAddressPrefix;
 import eu.bittrade.libs.steemj.util.AuthUtils;
+import eu.bittrade.libs.steemj.util.ImmutablePair;
 
 /**
  * Created by yuri yurivladdurain@gmail.com .
@@ -71,7 +72,7 @@ public class Golos4J {
             steemJConfig.setResponseTimeout(180_000);
             steemJConfig.setSocketTimeout(180_000);
             try {
-                steemJConfig.setWebSocketEndpointURI(new URI("wss://ws.golos.blog"));
+                steemJConfig.setWebSocketEndpointURI(new URI("wss://ws.golos.io"));
             } catch (URISyntaxException e) {
                 e.printStackTrace();
             }

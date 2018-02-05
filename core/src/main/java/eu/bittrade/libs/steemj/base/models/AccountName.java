@@ -38,7 +38,7 @@ public class AccountName implements ByteTransformable, SignatureObject {
      */
     @JsonCreator
     public AccountName(String name) {
-        this.setName(name);
+        this.setName(name.trim());
     }
 
     /**

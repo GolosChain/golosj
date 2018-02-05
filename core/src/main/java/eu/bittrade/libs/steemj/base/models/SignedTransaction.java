@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.annotations.VisibleForTesting;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.tuple.ImmutablePair;
+
 import org.bitcoinj.core.ECKey;
 import org.bitcoinj.core.ECKey.ECDSASignature;
 import org.bitcoinj.core.Sha256Hash;
@@ -28,6 +28,7 @@ import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.interfaces.ByteTransformable;
 import eu.bittrade.libs.steemj.interfaces.SignatureObject;
+import eu.bittrade.libs.steemj.util.ImmutablePair;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
 
 /**

@@ -2,7 +2,7 @@ package eu.bittrade.libs.golos4j;
 
 import junit.framework.TestCase;
 
-import org.apache.commons.lang3.tuple.ImmutablePair;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.internal.runners.JUnit38ClassRunner;
@@ -29,6 +29,7 @@ import eu.bittrade.libs.steemj.base.models.operations.VoteOperation;
 import eu.bittrade.libs.steemj.communication.CommunicationHandler;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.util.AuthUtils;
+import eu.bittrade.libs.steemj.util.ImmutablePair;
 
 /**
  * Created by yuri yurivladdurain@gmail.com .
