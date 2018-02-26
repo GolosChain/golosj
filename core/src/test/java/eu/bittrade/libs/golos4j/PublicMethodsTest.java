@@ -76,7 +76,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-public class PublicMethodsTest {
+public class  PublicMethodsTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(PublicMethodsTest.class);
     public static final AccountName ACCOUNT = new AccountName("lenutsa");
     private static final AccountName WITNESS_ACCOUNT = new AccountName("itsmine-78");
