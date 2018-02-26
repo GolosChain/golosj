@@ -1,7 +1,5 @@
 package eu.bittrade.libs.steemj.base.models.error;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
