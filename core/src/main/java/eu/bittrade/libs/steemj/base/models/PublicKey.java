@@ -72,7 +72,7 @@ public class PublicKey implements ByteTransformable {
             }
             try {
                 this.setPublicKey(ECKey.fromPublicOnly(potentialPublicKey));
-            } catch (IllegalArgumentException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
                 LOGGER.error(e.getLocalizedMessage());
             }
