@@ -1,4 +1,5 @@
 apply plugin: 'maven'
+apply plugin: 'maven-publish'
 group = 'eu.bittrade.libs'
 version = '0.4.1-SNAPSHOT'
 apply plugin: 'java'
@@ -9,7 +10,7 @@ tasks.withType(JavaCompile) {
 }
 repositories {
     mavenLocal()
-    google()
+
     maven { url "https://repo.maven.apache.org/maven2" }
 }
 
@@ -28,5 +29,4 @@ dependencies {
     testCompile 'org.hamcrest:hamcrest-all:1.3'
     testCompile 'org.exparity:hamcrest-date:2.0.4'
     testCompile 'org.bitcoinj:bitcoinj-core:0.14.5'
-    implementation files('libs/junidecode-0.2.jar')
 }
