@@ -7,7 +7,6 @@ package eu.bittrade.libs.steemj.enums;
  */
 public enum DiscussionSortType {
     GET_DISCUSSIONS_BY_TRENDING,
-    GET_DISCUSSIONS_BY_TRENDING30,
     GET_DISCUSSIONS_BY_CREATED,
     GET_DISCUSSIONS_BY_ACTIVE,
     GET_DISCUSSIONS_BY_CASHOUT,

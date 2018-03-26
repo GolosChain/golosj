@@ -18,6 +18,7 @@ public enum SteemApis {
     BLOCK_INFO_API(null),
     BLOCKCHAIN_STATISTICS_API(null),
     DATABASE_API(0),
+    SOCIAL_NETWORK(null),
     DEBUG_NODE_API(null),
     FOLLOW_API(5),
     MARKET_HISTORY_API(6),

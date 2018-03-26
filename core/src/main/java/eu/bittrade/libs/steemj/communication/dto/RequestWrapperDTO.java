@@ -107,7 +107,7 @@ public class RequestWrapperDTO {
      */
     public Object[] getParams() {
         Object[] params = new Object[3];
-        params[0] = steemApi.getApiId() == null ? steemApi.toString().toLowerCase() : steemApi.getApiId();
+        params[0] = steemApi.toString().toLowerCase();
         params[1] = getApiMethod().toString().toLowerCase();
         params[2] = additionalParameters;
 

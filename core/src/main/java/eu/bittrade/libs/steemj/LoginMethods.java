@@ -9,10 +9,12 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
- *
+ *Not supported, since 0.17 Golos HF
  */
 
 @SuppressWarnings("unused")
+@Deprecated
+
 public interface LoginMethods {
 
     /**

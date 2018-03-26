@@ -308,7 +308,7 @@ public class SteemJ {
      */
     public List<Vote> getAccountVotes(AccountName accountName) throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
-        requestObject.setSteemApi(SteemApis.DATABASE_API);
+        requestObject.setSteemApi(SteemApis.SOCIAL_NETWORK);
         requestObject.setApiMethod(RequestMethods.GET_ACCOUNT_VOTES);
         String[] parameters = {accountName.getName()};
         requestObject.setAdditionalParameters(parameters);
@@ -336,7 +336,7 @@ public class SteemJ {
     public List<VoteState> getActiveVotes(AccountName author, Permlink permlink) throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_ACTIVE_VOTES);
-        requestObject.setSteemApi(SteemApis.DATABASE_API);
+        requestObject.setSteemApi(SteemApis.SOCIAL_NETWORK);
         String[] parameters = {author.getName(), permlink.getLink()};
         requestObject.setAdditionalParameters(parameters);
 
@@ -524,7 +524,7 @@ public class SteemJ {
     public Discussion getContent(AccountName author, Permlink permlink) throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_CONTENT);
-        requestObject.setSteemApi(SteemApis.DATABASE_API);
+        requestObject.setSteemApi(SteemApis.SOCIAL_NETWORK);
         String[] parameters = {author.getName(), permlink.getLink()};
         requestObject.setAdditionalParameters(parameters);
 
@@ -552,7 +552,7 @@ public class SteemJ {
             throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_CONTENT_REPLIES);
-        requestObject.setSteemApi(SteemApis.DATABASE_API);
+        requestObject.setSteemApi(SteemApis.SOCIAL_NETWORK);
         String[] parameters = {author.getName(), permlink.getLink()};
         requestObject.setAdditionalParameters(parameters);
 
@@ -632,7 +632,7 @@ public class SteemJ {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
 
         requestObject.setApiMethod(RequestMethods.valueOf(sortBy.name()));
-        requestObject.setSteemApi(SteemApis.DATABASE_API);
+        requestObject.setSteemApi(SteemApis.SOCIAL_NETWORK);
         Object[] parameters = {discussionQuery};
         requestObject.setAdditionalParameters(parameters);
 
@@ -664,7 +664,7 @@ public class SteemJ {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
 
         requestObject.setApiMethod(RequestMethods.GET_DISCUSSIONS_BY_AUTHOR_BEFORE_DATE);
-        requestObject.setSteemApi(SteemApis.DATABASE_API);
+        requestObject.setSteemApi(SteemApis.SOCIAL_NETWORK);
 
         // Verify that the date has the correct format.
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(SteemJConfig.getInstance().getDateTimePattern());
@@ -980,7 +980,7 @@ public class SteemJ {
             throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_REPLIES_BY_LAST_UPDATE);
-        requestObject.setSteemApi(SteemApis.DATABASE_API);
+        requestObject.setSteemApi(SteemApis.SOCIAL_NETWORK);
         Object[] parameters = {username, permlink.getLink(), String.valueOf(limit)};
         requestObject.setAdditionalParameters(parameters);
 
@@ -1065,7 +1065,7 @@ public class SteemJ {
     public List<TrendingTag> getTrendingTags(String firstTag, int limit) throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_TRENDING_TAGS);
-        requestObject.setSteemApi(SteemApis.DATABASE_API);
+        requestObject.setSteemApi(SteemApis.SOCIAL_NETWORK);
         String[] parameters = {firstTag, String.valueOf(limit)};
         requestObject.setAdditionalParameters(parameters);
 
