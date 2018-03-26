@@ -2302,7 +2302,7 @@ public class SteemJ {
         // One new posts the parentAuthor is empty.
         AccountName parentAuthor = new AccountName("");
 
-        String jsonMetadata = CondenserUtils.generateSteemitMetadata(content, tags, "golos4J/0.0.2", "markdown");
+        String jsonMetadata = CondenserUtils.generateSteemitMetadata(content, tags, "golos4J/0.0.3", "markdown");
 
         CommentOperation commentOperation = new CommentOperation(parentAuthor, parentPermlink,
                 authorThatPublishsThePost, permlink, title, content, jsonMetadata);
@@ -2391,7 +2391,7 @@ public class SteemJ {
         }
         Permlink permlink = new Permlink(permlinkString);
 
-        String jsonMetadata = CondenserUtils.generateSteemitMetadata(content, tags, "golos4J/0.0.2", "markdown");
+        String jsonMetadata = CondenserUtils.generateSteemitMetadata(content, tags, "golos4J/0.0.3", "markdown");
 
         CommentOperation commentOperation = new CommentOperation(authorOfThePostOrCommentToReplyTo,
                 permlinkOfThePostOrCommentToReplyTo, authorThatPublishsTheComment, permlink, "", content, jsonMetadata);
@@ -2472,7 +2472,7 @@ public class SteemJ {
         AccountName parentAuthor = new AccountName("");
         Permlink parentPermlink = new Permlink(tags[0]);
 
-        String jsonMetadata = CondenserUtils.generateSteemitMetadata(content, tags, "golos4J/0.0.2", "markdown");
+        String jsonMetadata = CondenserUtils.generateSteemitMetadata(content, tags, "golos4J/0.0.3", "markdown");
 
         CommentOperation commentOperation = new CommentOperation(parentAuthor, parentPermlink, authorOfThePostToUpdate,
                 permlinkOfThePostToUpdate, title, content, jsonMetadata);
@@ -2533,7 +2533,7 @@ public class SteemJ {
         }
         ArrayList<Operation> operations = new ArrayList<>();
 
-        String jsonMetadata = CondenserUtils.generateSteemitMetadata(content, tags, "golos4J/0.0.2", "markdown");
+        String jsonMetadata = CondenserUtils.generateSteemitMetadata(content, tags, "golos4J/0.0.3", "markdown");
 
         CommentOperation commentOperation = new CommentOperation(parentAuthor, parentPermlink,
                 originalAuthorOfTheCommentToUpdate, originalPermlinkOfTheCommentToUpdate, "", content, jsonMetadata);

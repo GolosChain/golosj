@@ -44,7 +44,6 @@
     <orderEntry type="library" exported="" scope="PROVIDED" name="scrypt-1.4.0" level="project" />
     <orderEntry type="library" exported="" scope="PROVIDED" name="okhttp-2.7.2" level="project" />
     <orderEntry type="library" exported="" scope="PROVIDED" name="okio-1.6.0" level="project" />
-    <orderEntry type="library" exported="" scope="PROVIDED" name="junidecode-0.2" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="log4j-slf4j-impl-2.9.1" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="log4j-core-2.9.1" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="junit-4.12" level="project" />

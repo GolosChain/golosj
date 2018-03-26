@@ -32,7 +32,7 @@ public class DiscussionLight extends CommentLight {
     @JsonProperty("author_reputation")
     public long authorReputation;
     @JsonProperty("body_length")
-    public String bodyLength;
+    public Long bodyLength;
     @JsonProperty("reblogged_by")
     public List<String> rebloggedBy;
     @JsonProperty("first_reblogged_by")

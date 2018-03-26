@@ -863,14 +863,13 @@ public interface DatabaseMethods {
      */
     void setBlockAppliedCallback(@Nonnull BlockAppliedCallback blockAppliedCallback) throws SteemCommunicationException;
 
+    @Nullable
+    Map<String, String> getAccountAvatar(List<AccountName> name) throws SteemCommunicationException;
 
-    String getAccountAvatar(AccountName name) throws SteemCommunicationException;
-
-    String getAccountAvatar(String blogName, AccountName authorName, Permlink permlink) throws SteemCommunicationException;
-
+    @Nullable
     DiscussionWithComments getStoryByRoute(String blogName, AccountName authorName, Permlink permlink) throws SteemCommunicationException;
 
-    List<Discussion> getUserFeed(AccountName userName) throws SteemCommunicationException;
+   // List<Discussion> getUserFeed(AccountName userName) throws SteemCommunicationException;
 
-    List<DiscussionLight> getUserFeedLight(AccountName userName) throws SteemCommunicationException;
+  //  List<DiscussionLight> getUserFeedLight(AccountName userName) throws SteemCommunicationException;
 }

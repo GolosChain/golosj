@@ -35,7 +35,7 @@ public class CommentLight {
     @Deprecated
     public String mode;
     @JsonProperty("percent_steem_dollars")
-    short percentSteemDollars;
+    int percentSteemDollars;
     @JsonProperty("allow_replies")
     public Boolean allowReplies;
     @JsonProperty("allow_votes")

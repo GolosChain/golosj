@@ -8,32 +8,6 @@ import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
-
-import org.glassfish.tyrus.client.ClientManager;
-import org.glassfish.tyrus.client.ClientProperties;
-import org.glassfish.tyrus.client.SslContextConfigurator;
-import org.glassfish.tyrus.client.SslEngineConfigurator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.TimeZone;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
-
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.SSLSession;
-import javax.websocket.CloseReason;
-import javax.websocket.DeploymentException;
-import javax.websocket.EncodeException;
-import javax.websocket.Endpoint;
-import javax.websocket.EndpointConfig;
-import javax.websocket.MessageHandler;
-import javax.websocket.Session;
-
 import eu.bittrade.libs.steemj.base.models.SignedBlockHeader;
 import eu.bittrade.libs.steemj.base.models.deserializer.SteemJNodeFactory;
 import eu.bittrade.libs.steemj.base.models.error.SteemError;
@@ -46,6 +20,23 @@ import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemResponseError;
 import eu.bittrade.libs.steemj.exceptions.SteemTimeoutException;
 import eu.bittrade.libs.steemj.exceptions.SteemTransformationException;
+import org.glassfish.tyrus.client.ClientManager;
+import org.glassfish.tyrus.client.ClientProperties;
+import org.glassfish.tyrus.client.SslContextConfigurator;
+import org.glassfish.tyrus.client.SslEngineConfigurator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLSession;
+import javax.websocket.*;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.TimeZone;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 /**
  * This class handles the communication to the Steem web socket API.
@@ -150,7 +141,7 @@ public class CommunicationHandler extends Endpoint implements MessageHandler.Who
             @SuppressWarnings("unchecked")
             ResponseWrapperDTO<T> response = mapper.readValue(rawJsonResponse, ResponseWrapperDTO.class);
 
-            if (response == null || response.isEmpty()) {
+            if (response == null || response.isEmpty() || rawJsonResponse.contains("\"name\":\"N5boost16exception_detail10clone_implINS0_19error_info")) {
                 LOGGER.debug("The response was empty. The requested node may not provid the method {}.",
                         requestObject.getApiMethod());
                 List<T> emptyResult = new ArrayList<>();

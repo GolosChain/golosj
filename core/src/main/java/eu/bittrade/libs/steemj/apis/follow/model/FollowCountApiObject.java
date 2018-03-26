@@ -1,14 +1,17 @@
 package eu.bittrade.libs.steemj.apis.follow.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.libs.steemj.base.models.AccountName;
+import jdk.nashorn.internal.ir.annotations.Ignore;
 
 /**
  * This class represents a Steem "follow_count_api_object" object.
  *
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class FollowCountApiObject {
     @JsonProperty("account")
     private AccountName account;

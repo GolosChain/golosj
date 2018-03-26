@@ -35,14 +35,14 @@ import eu.bittrade.libs.steemj.util.ImmutablePair;
  * Created by yuri yurivladdurain@gmail.com .
  */
 @RunWith(JUnit38ClassRunner.class)
-public class SignedMethodsTest extends TestCase {
+public class  SignedMethodsTest extends TestCase {
     @Nonnull
     Golos4J golos4J = Golos4J.getInstance();
 
     @Before
     public void setUp() {
         //  golos4J.addAccount(new AccountName("yuri-vlad-second"), new ImmutablePair<>(PrivateKeyType.POSTING, "5JeKh4taphREBdqfKzfapu6ar3gCNPPKgG5QbUzEwmuasSAQFs3"), true);
-        golos4J.addAccount(new AccountName("yuri-vlad-second"), new ImmutablePair<>(PrivateKeyType.ACTIVE, "5K7YbhJZqGnw3hYzsmH5HbDixWP5ByCBdnJxM5uoe9LuMX5rcZV"), true);
+        golos4J.addAccount(new AccountName("yuri-vlad"), new ImmutablePair<>(PrivateKeyType.ACTIVE, "5KGbRrb7AcZruv2ECPzDDVYBhe2451oRgZ9RjZbwx7QhRSU6onK"), true);
     }
 
     @Test
@@ -63,7 +63,7 @@ public class SignedMethodsTest extends TestCase {
 
     @Test
     public void testUploadImage() throws Exception {
-        String login2 = "yuri-vlad-second";
+        String login2 = "yuri-vlad";
         golos4J.addAccountUsingMasterPassword(new AccountName(login2), "234sfdgkh1ezedsiU234wewe235ym8jhlq1unA0tlkJKfdhyn");
         GolosIoFilePath filePath = golos4J.getGolosIoSpecificMethods().uploadFile(new AccountName(login2), new File(getClass().getClassLoader().getResource("ThemeColors.png").getFile()));
         assertNotNull(filePath);
@@ -75,15 +75,15 @@ public class SignedMethodsTest extends TestCase {
 
     @Test
     public void testAccUpdate() throws Exception {
-        golos4J.addAccount(new AccountName("yuri-vlad-second"), new ImmutablePair<>(PrivateKeyType.ACTIVE, "5K7YbhJZqGnw3hYzsmH5HbDixWP5ByCBdnJxM5uoe9LuMX5rcZV"), true);
+        golos4J.addAccount(new AccountName("yuri-vlad"), new ImmutablePair<>(PrivateKeyType.ACTIVE, "5KGbRrb7AcZruv2ECPzDDVYBhe2451oRgZ9RjZbwx7QhRSU6onK"), true);
 
         GolosProfile gp = new GolosProfile();
         gp.setShownName("Yuri");
         String s = "{\"profile\":" + CommunicationHandler.getObjectMapper().writeValueAsString(gp) + "}";
-        AccountUpdateOperation aoo = new AccountUpdateOperation(new AccountName("yuri-vlad-second"), null,
+        AccountUpdateOperation aoo = new AccountUpdateOperation(new AccountName("yuri-vlad"), null,
                 null,
                 null,
-                new PublicKey("GLS6NvfChqWo84RHbrUZm34U1JUQCdMkaN8pRdZjDC9WSN1M2UVJ5"),
+                new PublicKey("GLS69FZuT6LjUXmcQboMaJZQAFMF4RnbhBtQC3wNkeJGMSW3YXEQD"),
                 s);
 
         List<Operation> operations = new ArrayList<>();

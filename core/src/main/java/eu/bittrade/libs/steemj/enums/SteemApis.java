@@ -9,6 +9,7 @@ import javax.annotation.Nullable;
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public enum SteemApis {
+    @Deprecated
     LOGIN_API(1),
     NETWORK_NODE_API(null),
     NETWORK_BROADCAST_API(3),
@@ -21,6 +22,7 @@ public enum SteemApis {
     SOCIAL_NETWORK(null),
     DEBUG_NODE_API(null),
     FOLLOW_API(5),
+    FOLLOW(null),
     MARKET_HISTORY_API(6),
     RAW_BLOCK_API(null);
 

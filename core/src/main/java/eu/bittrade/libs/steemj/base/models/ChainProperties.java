@@ -75,9 +75,7 @@ public class ChainProperties implements ByteTransformable {
      *             If the fee is not present or less than 0.
      */
     public void setAccountCreationFee(Asset accountCreationFee) {
-        if (accountCreationFee == null || accountCreationFee.getAmount() <= 0) {
-            throw new InvalidParameterException("The account creation fee needs to be greater than 0.");
-        }
+
         this.accountCreationFee = accountCreationFee;
     }
 

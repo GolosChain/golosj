@@ -4,6 +4,7 @@ package eu.bittrade.libs.steemj;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -12,7 +13,6 @@ import javax.annotation.Nullable;
 
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.AppliedOperation;
-import eu.bittrade.libs.steemj.base.models.Avatars;
 import eu.bittrade.libs.steemj.base.models.BlockHeader;
 import eu.bittrade.libs.steemj.base.models.ChainProperties;
 import eu.bittrade.libs.steemj.base.models.Config;
@@ -35,8 +35,6 @@ import eu.bittrade.libs.steemj.base.models.ScheduledHardfork;
 import eu.bittrade.libs.steemj.base.models.SignedBlockWithInfo;
 import eu.bittrade.libs.steemj.base.models.SignedTransaction;
 import eu.bittrade.libs.steemj.base.models.TrendingTag;
-import eu.bittrade.libs.steemj.base.models.UserFeed;
-import eu.bittrade.libs.steemj.base.models.UserFeedLight;
 import eu.bittrade.libs.steemj.base.models.Vote;
 import eu.bittrade.libs.steemj.base.models.VoteState;
 import eu.bittrade.libs.steemj.base.models.Witness;
@@ -112,9 +110,15 @@ class GolosDatabaseMethodsHandler implements DatabaseMethods {
     @Nullable
     @Override
     public DiscussionLight getContentLight(@Nonnull AccountName author, @Nonnull Permlink permlink) throws SteemCommunicationException {
+        Golos4J.HardForkVersion version = Golos4J.getInstance().getCurrentHardforkVersion();
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_CONTENT);
-        requestObject.setSteemApi(SteemApis.DATABASE_API);
+        if (version == Golos4J.HardForkVersion.HF_16) {
+            requestObject.setSteemApi(SteemApis.DATABASE_API);
+        } else {
+            requestObject.setSteemApi(SteemApis.SOCIAL_NETWORK);
+        }
+
         String[] parameters = {author.getName(), permlink.getLink()};
         requestObject.setAdditionalParameters(parameters);
 
@@ -222,7 +226,7 @@ class GolosDatabaseMethodsHandler implements DatabaseMethods {
     public List<DiscussionLight> getDiscussionsLightBy(@Nonnull DiscussionQuery discussionQuery, @Nonnull DiscussionSortType sortBy) throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.valueOf(sortBy.name()));
-        requestObject.setSteemApi(SteemApis.DATABASE_API);
+        requestObject.setSteemApi(SteemApis.SOCIAL_NETWORK);
         Object[] parameters = {discussionQuery};
         requestObject.setAdditionalParameters(parameters);
         List<DiscussionLight> out = communicationHandler.performRequest(requestObject, DiscussionLight.class);
@@ -323,39 +327,42 @@ class GolosDatabaseMethodsHandler implements DatabaseMethods {
     }
 
     @Override
-    public String getAccountAvatar(AccountName name) throws SteemCommunicationException {
+    public Map<String, String> getAccountAvatar(List<AccountName> name) throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setSteemApi(SteemApis.DATABASE_API);
-        requestObject.setApiMethod(RequestMethods.GET_STATE);
-        String[] parameters = {"@" + name.getName(), "{ truncate_body: 12 }"};
+        requestObject.setApiMethod(RequestMethods.GET_ACCOUNTS);
+
+        String[] innerParameters = new String[name.size()];
+        for (int i = 0; i < name.size(); i++) {
+            innerParameters[i] = name.get(i).getName();
+        }
+
+        String[][] parameters = {innerParameters};
         requestObject.setAdditionalParameters(parameters);
 
         List<ProfileImage> response = communicationHandler.performRequest(requestObject, ProfileImage.class);
-        if (!response.isEmpty() && response.get(0) != null) {
-            return response.get(0).getProfilePath();
+        HashMap<String, String> out = new HashMap<>(response.size());
+        for (int i = 0; i < name.size(); i++) {
+            out.put(name.get(i).getName(), null);
         }
-        return null;
-    }
-
-    @Override
-    public String getAccountAvatar(String blogName, AccountName authorName, Permlink permlink) throws SteemCommunicationException {
-        RequestWrapperDTO requestObject = new RequestWrapperDTO();
-        requestObject.setSteemApi(SteemApis.DATABASE_API);
-        requestObject.setApiMethod(RequestMethods.GET_STATE);
-        String[] parameters = {new Route(blogName, authorName, permlink).constructDiscussionRoute()};
-        requestObject.setAdditionalParameters(parameters);
-
-        List<Avatars> response = communicationHandler.performRequest(requestObject, Avatars.class);
         if (!response.isEmpty()) {
-            Avatars a = response.get(0);
-            if (a == null) return null;
-            return response.get(0).accountAvatars.get(authorName.getName());
+
+            for (int i = 0; i < response.size(); i++) {
+                ProfileImage avatar = response.get(i);
+                if (avatar != null) out.put(name.get(i).getName(), avatar.getProfilePath());
+
+            }
+            return out;
         }
         return null;
     }
+
 
     @Override
     public DiscussionWithComments getStoryByRoute(String blogName, AccountName authorName, Permlink permlink) throws SteemCommunicationException {
+        if (Golos4J.getInstance().getCurrentHardforkVersion() == Golos4J.HardForkVersion.HF_17)
+            return getStoryByRouteHf17(authorName, permlink);
+
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setSteemApi(SteemApis.DATABASE_API);
         requestObject.setApiMethod(RequestMethods.GET_STATE);
@@ -368,14 +375,67 @@ class GolosDatabaseMethodsHandler implements DatabaseMethods {
         }
 
         return null;
+
     }
 
+    private DiscussionWithComments getStoryByRouteHf17(AccountName authorName, Permlink permlink) throws SteemCommunicationException {
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
+        requestObject.setSteemApi(SteemApis.SOCIAL_NETWORK);
+        requestObject.setApiMethod(RequestMethods.GET_CONTENT);
+        String[] parameters = new String[]{authorName.getName(), permlink.getLink()};
+        requestObject.setAdditionalParameters(parameters);
+
+        List<Discussion> response = communicationHandler.performRequest(requestObject, Discussion.class);
+        if (response.isEmpty()) return null;
+
+        Discussion discussion = response.get(0);
+
+        requestObject = new RequestWrapperDTO();
+        requestObject.setSteemApi(SteemApis.SOCIAL_NETWORK);
+        requestObject.setApiMethod(RequestMethods.GET_ALL_CONTENT_REPLIES);
+        parameters = new String[]{authorName.getName(), permlink.getLink()};
+        requestObject.setAdditionalParameters(parameters);
+
+
+        List<Discussion> comments = communicationHandler.performRequest(requestObject, Discussion.class);
+
+        List<AccountName> accountNames = new ArrayList<>();
+        accountNames.add(discussion.getAuthor());
+        for (int i = 0; i < comments.size(); i++) {
+            if (comments.get(i) != null) {
+                AccountName name = comments.get(i).getAuthor();
+                if (!accountNames.contains(name)) accountNames.add(name);
+            }
+        }
+
+        List<ExtendedAccount> accounts = getAccounts(accountNames);
+
+        DiscussionWithComments discussionWithComments = new DiscussionWithComments();
+
+        List<Discussion> all = new ArrayList<>(comments.size() + 1);
+        all.add(discussion);
+
+        for (int i = 0; i < comments.size(); i++) {
+            Discussion comment = comments.get(i);
+            if (comment != null) all.add(comment);
+
+        }
+
+
+        discussionWithComments.setDiscussions(all);
+        discussionWithComments.setInvolvedAccounts(accounts);
+
+
+        return discussionWithComments;
+    }
+
+
     //{"id":37,"method":"call","params":[0,"get_state",["@yuri-vlad-second/feed"]]}
-    @Override
+  /*  @Override
     public List<Discussion> getUserFeed(AccountName userName) throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setSteemApi(SteemApis.DATABASE_API);
-        requestObject.setApiMethod(RequestMethods.GET_STATE);
+        requestObject.setApiMethod(RequestMethods. GET_STATE);
         String[] parameters = {new Route(null, userName, null).constructBlogRoute()};
         requestObject.setAdditionalParameters(parameters);
 
@@ -399,5 +459,5 @@ class GolosDatabaseMethodsHandler implements DatabaseMethods {
             return response.get(0).discussions;
         }
         return null;
-    }
+    }*/
 }

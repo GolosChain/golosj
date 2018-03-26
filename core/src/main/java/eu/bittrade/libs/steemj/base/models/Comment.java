@@ -82,7 +82,7 @@ public class Comment {
     private Asset maxAcceptedPayout;
     // Original type is uint16_t.
     @JsonProperty("percent_steem_dollars")
-    private short percentSteemDollars;
+    private int percentSteemDollars;
     @JsonProperty("allow_replies")
     private Boolean allowReplies;
     @JsonProperty("allow_votes")
@@ -321,7 +321,7 @@ public class Comment {
     /**
      * @return the percentSteemDollars
      */
-    public short getPercentSteemDollars() {
+    public int getPercentSteemDollars() {
         return percentSteemDollars;
     }
 

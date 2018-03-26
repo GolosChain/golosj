@@ -20,33 +20,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
-/**
- * ArrayMap is a generic key->value mapping data structure that is
- * designed to be more memory efficient than a traditional {@link java.util.HashMap},
- * this implementation is a version of the platform's
 
- * It keeps its mappings in an array data structure -- an integer array of hash
- * codes for each item, and an Object array of the key/value pairs.  This allows it to
- * avoid having to create an extra object for every entry put in to the map, and it
- * also tries to control the growth of the size of these arrays more aggressively
- * (since growing them only requires copying the entries in the array, not rebuilding
- * a hash map).
- *
- * <p>If you don't need the standard Java container APIs provided here (iterators etc),
- * consider using {@link SimpleArrayMap} instead.</p>
- *
- * <p>Note that this implementation is not intended to be appropriate for data structures
- * that may contain large numbers of items.  It is generally slower than a traditional
- * HashMap, since lookups require a binary search and adds and removes require inserting
- * and deleting entries in the array.  For containers holding up to hundreds of items,
- * the performance difference is not significant, less than 50%.</p>
- *
- * <p>Because this container is intended to better balance memory use, unlike most other
- * standard Java containers it will shrink its array as items are removed from it.  Currently
- * you have no control over this shrinking -- if you set a capacity and then remove an
- * item, it may reduce the capacity to better match the current size.  In the future an
- * explicit call to set the capacity should turn off this aggressive shrinking behavior.</p>
- */
 public class ArrayMap<K, V> extends SimpleArrayMap<K, V> implements Map<K, V> {
     MapCollections<K, V> mCollections;
 
@@ -56,6 +30,8 @@ public class ArrayMap<K, V> extends SimpleArrayMap<K, V> implements Map<K, V> {
 
     /**
      * Create a new ArrayMap with a given initial capacity.
+     *
+     * @param capacity int - tsarting capacity
      */
     public ArrayMap(int capacity) {
         super(capacity);
@@ -63,6 +39,8 @@ public class ArrayMap<K, V> extends SimpleArrayMap<K, V> implements Map<K, V> {
 
     /**
      * Create a new ArrayMap with the mappings from the given ArrayMap.
+     *
+     * @param map - source
      */
     public ArrayMap(SimpleArrayMap map) {
         super(map);
@@ -78,7 +56,7 @@ public class ArrayMap<K, V> extends SimpleArrayMap<K, V> implements Map<K, V> {
 
                 @Override
                 protected Object colGetEntry(int index, int offset) {
-                    return mArray[(index<<1) + offset];
+                    return mArray[(index << 1) + offset];
                 }
 
                 @Override
@@ -122,6 +100,7 @@ public class ArrayMap<K, V> extends SimpleArrayMap<K, V> implements Map<K, V> {
 
     /**
      * Determine if the array map contains all of the keys in the given collection.
+     *
      * @param collection The collection whose contents are to be checked against.
      * @return Returns true if this array map contains a key for every entry
      * in <var>collection</var>, else returns false.
@@ -132,6 +111,7 @@ public class ArrayMap<K, V> extends SimpleArrayMap<K, V> implements Map<K, V> {
 
     /**
      * Perform a {@link #put(Object, Object)} of all key/value pairs in <var>map</var>
+     *
      * @param map The map whose contents are to be retrieved.
      */
     @Override
@@ -144,6 +124,7 @@ public class ArrayMap<K, V> extends SimpleArrayMap<K, V> implements Map<K, V> {
 
     /**
      * Remove all keys in the array map that exist in the given collection.
+     *
      * @param collection The collection whose contents are to be used to remove keys.
      * @return Returns true if any keys were removed from the array map, else false.
      */
@@ -153,8 +134,9 @@ public class ArrayMap<K, V> extends SimpleArrayMap<K, V> implements Map<K, V> {
 
     /**
      * Remove all keys in the array map that do <b>not</b> exist in the given collection.
+     *
      * @param collection The collection whose contents are to be used to determine which
-     * keys to keep.
+     *                   keys to keep.
      * @return Returns true if any keys were removed from the array map, else false.
      */
     public boolean retainAll(Collection<?> collection) {
@@ -164,15 +146,15 @@ public class ArrayMap<K, V> extends SimpleArrayMap<K, V> implements Map<K, V> {
     /**
      * Return a {@link Set} for iterating over and interacting with all mappings
      * in the array map.
-     *
+     * <p>
      * <p><b>Note:</b> this is a very inefficient way to access the array contents, it
      * requires generating a number of temporary objects.</p>
-     *
+     * <p>
      * <p><b>Note:</b></p> the semantics of this
      * Set are subtly different than that of a {@link java.util.HashMap}: most important,
      * the {@link Entry Map.Entry} object returned by its iterator is a single
      * object that exists for the entire iterator, so you can <b>not</b> hold on to it
-     * after calling {@link java.util.Iterator#next() Iterator.next}.</p>
+     * after calling {@link java.util.Iterator#next() Iterator.next}.
      */
     @Override
     public Set<Entry<K, V>> entrySet() {
@@ -182,7 +164,7 @@ public class ArrayMap<K, V> extends SimpleArrayMap<K, V> implements Map<K, V> {
     /**
      * Return a {@link Set} for iterating over and interacting with all keys
      * in the array map.
-     *
+     * <p>
      * <p><b>Note:</b> this is a fairly inefficient way to access the array contents, it
      * requires generating a number of temporary objects.</p>
      */
@@ -194,7 +176,7 @@ public class ArrayMap<K, V> extends SimpleArrayMap<K, V> implements Map<K, V> {
     /**
      * Return a {@link Collection} for iterating over and interacting with all values
      * in the array map.
-     *
+     * <p>
      * <p><b>Note:</b> this is a fairly inefficient way to access the array contents, it
      * requires generating a number of temporary objects.</p>
      */
