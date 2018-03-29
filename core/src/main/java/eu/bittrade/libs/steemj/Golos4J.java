@@ -69,8 +69,8 @@ public class Golos4J {
     private Golos4J(@Nullable SteemJConfig config) {
         if (config == null) {
             steemJConfig = SteemJConfig.getInstance();
-          //  steemJConfig.setChainId("782a3039b478c839e4cb0c941ff4eaeb7df40bdd68bd441afd444b9da763de12");
-            steemJConfig.setChainId("5876894a41e6361bde2e73278f07340f2eb8b41c2facd29099de9deef6cdb679");
+            steemJConfig.setChainId("782a3039b478c839e4cb0c941ff4eaeb7df40bdd68bd441afd444b9da763de12");
+         //   steemJConfig.setChainId("5876894a41e6361bde2e73278f07340f2eb8b41c2facd29099de9deef6cdb679");
             steemJConfig.setSteemitAddressPrefix(SteemitAddressPrefix.GLS);
             steemJConfig.setResponseTimeout(180_000);
             steemJConfig.setSocketTimeout(180_000);
