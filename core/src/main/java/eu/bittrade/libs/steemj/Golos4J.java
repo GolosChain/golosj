@@ -1,21 +1,32 @@
 package eu.bittrade.libs.steemj;
 
 
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import eu.bittrade.libs.steemj.base.models.AccountName;
+import eu.bittrade.libs.steemj.base.models.DiscussionWithComments;
+import eu.bittrade.libs.steemj.base.models.Permlink;
+import eu.bittrade.libs.steemj.base.models.Route;
 import eu.bittrade.libs.steemj.communication.CommunicationHandler;
+import eu.bittrade.libs.steemj.communication.dto.RequestWrapperDTO;
 import eu.bittrade.libs.steemj.configuration.PrivateKeyStorage;
 import eu.bittrade.libs.steemj.configuration.SteemJConfig;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
+import eu.bittrade.libs.steemj.enums.RequestMethods;
+import eu.bittrade.libs.steemj.enums.SteemApis;
 import eu.bittrade.libs.steemj.enums.SteemitAddressPrefix;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.util.AuthUtils;
 import eu.bittrade.libs.steemj.util.ImmutablePair;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.*;
 
 /**
  * Created by yuri yurivladdurain@gmail.com .
@@ -70,12 +81,14 @@ public class Golos4J {
         if (config == null) {
             steemJConfig = SteemJConfig.getInstance();
             steemJConfig.setChainId("782a3039b478c839e4cb0c941ff4eaeb7df40bdd68bd441afd444b9da763de12");
-         //   steemJConfig.setChainId("5876894a41e6361bde2e73278f07340f2eb8b41c2facd29099de9deef6cdb679");
+            //   steemJConfig.setChainId("5876894a41e6361bde2e73278f07340f2eb8b41c2facd29099de9deef6cdb679");
             steemJConfig.setSteemitAddressPrefix(SteemitAddressPrefix.GLS);
             steemJConfig.setResponseTimeout(180_000);
             steemJConfig.setSocketTimeout(180_000);
             try {
-                steemJConfig.setWebSocketEndpointURI(new URI("wss://ws.golos.io"));
+                  steemJConfig.setWebSocketEndpointURI(new URI("wss://ws.golos.io"));
+                // steemJConfig.setWebSocketEndpointURI(new URI("wss://ws.testnet.golos.io"));
+              //  steemJConfig.setWebSocketEndpointURI(new URI("ws://78.46.193.218:8091"));
             } catch (URISyntaxException e) {
                 e.printStackTrace();
             }
@@ -97,10 +110,24 @@ public class Golos4J {
     @Nonnull
     public HardForkVersion getCurrentHardforkVersion() throws SteemCommunicationException {
         if (currentHardforkVersion == null) {
-            String versionString = databaseMethodsHandler.getHardforkVersion();
-            if (versionString.contains("0.16")) currentHardforkVersion = HardForkVersion.HF_16;
+            //String versionString = databaseMethodsHandler.getHardforkVersion();
+
+            try {
+                RequestWrapperDTO requestObject = new RequestWrapperDTO();
+                requestObject.setSteemApi(SteemApis.DATABASE_API);
+                requestObject.setApiMethod(RequestMethods.GET_STATE);
+                String[] parameters = {new Route("test",
+                        new AccountName("yuri-vlad"), new Permlink("b07ce6d4-6134-45d4-b2c0-771e290ce9b2")).constructDiscussionRoute()};
+                requestObject.setAdditionalParameters(parameters);
+                communicationHandler.performRequest(requestObject, DiscussionWithComments.class);
+                currentHardforkVersion = HardForkVersion.HF_16;
+            } catch (SteemCommunicationException e) {
+                currentHardforkVersion = HardForkVersion.HF_17;
+            }
+
+         /*   if (versionString.contains("0.16")) currentHardforkVersion = HardForkVersion.HF_16;
             else if (versionString.contains("0.17")) currentHardforkVersion = HardForkVersion.HF_17;
-            else throw new IllegalStateException("unknown hardfork " + versionString);
+            else throw new IllegalStateException("unknown hardfork " + versionString);*/
         }
         return currentHardforkVersion;
     }

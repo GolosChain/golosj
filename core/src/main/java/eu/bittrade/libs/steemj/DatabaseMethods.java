@@ -866,6 +866,7 @@ public interface DatabaseMethods {
     @Nullable
     Map<String, String> getAccountAvatar(List<AccountName> name) throws SteemCommunicationException;
 
+
     @Nullable
     DiscussionWithComments getStoryByRoute(String blogName, AccountName authorName, Permlink permlink) throws SteemCommunicationException;
 

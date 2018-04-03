@@ -142,6 +142,7 @@ public class CommunicationHandler extends Endpoint implements MessageHandler.Who
             ResponseWrapperDTO<T> response = mapper.readValue(rawJsonResponse, ResponseWrapperDTO.class);
 
             if (response == null || response.isEmpty() || rawJsonResponse.contains("\"name\":\"N5boost16exception_detail10clone_implINS0_19error_info")) {
+
                 LOGGER.debug("The response was empty. The requested node may not provid the method {}.",
                         requestObject.getApiMethod());
                 List<T> emptyResult = new ArrayList<>();

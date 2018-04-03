@@ -4,8 +4,6 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.annotations.VisibleForTesting;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-
 import org.bitcoinj.core.ECKey;
 import org.bitcoinj.core.ECKey.ECDSASignature;
 import org.bitcoinj.core.Sha256Hash;
@@ -21,6 +19,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import javax.annotation.Nullable;
 
 import eu.bittrade.libs.steemj.base.models.operations.Operation;
 import eu.bittrade.libs.steemj.configuration.SteemJConfig;
@@ -172,6 +172,7 @@ public class SignedTransaction extends Transaction implements ByteTransformable,
      * @throws SteemInvalidTransactionException If the transaction can not be signed.
      */
     protected void sign(String chainId, boolean skipValidation) throws SteemInvalidTransactionException {
+
         if (!skipValidation) {
             this.validate();
         }
@@ -196,10 +197,11 @@ public class SignedTransaction extends Transaction implements ByteTransformable,
                  * type will be tested later on. This technique improves the
                  * performance (thanks to ray66rus).
                  */
-                if (isCanonical(SteemJUtils.createSignedTransaction(0, signature, requiredPrivateKey))) {
+                if (isCanonical(createSignedTransaction(0, signature, requiredPrivateKey))) {
                     this.getExpirationDate().setDateTime(this.getExpirationDate().getDateTimeAsTimestamp() + 2);
                 } else {
                     isCanonical = true;
+
                     int keyType = SteemJUtils.getKeyType(signature, messageAsHash, requiredPrivateKey);
                     this.signatures.add(Utils.HEX
                             .encode(SteemJUtils.createSignedTransaction(keyType, signature, requiredPrivateKey)));
@@ -303,27 +305,63 @@ public class SignedTransaction extends Transaction implements ByteTransformable,
      * chain id.
      *
      * @param chainId The HEX representation of the chain Id you want to use for
-     *                this transaction.
+     * this transaction.
      * @return The serialized transaction object.
      * @throws SteemInvalidTransactionException If the transaction can not be signed.
      */
+    @Nullable
+    private byte[] chainIdByte;
+    @Nullable
+    private byte[] refBlockByte;
+    @Nullable
+    private byte[] refBlockPrefixByte;
+    @Nullable
+    private byte[] operationSizeByte;
+
+    private HashMap<Operation, byte[]> operationHashMap = new HashMap<>(operations.size());
+
+    @Nullable
+    private byte[] extensionSizeByte;
+
+    private HashMap<FutureExtensions, byte[]> extensionsHashMap = new HashMap<>(operations.size());
+
+
     protected byte[] toByteArray(String chainId) throws SteemInvalidTransactionException {
         try (ByteArrayOutputStream serializedTransaction = new ByteArrayOutputStream()) {
             if (chainId != null && !chainId.isEmpty()) {
-                serializedTransaction.write(Utils.HEX.decode(chainId));
+                if (chainIdByte == null) chainIdByte = Utils.HEX.decode(chainId);
+                serializedTransaction.write(chainIdByte);
             }
-            serializedTransaction.write(SteemJUtils.transformShortToByteArray(this.getRefBlockNum()));
-            serializedTransaction.write(SteemJUtils.transformIntToByteArray((int) this.getRefBlockPrefix()));
+            if (refBlockByte == null)
+                refBlockByte = SteemJUtils.transformShortToByteArray(this.getRefBlockNum());
+            serializedTransaction.write(refBlockByte);
+
+            if (refBlockPrefixByte == null)
+                refBlockPrefixByte = SteemJUtils.transformIntToByteArray((int) this.getRefBlockPrefix());
+            serializedTransaction.write(refBlockPrefixByte);
+
+
             serializedTransaction.write(this.getExpirationDate().toByteArray());
 
-            serializedTransaction.write(SteemJUtils.transformLongToVarIntByteArray(this.getOperations().size()));
+            if (operationSizeByte == null)
+                operationSizeByte = SteemJUtils.transformLongToVarIntByteArray(this.getOperations().size());
+
+            serializedTransaction.write(operationSizeByte);
             for (Operation operation : this.getOperations()) {
-                serializedTransaction.write(operation.toByteArray());
+                if (!operationHashMap.containsKey(operation))
+                    operationHashMap.put(operation, operation.toByteArray());
+
+                serializedTransaction.write(operationHashMap.get(operation));
             }
 
-            serializedTransaction.write(SteemJUtils.transformIntToVarIntByteArray(this.getExtensions().size()));
+            if (extensionSizeByte == null)
+                extensionSizeByte = SteemJUtils.transformIntToVarIntByteArray(this.getExtensions().size());
+
+            serializedTransaction.write(extensionSizeByte);
             for (FutureExtensions futureExtensions : this.getExtensions()) {
-                serializedTransaction.write(futureExtensions.toByteArray());
+                if (!extensionsHashMap.containsKey(futureExtensions))
+                    extensionsHashMap.put(futureExtensions, futureExtensions.toByteArray());
+                serializedTransaction.write(extensionsHashMap.get(futureExtensions));
             }
 
             return serializedTransaction.toByteArray();
@@ -331,6 +369,29 @@ public class SignedTransaction extends Transaction implements ByteTransformable,
             throw new SteemInvalidTransactionException(
                     "A problem occured while transforming the transaction into a byte array.", e);
         }
+    }
+
+
+    private byte[] createSignedTransaction(int keyType, ECKey.ECDSASignature signature, ECKey requiredPrivateKey) {
+        int headerByte = getHeaderByte(keyType, requiredPrivateKey);
+
+
+        signedTransaction[0] = (byte) headerByte;
+        System.arraycopy(Utils.bigIntegerToBytes(signature.r, 32), 0, signedTransaction, 1, 32);
+        System.arraycopy(Utils.bigIntegerToBytes(signature.s, 32), 0, signedTransaction, 33, 32);
+
+        return signedTransaction;
+    }
+
+    private byte[] signedTransaction = new byte[65];
+
+    private HashMap<Integer, Integer> headerBytes = new HashMap<>();
+
+    private int getHeaderByte(int keyType, ECKey requiredPrivateKey) {
+        if (!headerBytes.containsKey(keyType)) {
+            headerBytes.put(keyType, keyType + 27 + (requiredPrivateKey.isCompressed() ? 4 : 0));
+        }
+        return headerBytes.get(keyType);
     }
 
     @Override

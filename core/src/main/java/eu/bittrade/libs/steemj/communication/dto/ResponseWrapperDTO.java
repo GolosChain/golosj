@@ -12,9 +12,12 @@ import java.util.List;
  *
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
+
 public class ResponseWrapperDTO<T> {
+
     private int responseId;
+    @JsonProperty("jsonrpc")
+    private String rpcType;
     private List<T> result;
 
     @JsonCreator
