@@ -84,6 +84,10 @@ public class Discussion extends Comment {
         return activeVotes;
     }
 
+    public void setActiveVotes(List<VoteState> activeVotes) {
+        this.activeVotes = activeVotes;
+    }
+
     /**
      * @return the replies
      */

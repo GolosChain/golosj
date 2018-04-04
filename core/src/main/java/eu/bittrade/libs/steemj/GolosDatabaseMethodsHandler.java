@@ -390,14 +390,17 @@ class GolosDatabaseMethodsHandler implements DatabaseMethods {
 
         Discussion discussion = response.get(0);
 
-        requestObject = new RequestWrapperDTO();
+       /* requestObject = new RequestWrapperDTO();
         requestObject.setSteemApi(SteemApis.SOCIAL_NETWORK);
         requestObject.setApiMethod(RequestMethods.GET_ALL_CONTENT_REPLIES);
         parameters = new String[]{authorName.getName(), permlink.getLink()};
         requestObject.setAdditionalParameters(parameters);
 
 
-        List<Discussion> comments = communicationHandler.performRequest(requestObject, Discussion.class);
+*/
+
+
+        List<Discussion> comments = getAllContentReplies(discussion.getAuthor(), discussion.getPermlink());
 
         List<AccountName> accountNames = new ArrayList<>();
         accountNames.add(discussion.getAuthor());
@@ -429,35 +432,26 @@ class GolosDatabaseMethodsHandler implements DatabaseMethods {
         return discussionWithComments;
     }
 
+    private List<Discussion> getAllContentReplies(AccountName nameOfPost, Permlink permlinkOfPost) throws SteemCommunicationException {
+        ArrayList<Discussion> out = new ArrayList<>();
 
-    //{"id":37,"method":"call","params":[0,"get_state",["@yuri-vlad-second/feed"]]}
-  /*  @Override
-    public List<Discussion> getUserFeed(AccountName userName) throws SteemCommunicationException {
-        RequestWrapperDTO requestObject = new RequestWrapperDTO();
-        requestObject.setSteemApi(SteemApis.DATABASE_API);
-        requestObject.setApiMethod(RequestMethods. GET_STATE);
-        String[] parameters = {new Route(null, userName, null).constructBlogRoute()};
-        requestObject.setAdditionalParameters(parameters);
+        List<Discussion> replies = getContentReplies(nameOfPost, permlinkOfPost);
 
-        List<UserFeed> response = communicationHandler.performRequest(requestObject, UserFeed.class);
-        if (!response.isEmpty()) {
-            return response.get(0).getDiscussions();
+        for (Discussion discussion : replies) {
+            if (discussion != null) out.add(discussion);
         }
-        return null;
+        ArrayList<Discussion> supplementary = new ArrayList<>();
+        for (Discussion discussion : out) {
+            if (discussion.getChildren() != 0) {
+                supplementary.addAll(getAllContentReplies(discussion.getAuthor(), discussion.getPermlink()));
+            }
+        }
+        out.addAll(supplementary);
+        for (Discussion discussion : out) {
+            if (discussion.getNetVotes() != 0) {
+                discussion.setActiveVotes(getActiveVotes(discussion.getAuthor(), discussion.getPermlink()));
+            }
+        }
+        return out;
     }
-
-    @Override
-    public List<DiscussionLight> getUserFeedLight(AccountName userName) throws SteemCommunicationException {
-        RequestWrapperDTO requestObject = new RequestWrapperDTO();
-        requestObject.setSteemApi(SteemApis.DATABASE_API);
-        requestObject.setApiMethod(RequestMethods.GET_STATE);
-        String[] parameters = {new Route(null, userName, null).constructBlogRoute()};
-        requestObject.setAdditionalParameters(parameters);
-
-        List<UserFeedLight> response = communicationHandler.performRequest(requestObject, UserFeedLight.class);
-        if (!response.isEmpty()) {
-            return response.get(0).discussions;
-        }
-        return null;
-    }*/
 }

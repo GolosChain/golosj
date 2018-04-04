@@ -10,9 +10,27 @@ public class SteemError {
     private int responseId;
     @JsonProperty("error")
     private SteemErrorDetails steemErrorDetails;
+    @JsonProperty("jsonrpc")
+    private String rpcVersion;
 
     public int getResponseId() {
         return responseId;
+    }
+
+    public void setResponseId(int responseId) {
+        this.responseId = responseId;
+    }
+
+    public void setSteemErrorDetails(SteemErrorDetails steemErrorDetails) {
+        this.steemErrorDetails = steemErrorDetails;
+    }
+
+    public String getRpcVersion() {
+        return rpcVersion;
+    }
+
+    public void setRpcVersion(String rpcVersion) {
+        this.rpcVersion = rpcVersion;
     }
 
     public SteemErrorDetails getSteemErrorDetails() {
