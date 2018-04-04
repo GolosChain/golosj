@@ -86,10 +86,7 @@ public class Golos4J {
             steemJConfig.setResponseTimeout(180_000);
             steemJConfig.setSocketTimeout(180_000);
             try {
-                 steemJConfig.setWebSocketEndpointURI(new URI("wss://ws.golos.io"));
-              //    steemJConfig.setWebSocketEndpointURI(new URI("wss://ws17.golos.io"));
-                // steemJConfig.setWebSocketEndpointURI(new URI("wss://ws.testnet.golos.io"));
-              //  steemJConfig.setWebSocketEndpointURI(new URI("ws://78.46.193.218:8091"));
+                  steemJConfig.setWebSocketEndpointURI(new URI("wss://ws17.golos.io"));
             } catch (URISyntaxException e) {
                 e.printStackTrace();
             }
