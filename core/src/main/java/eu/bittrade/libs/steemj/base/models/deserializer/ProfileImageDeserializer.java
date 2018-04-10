@@ -5,12 +5,14 @@ import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.core.TreeNode;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
-import eu.bittrade.libs.steemj.base.models.ProfileImage;
-import eu.bittrade.libs.steemj.communication.CommunicationHandler;
 
 import java.io.IOException;
+
+import eu.bittrade.libs.steemj.base.models.ProfileImage;
+import eu.bittrade.libs.steemj.communication.CommunicationHandler;
 
 /**
  * Created by yuri on 03.11.17.
@@ -26,8 +28,9 @@ public class ProfileImageDeserializer extends JsonDeserializer<ProfileImage> {
         if (metadata == null)
             return null;
         String profileText = ((TextNode) metadata).textValue();
-        ObjectNode node = (ObjectNode) CommunicationHandler.getObjectMapper().readTree(profileText);
-        if (node == null)
+        JsonNode node = CommunicationHandler.getObjectMapper().readTree(profileText);
+
+        if (node == null || !(node instanceof ObjectNode))
             return null;
         TreeNode profile = node.get("profile");
         if (profile == null) return null;

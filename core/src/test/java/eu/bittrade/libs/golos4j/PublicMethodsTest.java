@@ -225,6 +225,7 @@ public class PublicMethodsTest {
         List<ExtendedAccount> accounts = golos4J.getDatabaseMethods().getAccounts(Collections.singletonList(new AccountName("yuri-vlad")));
         assertEquals(1, accounts.size());
         System.out.println("posting key is " + ((PublicKey) accounts.get(0).getPosting().getKeyAuths().keySet().toArray()[0]).getAddressFromPublicKey());
+
     }
 
     @Test
@@ -257,6 +258,15 @@ public class PublicMethodsTest {
         assertThat(blockContainingVoteOperation.getTimestamp().getDateTime(), equalTo("2016-10-19T12:13:27"));
         assertThat(blockContainingVoteOperation.getWitness(), equalTo("testz"));
 
+    }
+
+    @Test
+    public void getBlogsPosts() throws SteemCommunicationException {
+        DiscussionQuery discussionQuery = new DiscussionQuery();
+        discussionQuery.setLimit(20);
+        discussionQuery.setSelectAuthors(Collections.singletonList(new AccountName("mariadia")));
+        List<Discussion> discussions = golos4J.getDatabaseMethods().getDiscussionsBy(discussionQuery, DiscussionSortType.GET_DISCUSSIONS_BY_BLOG);
+        Assert.assertTrue(discussions.size() > 2);
     }
 
     @Test

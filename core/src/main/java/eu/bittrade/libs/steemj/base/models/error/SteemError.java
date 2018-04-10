@@ -1,10 +1,13 @@
 package eu.bittrade.libs.steemj.base.models.error;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class SteemError {
     @JsonProperty("id")
     private int responseId;
