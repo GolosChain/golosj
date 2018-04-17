@@ -270,7 +270,7 @@ public interface DatabaseMethods {
      *                                     given time (see
      *                                     {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(long)
      *                                     setResponseTimeout}).</li>
-     *                                     <li>If there is a connection problem.</li>
+     *                                      <li>If there is a connection problem.</li>
      *                                     <li>If the SteemJ is unable to transform the JSON response
      *                                     into a Java object.</li>
      *                                     <li>If the Server returned an error object.</li>
