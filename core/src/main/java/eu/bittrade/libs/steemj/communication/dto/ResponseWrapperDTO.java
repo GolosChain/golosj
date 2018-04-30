@@ -14,20 +14,39 @@ import java.util.List;
  */
 
 public class ResponseWrapperDTO<T> {
-
+    @JsonProperty("id")
     private int responseId;
     @JsonProperty("jsonrpc")
     private String rpcType;
     private List<T> result;
+
 
     @JsonCreator
     public ResponseWrapperDTO(@JsonProperty("result") List<T> result) {
         this.result = result;
     }
 
-    @JsonProperty("id")
+
     public int getResponseId() {
         return responseId;
+    }
+
+    public ResponseWrapperDTO(int responseId, String rpcType, List<T> result) {
+        this.responseId = responseId;
+        this.rpcType = rpcType;
+        this.result = result;
+    }
+
+    public void setResponseId(int responseId) {
+        this.responseId = responseId;
+    }
+
+    public void setRpcType(String rpcType) {
+        this.rpcType = rpcType;
+    }
+
+    public void setResult(List<T> result) {
+        this.result = result;
     }
 
     public List<T> getResult() {

@@ -138,6 +138,7 @@ public class CommunicationHandler extends Endpoint implements MessageHandler.Who
 
             sendMessageSynchronously(requestObject);
 
+            System.out.println(rawJsonResponse);
             @SuppressWarnings("unchecked")
             ResponseWrapperDTO<T> response = mapper.readValue(rawJsonResponse, ResponseWrapperDTO.class);
 

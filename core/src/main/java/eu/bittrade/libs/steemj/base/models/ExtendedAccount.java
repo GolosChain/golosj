@@ -229,7 +229,7 @@ public class ExtendedAccount extends Account {
 
     @Override
     public String toString() {
-        return "ExtendedAccount{" +
+        return super.toString() +  " ExtendedAccount{" +
                 "vestingBalance=" + vestingBalance +
                 ", reputation=" + reputation +
                 ", transferHistory=" + transferHistory +

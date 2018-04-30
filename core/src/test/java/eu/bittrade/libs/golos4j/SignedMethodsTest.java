@@ -2,7 +2,6 @@ package eu.bittrade.libs.golos4j;
 
 import junit.framework.TestCase;
 
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.internal.runners.JUnit38ClassRunner;
@@ -21,6 +20,7 @@ import eu.bittrade.libs.steemj.base.models.AppliedOperation;
 import eu.bittrade.libs.steemj.base.models.GlobalProperties;
 import eu.bittrade.libs.steemj.base.models.GolosIoFilePath;
 import eu.bittrade.libs.steemj.base.models.GolosProfile;
+import eu.bittrade.libs.steemj.base.models.Permlink;
 import eu.bittrade.libs.steemj.base.models.PublicKey;
 import eu.bittrade.libs.steemj.base.models.SignedTransaction;
 import eu.bittrade.libs.steemj.base.models.operations.AccountUpdateOperation;
@@ -35,7 +35,7 @@ import eu.bittrade.libs.steemj.util.ImmutablePair;
  * Created by yuri yurivladdurain@gmail.com .
  */
 @RunWith(JUnit38ClassRunner.class)
-public class  SignedMethodsTest extends TestCase {
+public class SignedMethodsTest extends TestCase {
     @Nonnull
     Golos4J golos4J = Golos4J.getInstance();
 
@@ -72,6 +72,28 @@ public class  SignedMethodsTest extends TestCase {
         assertNotNull(value);
     }
 
+    @Test
+
+    public void testVerifyAuthority() throws Exception {
+        golos4J.addAccount(new AccountName("yuri-vlad"), new ImmutablePair<>(PrivateKeyType.ACTIVE, "5KZPvXWyLVeJ3prqwvEgqFuWghwMLWGuYAgGCJutVdfwWJZXWHm"), true);
+        VoteOperation voteOperation = new VoteOperation(
+                new AccountName("yuri-vlad"),
+                new AccountName("yuri-vlad-second"),
+                new Permlink("sdsffs1211"),
+                (short) (100 * 100));
+
+        ArrayList<Operation> operations = new ArrayList<>();
+        operations.add(voteOperation);
+
+        GlobalProperties globalProperties = Golos4J.getInstance().getDatabaseMethods().getDynamicGlobalProperties();
+
+        SignedTransaction signedTransaction = new SignedTransaction(globalProperties.getHeadBlockId(), operations,
+                null);
+
+        signedTransaction.sign();
+
+        Golos4J.getInstance().getDatabaseMethods().verifyAuthority(signedTransaction);
+    }
 
     @Test
     public void testAccUpdate() throws Exception {
@@ -96,6 +118,7 @@ public class  SignedMethodsTest extends TestCase {
 
         signedTransaction.sign();
 
-        Golos4J.getInstance().getNetworkBroadcastMethods().broadcastTransaction(signedTransaction);
+
+        // Golos4J.getInstance().getNetworkBroadcastMethods().broadcastTransaction(signedTransaction);
     }
 }
