@@ -90,7 +90,7 @@ public class GlobalProperties {
      * This object is only used to wrap the JSON response in a POJO, so
      * therefore this class should not be instantiated.
      */
-    private GlobalProperties() {
+    public GlobalProperties() {
     }
 
     public int getVoteRegenerationPerDay() {
@@ -281,6 +281,126 @@ public class GlobalProperties {
      */
     public long getLastIrreversibleBlockNum() {
         return lastIrreversibleBlockNum;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setHeadBlockNumber(long headBlockNumber) {
+        this.headBlockNumber = headBlockNumber;
+    }
+
+    public void setVoteRegenerationPerDay(int voteRegenerationPerDay) {
+        this.voteRegenerationPerDay = voteRegenerationPerDay;
+    }
+
+    public void setHeadBlockId(BlockId headBlockId) {
+        this.headBlockId = headBlockId;
+    }
+
+    public void setTime(TimePointSec time) {
+        this.time = time;
+    }
+
+    public void setCurrentWitness(AccountName currentWitness) {
+        this.currentWitness = currentWitness;
+    }
+
+    public void setTotalPow(BigInteger totalPow) {
+        this.totalPow = totalPow;
+    }
+
+    public void setNumPowWitnesses(long numPowWitnesses) {
+        this.numPowWitnesses = numPowWitnesses;
+    }
+
+    public void setVirtualSupply(Asset virtualSupply) {
+        this.virtualSupply = virtualSupply;
+    }
+
+    public void setCurrentSupply(Asset currentSupply) {
+        this.currentSupply = currentSupply;
+    }
+
+    public void setConfidentialSupply(Asset confidentialSupply) {
+        this.confidentialSupply = confidentialSupply;
+    }
+
+    public void setCurrentSdbSupply(Asset currentSdbSupply) {
+        this.currentSdbSupply = currentSdbSupply;
+    }
+
+    public void setConfientialSdbSupply(Asset confientialSdbSupply) {
+        this.confientialSdbSupply = confientialSdbSupply;
+    }
+
+    public void setTotalVestingFundSteem(Asset totalVestingFundSteem) {
+        this.totalVestingFundSteem = totalVestingFundSteem;
+    }
+
+    public void setTotalVestingShares(Asset totalVestingShares) {
+        this.totalVestingShares = totalVestingShares;
+    }
+
+    public void setTotalRewardFundSteem(Asset totalRewardFundSteem) {
+        this.totalRewardFundSteem = totalRewardFundSteem;
+    }
+
+    public void setTotalRewardShares2(BigInteger totalRewardShares2) {
+        this.totalRewardShares2 = totalRewardShares2;
+    }
+
+    public void setPendingRewardedVestingShares(Asset pendingRewardedVestingShares) {
+        this.pendingRewardedVestingShares = pendingRewardedVestingShares;
+    }
+
+    public void setPendingRewardedVestingSteem(Asset pendingRewardedVestingSteem) {
+        this.pendingRewardedVestingSteem = pendingRewardedVestingSteem;
+    }
+
+    public void setSdbInterestRate(int sdbInterestRate) {
+        this.sdbInterestRate = sdbInterestRate;
+    }
+
+    public void setSdbPrintRate(int sdbPrintRate) {
+        this.sdbPrintRate = sdbPrintRate;
+    }
+
+    public void setMaximumBlockSize(long maximumBlockSize) {
+        this.maximumBlockSize = maximumBlockSize;
+    }
+
+    public void setCurrentAslot(BigInteger currentAslot) {
+        this.currentAslot = currentAslot;
+    }
+
+    public void setRecentSlotsFilled(BigInteger recentSlotsFilled) {
+        this.recentSlotsFilled = recentSlotsFilled;
+    }
+
+    public void setParticipationCount(short participationCount) {
+        this.participationCount = participationCount;
+    }
+
+    public void setLastIrreversibleBlockNum(long lastIrreversibleBlockNum) {
+        this.lastIrreversibleBlockNum = lastIrreversibleBlockNum;
+    }
+
+    public void setVotePowerReserveRate(long votePowerReserveRate) {
+        this.votePowerReserveRate = votePowerReserveRate;
+    }
+
+    public void setCurrentReserveRatio(long currentReserveRatio) {
+        this.currentReserveRatio = currentReserveRatio;
+    }
+
+    public void setAvarageBlockSize(int avarageBlockSize) {
+        this.avarageBlockSize = avarageBlockSize;
+    }
+
+    public void setMaxVirtualBandwidth(String maxVirtualBandwidth) {
+        this.maxVirtualBandwidth = maxVirtualBandwidth;
     }
 
     /**

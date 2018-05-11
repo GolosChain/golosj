@@ -23,6 +23,7 @@ import eu.bittrade.libs.steemj.base.models.GolosProfile;
 import eu.bittrade.libs.steemj.base.models.Permlink;
 import eu.bittrade.libs.steemj.base.models.PublicKey;
 import eu.bittrade.libs.steemj.base.models.SignedTransaction;
+import eu.bittrade.libs.steemj.base.models.TimePointSec;
 import eu.bittrade.libs.steemj.base.models.operations.AccountUpdateOperation;
 import eu.bittrade.libs.steemj.base.models.operations.Operation;
 import eu.bittrade.libs.steemj.base.models.operations.VoteOperation;
@@ -120,5 +121,21 @@ public class SignedMethodsTest extends TestCase {
 
 
         // Golos4J.getInstance().getNetworkBroadcastMethods().broadcastTransaction(signedTransaction);
+    }
+
+    @Test
+    public void testSerialize() throws Exception {
+        golos4J.addAccount(new AccountName("yuri-vlad-second"), new ImmutablePair<>(PrivateKeyType.ACTIVE, "5K7YbhJZqGnw3hYzsmH5HbDixWP5ByCBdnJxM5uoe9LuMX5rcZV"), true);
+        VoteOperation operation = new VoteOperation(new AccountName("yuri-vlad-second"), new AccountName("oksaxa"), new Permlink("ru--kitaijskaya-czivilizacziya"), (short) 10000);
+        ArrayList<Operation> operations = new ArrayList<>();
+        operations.add(operation);
+
+        SignedTransaction signedTransaction = new SignedTransaction(51322, 3809751608L,
+                new TimePointSec("2018-04-26T08:21:37")
+                , operations,
+                null);
+        signedTransaction.sign();
+        System.out.println(signedTransaction);
+
     }
 }

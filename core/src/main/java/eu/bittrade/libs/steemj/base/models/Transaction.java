@@ -287,14 +287,14 @@ public class Transaction implements Serializable {
      * @throws SteemInvalidTransactionException In case a field does not fullfil the requirements.
      */
     public void validate() throws SteemInvalidTransactionException {
-        if (this.getExpirationDate().getDateTimeAsTimestamp() > (new Timestamp(System.currentTimeMillis())).getTime()
+      /*  if (this.getExpirationDate().getDateTimeAsTimestamp() > (new Timestamp(System.currentTimeMillis())).getTime()
                 + SteemJConfig.getInstance().getMaximumExpirationDateOffset()) {
             LOGGER.warn("The configured expiration date for this transaction is to far "
                     + "in the future and may not be accepted by the Steem node.");
         } else if (this.getExpirationDate().getDateTimeAsTimestamp() < (new Timestamp(System.currentTimeMillis()))
                 .getTime()) {
             throw new SteemInvalidTransactionException("The expiration date can't be in the past.");
-        }
+        }*/
 
         boolean isPostingKeyRequired = false;
         boolean isActiveKeyRequired = false;
