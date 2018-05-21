@@ -37,8 +37,11 @@ import eu.bittrade.libs.steemj.apis.market.history.model.MarketVolume;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.AppliedOperation;
 import eu.bittrade.libs.steemj.base.models.Asset;
+import eu.bittrade.libs.steemj.base.models.BeneficiaryRouteType;
 import eu.bittrade.libs.steemj.base.models.BlockHeader;
 import eu.bittrade.libs.steemj.base.models.ChainProperties;
+import eu.bittrade.libs.steemj.base.models.CommentOptionsExtension;
+import eu.bittrade.libs.steemj.base.models.CommentPayoutBeneficiaries;
 import eu.bittrade.libs.steemj.base.models.Config;
 import eu.bittrade.libs.steemj.base.models.Discussion;
 import eu.bittrade.libs.steemj.base.models.DiscussionQuery;
@@ -2314,8 +2317,10 @@ public class SteemJ {
         short percentSteemDollars = (short) 10000;
         Asset maxAcceptedPayout = new Asset(1000000000, AssetSymbolType.GBG);
 
-      /*  BeneficiaryRouteType beneficiaryRouteType = new BeneficiaryRouteType(SteemJConfig.getSteemJAccount(),
+        BeneficiaryRouteType beneficiaryRouteType = new BeneficiaryRouteType(SteemJConfig.getSteemJAccount(),
                 SteemJConfig.getInstance().getSteemJWeight());
+
+
 
         ArrayList<BeneficiaryRouteType> beneficiaryRouteTypes = new ArrayList<>();
         beneficiaryRouteTypes.add(beneficiaryRouteType);
@@ -2324,13 +2329,15 @@ public class SteemJ {
         commentPayoutBeneficiaries.setBeneficiaries(beneficiaryRouteTypes);
 
         ArrayList<CommentOptionsExtension> commentOptionsExtensions = new ArrayList<>();
-        commentOptionsExtensions.add(commentPayoutBeneficiaries);*/
+        commentOptionsExtensions.add(commentPayoutBeneficiaries);
 
         CommentOptionsOperation commentOptionsOperation = new CommentOptionsOperation(authorThatPublishsThePost,
                 permlink, maxAcceptedPayout, percentSteemDollars, allowVotes, allowCurationRewards,
-                null);
+                commentOptionsExtensions);
 
         operations.add(commentOptionsOperation);
+
+
 
         GlobalProperties globalProperties = this.getDynamicGlobalProperties();
 
@@ -2403,7 +2410,7 @@ public class SteemJ {
         short percentSteemDollars = (short) 10000;
         Asset maxAcceptedPayout = new Asset(1000000000, AssetSymbolType.GBG);
 
-      /*  BeneficiaryRouteType beneficiaryRouteType = new BeneficiaryRouteType(SteemJConfig.getSteemJAccount(),
+       BeneficiaryRouteType beneficiaryRouteType = new BeneficiaryRouteType(SteemJConfig.getSteemJAccount(),
                 SteemJConfig.getInstance().getSteemJWeight());
 
         ArrayList<BeneficiaryRouteType> beneficiaryRouteTypes = new ArrayList<>();
@@ -2413,11 +2420,11 @@ public class SteemJ {
         commentPayoutBeneficiaries.setBeneficiaries(beneficiaryRouteTypes);
 
         ArrayList<CommentOptionsExtension> commentOptionsExtensions = new ArrayList<>();
-        commentOptionsExtensions.add(commentPayoutBeneficiaries);*/
+        commentOptionsExtensions.add(commentPayoutBeneficiaries);
 
         CommentOptionsOperation commentOptionsOperation = new CommentOptionsOperation(authorThatPublishsTheComment,
                 permlink, maxAcceptedPayout, percentSteemDollars, allowVotes, allowCurationRewards,
-                null);
+                commentOptionsExtensions);
 
         operations.add(commentOptionsOperation);
 

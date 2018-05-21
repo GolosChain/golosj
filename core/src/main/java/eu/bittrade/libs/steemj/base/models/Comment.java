@@ -2,6 +2,7 @@ package eu.bittrade.libs.steemj.base.models;
 
 import java.math.BigInteger;
 import java.util.Arrays;
+import java.util.List;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
@@ -92,13 +93,197 @@ public class Comment {
     // TODO: Fix type
     // bip::vector< beneficiary_route_type, allocator< beneficiary_route_type >
     // > beneficiaries;
-    private Object[] beneficiaries;
+    @JsonProperty("beneficiaries")
+    private List<Beneficiary> beneficiaries;
 
     /**
      * This object is only used to wrap the JSON response in a POJO, so
      * therefore this class should not be instantiated.
      */
     protected Comment() {
+    }
+
+    public Comment(long id, String category, AccountName parentAuthor, Permlink parentPermlink, AccountName author, Permlink permlink, String title, String body, String jsonMetadata, TimePointSec lastUpdate, TimePointSec created, TimePointSec active, TimePointSec lastPayout, short depth, int children, String childrenRshares2, long netRshares, long absRshares, long voteRshares, long childrenAbsRshares, TimePointSec cashoutTime, TimePointSec maxCashoutTime, BigInteger totalVoteWeight, long rewardWeight, Asset totalPayoutValue, Asset curatorPayoutValue, long authorRewards, int netVotes, long rootComment, String mode, Asset maxAcceptedPayout, int percentSteemDollars, Boolean allowReplies, Boolean allowVotes, Boolean allowCurationRewards, List<Beneficiary> beneficiaries) {
+        this.id = id;
+        this.category = category;
+        this.parentAuthor = parentAuthor;
+        this.parentPermlink = parentPermlink;
+        this.author = author;
+        this.permlink = permlink;
+        this.title = title;
+        this.body = body;
+        this.jsonMetadata = jsonMetadata;
+        this.lastUpdate = lastUpdate;
+        this.created = created;
+        this.active = active;
+        this.lastPayout = lastPayout;
+        this.depth = depth;
+        this.children = children;
+        this.childrenRshares2 = childrenRshares2;
+        this.netRshares = netRshares;
+        this.absRshares = absRshares;
+        this.voteRshares = voteRshares;
+        this.childrenAbsRshares = childrenAbsRshares;
+        this.cashoutTime = cashoutTime;
+        this.maxCashoutTime = maxCashoutTime;
+        this.totalVoteWeight = totalVoteWeight;
+        this.rewardWeight = rewardWeight;
+        this.totalPayoutValue = totalPayoutValue;
+        this.curatorPayoutValue = curatorPayoutValue;
+        this.authorRewards = authorRewards;
+        this.netVotes = netVotes;
+        this.rootComment = rootComment;
+        this.mode = mode;
+        this.maxAcceptedPayout = maxAcceptedPayout;
+        this.percentSteemDollars = percentSteemDollars;
+        this.allowReplies = allowReplies;
+        this.allowVotes = allowVotes;
+        this.allowCurationRewards = allowCurationRewards;
+        this.beneficiaries = beneficiaries;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public void setParentAuthor(AccountName parentAuthor) {
+        this.parentAuthor = parentAuthor;
+    }
+
+    public void setParentPermlink(Permlink parentPermlink) {
+        this.parentPermlink = parentPermlink;
+    }
+
+    public void setAuthor(AccountName author) {
+        this.author = author;
+    }
+
+    public void setPermlink(Permlink permlink) {
+        this.permlink = permlink;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setBody(String body) {
+        this.body = body;
+    }
+
+    public void setJsonMetadata(String jsonMetadata) {
+        this.jsonMetadata = jsonMetadata;
+    }
+
+    public void setLastUpdate(TimePointSec lastUpdate) {
+        this.lastUpdate = lastUpdate;
+    }
+
+    public void setCreated(TimePointSec created) {
+        this.created = created;
+    }
+
+    public void setActive(TimePointSec active) {
+        this.active = active;
+    }
+
+    public void setLastPayout(TimePointSec lastPayout) {
+        this.lastPayout = lastPayout;
+    }
+
+    public void setDepth(short depth) {
+        this.depth = depth;
+    }
+
+    public void setChildren(int children) {
+        this.children = children;
+    }
+
+    public void setChildrenRshares2(String childrenRshares2) {
+        this.childrenRshares2 = childrenRshares2;
+    }
+
+    public void setNetRshares(long netRshares) {
+        this.netRshares = netRshares;
+    }
+
+    public void setAbsRshares(long absRshares) {
+        this.absRshares = absRshares;
+    }
+
+    public void setVoteRshares(long voteRshares) {
+        this.voteRshares = voteRshares;
+    }
+
+    public void setChildrenAbsRshares(long childrenAbsRshares) {
+        this.childrenAbsRshares = childrenAbsRshares;
+    }
+
+    public void setCashoutTime(TimePointSec cashoutTime) {
+        this.cashoutTime = cashoutTime;
+    }
+
+    public void setMaxCashoutTime(TimePointSec maxCashoutTime) {
+        this.maxCashoutTime = maxCashoutTime;
+    }
+
+    public void setTotalVoteWeight(BigInteger totalVoteWeight) {
+        this.totalVoteWeight = totalVoteWeight;
+    }
+
+    public void setRewardWeight(long rewardWeight) {
+        this.rewardWeight = rewardWeight;
+    }
+
+    public void setTotalPayoutValue(Asset totalPayoutValue) {
+        this.totalPayoutValue = totalPayoutValue;
+    }
+
+    public void setCuratorPayoutValue(Asset curatorPayoutValue) {
+        this.curatorPayoutValue = curatorPayoutValue;
+    }
+
+    public void setAuthorRewards(long authorRewards) {
+        this.authorRewards = authorRewards;
+    }
+
+    public void setNetVotes(int netVotes) {
+        this.netVotes = netVotes;
+    }
+
+    public void setRootComment(long rootComment) {
+        this.rootComment = rootComment;
+    }
+
+    public void setMode(String mode) {
+        this.mode = mode;
+    }
+
+    public void setMaxAcceptedPayout(Asset maxAcceptedPayout) {
+        this.maxAcceptedPayout = maxAcceptedPayout;
+    }
+
+    public void setPercentSteemDollars(int percentSteemDollars) {
+        this.percentSteemDollars = percentSteemDollars;
+    }
+
+    public void setAllowReplies(Boolean allowReplies) {
+        this.allowReplies = allowReplies;
+    }
+
+    public void setAllowVotes(Boolean allowVotes) {
+        this.allowVotes = allowVotes;
+    }
+
+    public void setAllowCurationRewards(Boolean allowCurationRewards) {
+        this.allowCurationRewards = allowCurationRewards;
+    }
+
+    public void setBeneficiaries(List<Beneficiary> beneficiaries) {
+        this.beneficiaries = beneficiaries;
     }
 
     /**
@@ -346,13 +531,13 @@ public class Comment {
         return allowCurationRewards;
     }
 
-    /**
-     * @return the beneficiaries
-     */
-    public Object[] getBeneficiaries() {
+    public List<Beneficiary> getBeneficiaries() {
         return beneficiaries;
     }
 
+    /**
+     * @return the beneficiaries
+     */
     @Override
     public String toString() {
         return "Comment{" +
@@ -391,7 +576,7 @@ public class Comment {
                 ", allowReplies=" + allowReplies +
                 ", allowVotes=" + allowVotes +
                 ", allowCurationRewards=" + allowCurationRewards +
-                ", beneficiaries=" + Arrays.toString(beneficiaries) +
+                ", beneficiaries=" + beneficiaries +
                 '}';
     }
 }

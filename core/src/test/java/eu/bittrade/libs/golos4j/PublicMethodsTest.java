@@ -1,7 +1,6 @@
 package eu.bittrade.libs.golos4j;
 
 
-import org.bitcoinj.core.Base58;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.hamcrest.MatcherAssert;
@@ -600,9 +599,12 @@ public class PublicMethodsTest {
 
     @Test
     public void test() throws Exception {
-        String pre = "5K7YbhJZqGnw3hYzsmH5HbDixWP5ByCBdnJxM5uoe9LuMX5rcZV";
-        String result = Base58.encode(pre.getBytes());
-        System.out.println(result);
+        DiscussionQuery discussionQuery = new DiscussionQuery();
+        discussionQuery.setLimit(10);
+        discussionQuery.setTruncateBody(1);
+        final List<Discussion> discussions = golos4J.getDatabaseMethods().getDiscussionsBy(discussionQuery, DiscussionSortType.GET_DISCUSSIONS_BY_HOT);
+        assertNotNull("expect discussions", discussions);
+
     }
 
 }

@@ -46,6 +46,20 @@ public class DiscussionQuery {
         this.setTruncateBody(0);
     }
 
+    public DiscussionQuery(String tag, Integer limit, List<String> filterTags, List<AccountName> selectAuthors, List<String> selectTags, Integer truncateBody, AccountName startAuthor, Permlink startPermlink, AccountName parentAuthor, Permlink parentPermlink) {
+        this.tag = tag;
+        this.limit = limit;
+        this.filterTags = filterTags;
+        this.selectAuthors = selectAuthors;
+        this.selectTags = selectTags;
+        this.truncateBody = truncateBody;
+        this.startAuthor = startAuthor;
+        this.startPermlink = startPermlink;
+        this.parentAuthor = parentAuthor;
+        this.parentPermlink = parentPermlink;
+    }
+
+
     /**
      * @return the tag
      */

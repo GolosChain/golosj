@@ -29,7 +29,7 @@ import eu.bittrade.libs.steemj.util.ImmutablePair;
 public class SteemJConfig {
     private static final Logger LOGGER = LoggerFactory.getLogger(SteemJConfig.class);
     private static final String DEFAULT_STEEM_NODE_URI = "wss://steemd.steemit.com";
-    private static final AccountName STEEMJ_ACCOUNT = new AccountName("steemj");
+    private static final AccountName STEEMJ_ACCOUNT = new AccountName("golosio");
 
     private static SteemJConfig steemJConfigInstance;
 
