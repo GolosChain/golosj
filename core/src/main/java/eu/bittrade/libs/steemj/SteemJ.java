@@ -606,6 +606,7 @@ public class SteemJ {
     public Price getCurrentMedianHistoryPrice() throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_CURRENT_MEDIAN_HISTORY_PRICE);
+
         requestObject.setSteemApi(SteemApis.DATABASE_API);
         String[] parameters = {};
         requestObject.setAdditionalParameters(parameters);

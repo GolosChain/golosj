@@ -1,6 +1,20 @@
 package eu.bittrade.libs.golos4j;
 
 
+import eu.bittrade.libs.steemj.Golos4J;
+import eu.bittrade.libs.steemj.apis.follow.enums.FollowType;
+import eu.bittrade.libs.steemj.apis.follow.model.*;
+import eu.bittrade.libs.steemj.base.models.*;
+import eu.bittrade.libs.steemj.base.models.operations.AccountCreateOperation;
+import eu.bittrade.libs.steemj.base.models.operations.Operation;
+import eu.bittrade.libs.steemj.base.models.operations.VoteOperation;
+import eu.bittrade.libs.steemj.enums.AssetSymbolType;
+import eu.bittrade.libs.steemj.enums.DiscussionSortType;
+import eu.bittrade.libs.steemj.enums.PrivateKeyType;
+import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
+import eu.bittrade.libs.steemj.exceptions.SteemResponseError;
+import eu.bittrade.libs.steemj.util.AuthUtils;
+import org.bitcoinj.core.Base58;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.hamcrest.MatcherAssert;
@@ -16,62 +30,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import eu.bittrade.libs.steemj.Golos4J;
-import eu.bittrade.libs.steemj.apis.follow.enums.FollowType;
-import eu.bittrade.libs.steemj.apis.follow.model.AccountReputation;
-import eu.bittrade.libs.steemj.apis.follow.model.BlogEntry;
-import eu.bittrade.libs.steemj.apis.follow.model.CommentBlogEntry;
-import eu.bittrade.libs.steemj.apis.follow.model.CommentFeedEntry;
-import eu.bittrade.libs.steemj.apis.follow.model.FeedEntry;
-import eu.bittrade.libs.steemj.apis.follow.model.FollowApiObject;
-import eu.bittrade.libs.steemj.apis.follow.model.FollowCountApiObject;
-import eu.bittrade.libs.steemj.apis.follow.model.PostsPerAuthorPair;
-import eu.bittrade.libs.steemj.base.models.AccountName;
-import eu.bittrade.libs.steemj.base.models.AppliedOperation;
-import eu.bittrade.libs.steemj.base.models.Asset;
-import eu.bittrade.libs.steemj.base.models.BlockHeader;
-import eu.bittrade.libs.steemj.base.models.ChainProperties;
-import eu.bittrade.libs.steemj.base.models.Config;
-import eu.bittrade.libs.steemj.base.models.Discussion;
-import eu.bittrade.libs.steemj.base.models.DiscussionLight;
-import eu.bittrade.libs.steemj.base.models.DiscussionQuery;
-import eu.bittrade.libs.steemj.base.models.DiscussionWithComments;
-import eu.bittrade.libs.steemj.base.models.ExtendedAccount;
-import eu.bittrade.libs.steemj.base.models.GlobalProperties;
-import eu.bittrade.libs.steemj.base.models.LiquidityBalance;
-import eu.bittrade.libs.steemj.base.models.Permlink;
-import eu.bittrade.libs.steemj.base.models.PublicKey;
-import eu.bittrade.libs.steemj.base.models.ScheduledHardfork;
-import eu.bittrade.libs.steemj.base.models.SignedBlockWithInfo;
-import eu.bittrade.libs.steemj.base.models.SteemVersionInfo;
-import eu.bittrade.libs.steemj.base.models.TrendingTag;
-import eu.bittrade.libs.steemj.base.models.Vote;
-import eu.bittrade.libs.steemj.base.models.VoteState;
-import eu.bittrade.libs.steemj.base.models.Witness;
-import eu.bittrade.libs.steemj.base.models.WitnessSchedule;
-import eu.bittrade.libs.steemj.base.models.operations.AccountCreateOperation;
-import eu.bittrade.libs.steemj.base.models.operations.Operation;
-import eu.bittrade.libs.steemj.base.models.operations.VoteOperation;
-import eu.bittrade.libs.steemj.enums.AssetSymbolType;
-import eu.bittrade.libs.steemj.enums.DiscussionSortType;
-import eu.bittrade.libs.steemj.enums.PrivateKeyType;
-import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
-import eu.bittrade.libs.steemj.exceptions.SteemResponseError;
-import eu.bittrade.libs.steemj.util.AuthUtils;
-
 import static eu.bittrade.libs.steemj.enums.PrivateKeyType.POSTING;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.greaterThan;
-import static org.hamcrest.Matchers.greaterThanOrEqualTo;
-import static org.hamcrest.Matchers.instanceOf;
-import static org.hamcrest.Matchers.isEmptyOrNullString;
-import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.*;
 import static org.hamcrest.core.IsEqual.equalTo;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 public class PublicMethodsTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(PublicMethodsTest.class);
@@ -79,10 +42,12 @@ public class PublicMethodsTest {
     private static final AccountName WITNESS_ACCOUNT = new AccountName("cyberfounder");
     public static final Permlink PERMLINK = new Permlink("kriptopirozhkovo-khardfokovyi-post");
     private Golos4J golos4J;
+    private boolean useTestnet = true;
 
     @Before
     public void setup() {
-        golos4J = Golos4J.getInstance();
+        if (useTestnet) golos4J = Golos4J.getTestnet();
+        else golos4J = Golos4J.getInstance();
     }
 
     @Test
@@ -185,6 +150,13 @@ public class PublicMethodsTest {
         // something is returned.
         assertThat(activeWitnesses.size(), greaterThan(0));
         assertThat(activeWitnesses.get(0), not(isEmptyOrNullString()));
+    }
+
+    @Test
+    public void getFeedHistoryTest() throws Exception {
+        FeedHistory history = golos4J.getDatabaseMethods().getFeedHistory();
+        assertNotNull(history.getCurrentPrice());
+        assertThat(history.getCurrentPrice().getBase().getAmount(), greaterThan(0.0));
     }
 
     @Test
@@ -388,11 +360,8 @@ public class PublicMethodsTest {
 
     @Test
     public void testGetWitnessesByVote() throws Exception {
-        final List<Witness> activeWitnessesByVote = golos4J.getDatabaseMethods().getWitnessByVote(new AccountName("pfunk"), 10);
-
-        assertEquals("expect that 10 results are returned", activeWitnessesByVote.size(), 10);
-        assertEquals("expect pfunk to be the first returned witness", "pfunk",
-                activeWitnessesByVote.get(0).getOwner().getName());
+        final List<Witness> activeWitnessesByVote = golos4J.getDatabaseMethods().getWitnessByVote(WITNESS_ACCOUNT, 10);
+        assertTrue(!activeWitnessesByVote.isEmpty());
     }
 
     @Test
@@ -427,7 +396,7 @@ public class PublicMethodsTest {
 
     @Test
     public void testLookupWitnessAccount() throws Exception {
-        final List<String> accounts = golos4J.getDatabaseMethods().lookupWitnessAccounts("phenom", 10);
+        final List<String> accounts = golos4J.getDatabaseMethods().lookupWitnessAccounts("cyberfounder", 10);
 
         assertNotNull("expect accounts", accounts);
         assertThat("expect at least one account", accounts.size(), greaterThan(0));
@@ -437,7 +406,7 @@ public class PublicMethodsTest {
     public void testMinerQueue() throws Exception {
         final List<String> minerQueue = golos4J.getDatabaseMethods().getMinerQueue();
 
-        assertThat("expect the number of miners greater than 0", minerQueue.size(), greaterThan(15));
+        assertThat("expect the number of miners greater than 0", minerQueue.size(), greaterThan(0));
     }
 
     @Test
@@ -461,7 +430,7 @@ public class PublicMethodsTest {
     public void testWitnessCount() throws Exception {
         final int witnessCount = golos4J.getDatabaseMethods().getWitnessCount();
 
-        assertThat("expect the number of witnesses greater than 13071", witnessCount, greaterThan(0));
+        assertThat("expect the number of witnesses greater than 0", witnessCount, greaterThan(0));
     }
 
     @Test
@@ -470,6 +439,22 @@ public class PublicMethodsTest {
 
         assertNotNull("expect hardfork version", witnessSchedule);
         assertThat(witnessSchedule.getTop19Weight(), equalTo((short) 1));
+    }
+
+    @Test
+    public void getWitnessesTest() throws Exception {
+        ArrayList<Integer> integers = new ArrayList<>();
+        integers.add(0);
+        integers.add(1);
+        List<Witness> witnesses = golos4J.getDatabaseMethods().getWitnesses(integers);
+        assertTrue(!witnesses.isEmpty());
+    }
+
+
+    @Test
+    public void getWitnessesByAccount() throws Exception {
+        Witness witness = golos4J.getDatabaseMethods().getWitnessByAccount(new AccountName("cyber"));
+        assertNotNull(witness);
     }
 
     @Test
@@ -599,12 +584,9 @@ public class PublicMethodsTest {
 
     @Test
     public void test() throws Exception {
-        DiscussionQuery discussionQuery = new DiscussionQuery();
-        discussionQuery.setLimit(10);
-        discussionQuery.setTruncateBody(1);
-        final List<Discussion> discussions = golos4J.getDatabaseMethods().getDiscussionsBy(discussionQuery, DiscussionSortType.GET_DISCUSSIONS_BY_HOT);
-        assertNotNull("expect discussions", discussions);
-
+        String pre = "5K7YbhJZqGnw3hYzsmH5HbDixWP5ByCBdnJxM5uoe9LuMX5rcZV";
+        String result = Base58.encode(pre.getBytes());
+        System.out.println(result);
     }
 
 }

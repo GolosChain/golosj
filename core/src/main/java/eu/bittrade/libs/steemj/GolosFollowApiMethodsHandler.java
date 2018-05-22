@@ -40,18 +40,14 @@ class GolosFollowApiMethodsHandler implements FollowApiMethods {
     @Override
     public List<FollowApiObject> getFollowers(AccountName following, AccountName startFollower, FollowType type,
                                               short limit) throws SteemCommunicationException {
-        if (Golos4J.getInstance().getCurrentHardforkVersion() == Golos4J.HardForkVersion.HF_16)
-            return steemJ.getFollowers(following, startFollower, type, limit);
-        else {
-            RequestWrapperDTO requestObject = new RequestWrapperDTO();
-            requestObject.setApiMethod(RequestMethods.GET_FOLLOWERS);
-            requestObject.setSteemApi(SteemApis.FOLLOW);
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
+        requestObject.setApiMethod(RequestMethods.GET_FOLLOWERS);
+        requestObject.setSteemApi(SteemApis.FOLLOW);
 
-            Object[] parameters = {following.getName(), startFollower.getName(), type.toString().toLowerCase(), limit};
-            requestObject.setAdditionalParameters(parameters);
+        Object[] parameters = {following.getName(), startFollower.getName(), type.toString().toLowerCase(), limit};
+        requestObject.setAdditionalParameters(parameters);
 
-            return communicationHandler.performRequest(requestObject, FollowApiObject.class);
-        }
+        return communicationHandler.performRequest(requestObject, FollowApiObject.class);
     }
 
     @Override
@@ -60,12 +56,7 @@ class GolosFollowApiMethodsHandler implements FollowApiMethods {
         Golos4J.HardForkVersion version = Golos4J.getInstance().getCurrentHardforkVersion();
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_FOLLOWING);
-        if (version == Golos4J.HardForkVersion.HF_16) {
-            requestObject.setSteemApi(SteemApis.FOLLOW_API);
-        } else {
-            requestObject.setSteemApi(SteemApis.FOLLOW);
-        }
-
+        requestObject.setSteemApi(SteemApis.FOLLOW);
         ArrayList<Object> parametersList = new ArrayList();
         if (following != null) parametersList.add(following.getName());
         if (startFollower != null) parametersList.add(startFollower.getName());
@@ -79,113 +70,87 @@ class GolosFollowApiMethodsHandler implements FollowApiMethods {
 
     @Override
     public FollowCountApiObject getFollowCount(AccountName account) throws SteemCommunicationException {
-        if (Golos4J.getInstance().getCurrentHardforkVersion() == Golos4J.HardForkVersion.HF_16)
-            return steemJ.getFollowCount(account);
-        else {
-            RequestWrapperDTO requestObject = new RequestWrapperDTO();
-            requestObject.setApiMethod(RequestMethods.GET_FOLLOW_COUNT);
-            requestObject.setSteemApi(SteemApis.FOLLOW);
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
+        requestObject.setApiMethod(RequestMethods.GET_FOLLOW_COUNT);
+        requestObject.setSteemApi(SteemApis.FOLLOW);
 
-            Object[] parameters = {account.getName()};
-            requestObject.setAdditionalParameters(parameters);
-
-            return communicationHandler.performRequest(requestObject, FollowCountApiObject.class).get(0);
-        }
-
+        Object[] parameters = {account.getName()};
+        requestObject.setAdditionalParameters(parameters);
+        return communicationHandler.performRequest(requestObject, FollowCountApiObject.class).get(0);
     }
 
     @Override
     public List<FeedEntry> getFeedEntries(AccountName account, int entryId, short limit)
             throws SteemCommunicationException {
-        if (Golos4J.getInstance().getCurrentHardforkVersion() == Golos4J.HardForkVersion.HF_16)
-            return steemJ.getFeedEntries(account, entryId, limit);
-        else {
-            RequestWrapperDTO requestObject = new RequestWrapperDTO();
-            requestObject.setApiMethod(RequestMethods.GET_FEED_ENTRIES);
-            requestObject.setSteemApi(SteemApis.FOLLOW);
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
+        requestObject.setApiMethod(RequestMethods.GET_FEED_ENTRIES);
+        requestObject.setSteemApi(SteemApis.FOLLOW);
 
-            Object[] parameters = {account.getName(), entryId, limit};
-            requestObject.setAdditionalParameters(parameters);
-
-            return communicationHandler.performRequest(requestObject, FeedEntry.class);
-        }
+        Object[] parameters = {account.getName(), entryId, limit};
+        requestObject.setAdditionalParameters(parameters);
+        return communicationHandler.performRequest(requestObject, FeedEntry.class);
     }
 
     @Override
     public List<CommentFeedEntry> getFeed(AccountName account, int entryId, short limit)
             throws SteemCommunicationException {
-        if (Golos4J.getInstance().getCurrentHardforkVersion() == Golos4J.HardForkVersion.HF_16)
-            return steemJ.getFeed(account, entryId, limit);
-        else {
-            RequestWrapperDTO requestObject = new RequestWrapperDTO();
-            requestObject.setApiMethod(RequestMethods.GET_FEED);
-            requestObject.setSteemApi(SteemApis.FOLLOW);
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
+        requestObject.setApiMethod(RequestMethods.GET_FEED);
+        requestObject.setSteemApi(SteemApis.FOLLOW);
 
-            Object[] parameters = {account.getName(), entryId, limit};
-            requestObject.setAdditionalParameters(parameters);
-
-            return communicationHandler.performRequest(requestObject, CommentFeedEntry.class);
-        }
-
+        Object[] parameters = {account.getName(), entryId, limit};
+        requestObject.setAdditionalParameters(parameters);
+        return communicationHandler.performRequest(requestObject, CommentFeedEntry.class);
     }
 
     @Override
     public List<BlogEntry> getBlogEntries(AccountName account, int entryId, short limit)
             throws SteemCommunicationException {
-        if (Golos4J.getInstance().getCurrentHardforkVersion() == Golos4J.HardForkVersion.HF_16)
-            return steemJ.getBlogEntries(account, entryId, limit);
-        else {
-            RequestWrapperDTO requestObject = new RequestWrapperDTO();
-            requestObject.setApiMethod(RequestMethods.GET_BLOG_ENTRIES);
-            requestObject.setSteemApi(SteemApis.FOLLOW);
 
-            Object[] parameters = {account.getName(), entryId, limit};
-            requestObject.setAdditionalParameters(parameters);
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
+        requestObject.setApiMethod(RequestMethods.GET_BLOG_ENTRIES);
+        requestObject.setSteemApi(SteemApis.FOLLOW);
 
-            return communicationHandler.performRequest(requestObject, BlogEntry.class);
-        }
+        Object[] parameters = {account.getName(), entryId, limit};
+        requestObject.setAdditionalParameters(parameters);
+
+        return communicationHandler.performRequest(requestObject, BlogEntry.class);
+
     }
 
     @Override
     public List<CommentBlogEntry> getBlog(AccountName account, int entryId, short limit)
             throws SteemCommunicationException {
-        if (Golos4J.getInstance().getCurrentHardforkVersion() == Golos4J.HardForkVersion.HF_16)
-            return steemJ.getBlog(account, entryId, limit);
-        else {
-            RequestWrapperDTO requestObject = new RequestWrapperDTO();
-            requestObject.setApiMethod(RequestMethods.GET_BLOG);
-            requestObject.setSteemApi(SteemApis.FOLLOW);
 
-            Object[] parameters = {account.getName(), entryId, limit};
-            requestObject.setAdditionalParameters(parameters);
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
+        requestObject.setApiMethod(RequestMethods.GET_BLOG);
+        requestObject.setSteemApi(SteemApis.FOLLOW);
 
-            return communicationHandler.performRequest(requestObject, CommentBlogEntry.class);
-        }
+        Object[] parameters = {account.getName(), entryId, limit};
+        requestObject.setAdditionalParameters(parameters);
+
+        return communicationHandler.performRequest(requestObject, CommentBlogEntry.class);
 
     }
 
     @Override
     public List<AccountReputation> getAccountReputations(AccountName accountName, int limit)
             throws SteemCommunicationException {
-        if (Golos4J.getInstance().getCurrentHardforkVersion() == Golos4J.HardForkVersion.HF_16)
-            return steemJ.getAccountReputations(accountName, limit);
-        else {
-            RequestWrapperDTO requestObject = new RequestWrapperDTO();
-            requestObject.setApiMethod(RequestMethods.GET_ACCOUNT_REPUTATIONS);
-            requestObject.setSteemApi(SteemApis.FOLLOW);
 
-            Object[] parameters = {accountName.getName(), limit};
-            requestObject.setAdditionalParameters(parameters);
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
+        requestObject.setApiMethod(RequestMethods.GET_ACCOUNT_REPUTATIONS);
+        requestObject.setSteemApi(SteemApis.FOLLOW);
 
-            return communicationHandler.performRequest(requestObject, AccountReputation.class);
-        }
+        Object[] parameters = {accountName.getName(), limit};
+        requestObject.setAdditionalParameters(parameters);
+
+        return communicationHandler.performRequest(requestObject, AccountReputation.class);
+
     }
 
     @Override
     public List<AccountName> getRebloggedBy(AccountName author, Permlink permlink) throws SteemCommunicationException {
-        if (Golos4J.getInstance().getCurrentHardforkVersion() == Golos4J.HardForkVersion.HF_16)
-            return steemJ.getRebloggedBy(author, permlink);
-        else {
+
             RequestWrapperDTO requestObject = new RequestWrapperDTO();
             requestObject.setApiMethod(RequestMethods.GET_REBLOGGED_BY);
             requestObject.setSteemApi(SteemApis.FOLLOW);
@@ -194,22 +159,19 @@ class GolosFollowApiMethodsHandler implements FollowApiMethods {
             requestObject.setAdditionalParameters(parameters);
 
             return communicationHandler.performRequest(requestObject, AccountName.class);
-        }
+
     }
 
     @Override
     public List<PostsPerAuthorPair> getBlogAuthors(AccountName blogAccount) throws SteemCommunicationException {
-        if (Golos4J.getInstance().getCurrentHardforkVersion() == Golos4J.HardForkVersion.HF_16)
-            return steemJ.getBlogAuthors(blogAccount);
-        else {
-            RequestWrapperDTO requestObject = new RequestWrapperDTO();
-            requestObject.setApiMethod(RequestMethods.GET_BLOG_AUTHORS);
-            requestObject.setSteemApi(SteemApis.FOLLOW);
 
-            Object[] parameters = {blogAccount.getName()};
-            requestObject.setAdditionalParameters(parameters);
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
+        requestObject.setApiMethod(RequestMethods.GET_BLOG_AUTHORS);
+        requestObject.setSteemApi(SteemApis.FOLLOW);
 
-            return communicationHandler.performRequest(requestObject, PostsPerAuthorPair.class);
-        }
+        Object[] parameters = {blogAccount.getName()};
+        requestObject.setAdditionalParameters(parameters);
+
+        return communicationHandler.performRequest(requestObject, PostsPerAuthorPair.class);
     }
 }

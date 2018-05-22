@@ -24,7 +24,8 @@ public enum SteemApis {
     FOLLOW_API(5),
     FOLLOW(null),
     MARKET_HISTORY_API(6),
-    RAW_BLOCK_API(null);
+    RAW_BLOCK_API(null),
+    WITNESS_API(null);
 
     @Nullable
     private Integer apiId;

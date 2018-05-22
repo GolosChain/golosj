@@ -1,42 +1,16 @@
 package eu.bittrade.libs.steemj;
 
-import java.text.ParseException;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import eu.bittrade.libs.steemj.base.models.AccountName;
-import eu.bittrade.libs.steemj.base.models.AppliedOperation;
-import eu.bittrade.libs.steemj.base.models.BlockHeader;
-import eu.bittrade.libs.steemj.base.models.ChainProperties;
-import eu.bittrade.libs.steemj.base.models.Config;
-import eu.bittrade.libs.steemj.base.models.Discussion;
-import eu.bittrade.libs.steemj.base.models.DiscussionLight;
-import eu.bittrade.libs.steemj.base.models.DiscussionQuery;
-import eu.bittrade.libs.steemj.base.models.DiscussionWithComments;
-import eu.bittrade.libs.steemj.base.models.ExtendedAccount;
-import eu.bittrade.libs.steemj.base.models.ExtendedLimitOrder;
-import eu.bittrade.libs.steemj.base.models.FeedHistory;
-import eu.bittrade.libs.steemj.base.models.GlobalProperties;
-import eu.bittrade.libs.steemj.base.models.LiquidityBalance;
-import eu.bittrade.libs.steemj.base.models.OrderBook;
-import eu.bittrade.libs.steemj.base.models.Permlink;
-import eu.bittrade.libs.steemj.base.models.Price;
-import eu.bittrade.libs.steemj.base.models.RewardFund;
-import eu.bittrade.libs.steemj.base.models.ScheduledHardfork;
-import eu.bittrade.libs.steemj.base.models.SignedBlockWithInfo;
-import eu.bittrade.libs.steemj.base.models.SignedTransaction;
-import eu.bittrade.libs.steemj.base.models.TrendingTag;
-import eu.bittrade.libs.steemj.base.models.Vote;
-import eu.bittrade.libs.steemj.base.models.VoteState;
-import eu.bittrade.libs.steemj.base.models.Witness;
-import eu.bittrade.libs.steemj.base.models.WitnessSchedule;
+import eu.bittrade.libs.steemj.base.models.*;
 import eu.bittrade.libs.steemj.communication.BlockAppliedCallback;
 import eu.bittrade.libs.steemj.enums.DiscussionSortType;
 import eu.bittrade.libs.steemj.enums.RewardFundType;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.text.ParseException;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by yuri yurivladdurain@gmail.com
@@ -270,7 +244,7 @@ public interface DatabaseMethods {
      *                                     given time (see
      *                                     {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(long)
      *                                     setResponseTimeout}).</li>
-     *                                      <li>If there is a connection problem.</li>
+     *                                     <li>If there is a connection problem.</li>
      *                                     <li>If the SteemJ is unable to transform the JSON response
      *                                     into a Java object.</li>
      *                                     <li>If the Server returned an error object.</li>
@@ -737,6 +711,7 @@ public interface DatabaseMethods {
     /**
      * Get all witnesses.
      *
+     * @param witnessIndex position of witness to get
      * @return A list of witnesses.
      * @throws SteemCommunicationException <ul>
      *                                     <li>If the server was not able to answer the request in the
@@ -750,7 +725,7 @@ public interface DatabaseMethods {
      *                                     </ul>
      */
     @Nonnull
-    List<Witness> getWitnesses() throws SteemCommunicationException;
+    List<Witness> getWitnesses(List<Integer> witnessIndex) throws SteemCommunicationException;
 
     /**
      * Get the witness schedule.
@@ -769,6 +744,8 @@ public interface DatabaseMethods {
      */
     @Nonnull
     WitnessSchedule getWitnessSchedule() throws SteemCommunicationException;
+
+
 
     /**
      * Search for accounts.
@@ -870,7 +847,7 @@ public interface DatabaseMethods {
     @Nullable
     DiscussionWithComments getStoryByRoute(String blogName, AccountName authorName, Permlink permlink) throws SteemCommunicationException;
 
-   // List<Discussion> getUserFeed(AccountName userName) throws SteemCommunicationException;
+    // List<Discussion> getUserFeed(AccountName userName) throws SteemCommunicationException;
 
-  //  List<DiscussionLight> getUserFeedLight(AccountName userName) throws SteemCommunicationException;
+    //  List<DiscussionLight> getUserFeedLight(AccountName userName) throws SteemCommunicationException;
 }

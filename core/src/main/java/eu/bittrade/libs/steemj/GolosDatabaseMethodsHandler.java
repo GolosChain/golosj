@@ -1,44 +1,7 @@
 package eu.bittrade.libs.steemj;
 
 
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import eu.bittrade.libs.steemj.base.models.AccountName;
-import eu.bittrade.libs.steemj.base.models.AppliedOperation;
-import eu.bittrade.libs.steemj.base.models.BlockHeader;
-import eu.bittrade.libs.steemj.base.models.ChainProperties;
-import eu.bittrade.libs.steemj.base.models.Config;
-import eu.bittrade.libs.steemj.base.models.Discussion;
-import eu.bittrade.libs.steemj.base.models.DiscussionLight;
-import eu.bittrade.libs.steemj.base.models.DiscussionQuery;
-import eu.bittrade.libs.steemj.base.models.DiscussionWithComments;
-import eu.bittrade.libs.steemj.base.models.ExtendedAccount;
-import eu.bittrade.libs.steemj.base.models.ExtendedLimitOrder;
-import eu.bittrade.libs.steemj.base.models.FeedHistory;
-import eu.bittrade.libs.steemj.base.models.GlobalProperties;
-import eu.bittrade.libs.steemj.base.models.LiquidityBalance;
-import eu.bittrade.libs.steemj.base.models.OrderBook;
-import eu.bittrade.libs.steemj.base.models.Permlink;
-import eu.bittrade.libs.steemj.base.models.Price;
-import eu.bittrade.libs.steemj.base.models.ProfileImage;
-import eu.bittrade.libs.steemj.base.models.RewardFund;
-import eu.bittrade.libs.steemj.base.models.Route;
-import eu.bittrade.libs.steemj.base.models.ScheduledHardfork;
-import eu.bittrade.libs.steemj.base.models.SignedBlockWithInfo;
-import eu.bittrade.libs.steemj.base.models.SignedTransaction;
-import eu.bittrade.libs.steemj.base.models.TrendingTag;
-import eu.bittrade.libs.steemj.base.models.Vote;
-import eu.bittrade.libs.steemj.base.models.VoteState;
-import eu.bittrade.libs.steemj.base.models.Witness;
-import eu.bittrade.libs.steemj.base.models.WitnessSchedule;
+import eu.bittrade.libs.steemj.base.models.*;
 import eu.bittrade.libs.steemj.communication.BlockAppliedCallback;
 import eu.bittrade.libs.steemj.communication.CommunicationHandler;
 import eu.bittrade.libs.steemj.communication.dto.RequestWrapperDTO;
@@ -49,6 +12,11 @@ import eu.bittrade.libs.steemj.enums.RewardFundType;
 import eu.bittrade.libs.steemj.enums.SteemApis;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.text.ParseException;
+import java.util.*;
 
 /**
  * Created by yuri yurivladdurain@gmail.com
@@ -110,15 +78,9 @@ class GolosDatabaseMethodsHandler implements DatabaseMethods {
     @Nullable
     @Override
     public DiscussionLight getContentLight(@Nonnull AccountName author, @Nonnull Permlink permlink) throws SteemCommunicationException {
-        Golos4J.HardForkVersion version = Golos4J.getInstance().getCurrentHardforkVersion();
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_CONTENT);
-        if (version == Golos4J.HardForkVersion.HF_16) {
-            requestObject.setSteemApi(SteemApis.DATABASE_API);
-        } else {
-            requestObject.setSteemApi(SteemApis.SOCIAL_NETWORK);
-        }
-
+        requestObject.setSteemApi(SteemApis.SOCIAL_NETWORK);
         String[] parameters = {author.getName(), permlink.getLink()};
         requestObject.setAdditionalParameters(parameters);
 
@@ -139,7 +101,9 @@ class GolosDatabaseMethodsHandler implements DatabaseMethods {
     public List<String> getActiveWitnesses() throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_ACTIVE_WITNESSES);
+        if (Golos4J.getInstance().getCurrentHardforkVersion() == Golos4J.HardForkVersion.HF_17)
         requestObject.setSteemApi(SteemApis.DATABASE_API);
+        else    requestObject.setSteemApi(SteemApis.WITNESS_API);
         String[] parameters = {};
         requestObject.setAdditionalParameters(parameters);
         return communicationHandler.performRequest(requestObject, String.class);
@@ -167,7 +131,16 @@ class GolosDatabaseMethodsHandler implements DatabaseMethods {
 
     @Override
     public Price getCurrentMedianHistoryPrice() throws SteemCommunicationException {
-        return steemJ.getCurrentMedianHistoryPrice();
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
+        requestObject.setApiMethod(RequestMethods.GET_CURRENT_MEDIAN_HISTORY_PRICE);
+
+        if (Golos4J.getInstance().getCurrentHardforkVersion() == Golos4J.HardForkVersion.HF_17)
+            requestObject.setSteemApi(SteemApis.DATABASE_API);
+        else requestObject.setSteemApi(SteemApis.WITNESS_API);
+        String[] parameters = {};
+        requestObject.setAdditionalParameters(parameters);
+
+        return communicationHandler.performRequest(requestObject, Price.class).get(0);
     }
 
     @Override
@@ -195,7 +168,15 @@ class GolosDatabaseMethodsHandler implements DatabaseMethods {
 
     @Override
     public FeedHistory getFeedHistory() throws SteemCommunicationException {
-        return steemJ.getFeedHistory();
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
+        requestObject.setApiMethod(RequestMethods.GET_FEED_HISTORY);
+        if (Golos4J.getInstance().getCurrentHardforkVersion() == Golos4J.HardForkVersion.HF_17)
+            requestObject.setSteemApi(SteemApis.DATABASE_API);
+        else requestObject.setSteemApi(SteemApis.WITNESS_API);
+        String[] parameters = {};
+        requestObject.setAdditionalParameters(parameters);
+
+        return communicationHandler.performRequest(requestObject, FeedHistory.class).get(0);
     }
 
     @Override
@@ -213,7 +194,9 @@ class GolosDatabaseMethodsHandler implements DatabaseMethods {
     public List<String> getMinerQueue() throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_MINER_QUEUE);
-        requestObject.setSteemApi(SteemApis.DATABASE_API);
+        if (Golos4J.getInstance().getCurrentHardforkVersion() == Golos4J.HardForkVersion.HF_17)
+            requestObject.setSteemApi(SteemApis.DATABASE_API);
+        else requestObject.setSteemApi(SteemApis.WITNESS_API);
         String[] parameters = {};
         requestObject.setAdditionalParameters(parameters);
         List<String> out = communicationHandler.performRequest(requestObject, String.class);
@@ -273,27 +256,71 @@ class GolosDatabaseMethodsHandler implements DatabaseMethods {
 
     @Override
     public Witness getWitnessByAccount(AccountName witnessName) throws SteemCommunicationException {
-        return steemJ.getWitnessByAccount(witnessName);
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
+        requestObject.setApiMethod(RequestMethods.GET_WITNESS_BY_ACCOUNT);
+
+        if (Golos4J.getInstance().getCurrentHardforkVersion() == Golos4J.HardForkVersion.HF_17)
+            requestObject.setSteemApi(SteemApis.DATABASE_API);
+        else requestObject.setSteemApi(SteemApis.WITNESS_API);
+
+        String[] parameters = {witnessName.getName()};
+        requestObject.setAdditionalParameters(parameters);
+
+        return communicationHandler.performRequest(requestObject, Witness.class).get(0);
     }
 
     @Override
     public List<Witness> getWitnessByVote(AccountName witnessName, int limit) throws SteemCommunicationException {
-        return steemJ.getWitnessByVote(witnessName, limit);
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
+        requestObject.setApiMethod(RequestMethods.GET_WITNESSES_BY_VOTE);
+        if (Golos4J.getInstance().getCurrentHardforkVersion() == Golos4J.HardForkVersion.HF_17)
+            requestObject.setSteemApi(SteemApis.DATABASE_API);
+        else requestObject.setSteemApi(SteemApis.WITNESS_API);
+        String[] parameters = {witnessName.getName(), String.valueOf(limit)};
+        requestObject.setAdditionalParameters(parameters);
+
+        return communicationHandler.performRequest(requestObject, Witness.class);
     }
 
     @Override
     public int getWitnessCount() throws SteemCommunicationException {
-        return steemJ.getWitnessCount();
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
+        requestObject.setApiMethod(RequestMethods.GET_WITNESS_COUNT);
+        if (Golos4J.getInstance().getCurrentHardforkVersion() == Golos4J.HardForkVersion.HF_17)
+            requestObject.setSteemApi(SteemApis.DATABASE_API);
+        else requestObject.setSteemApi(SteemApis.WITNESS_API);
+        String[] parameters = {};
+        requestObject.setAdditionalParameters(parameters);
+
+        return communicationHandler.performRequest(requestObject, Integer.class).get(0);
     }
 
     @Override
-    public List<Witness> getWitnesses() throws SteemCommunicationException {
-        return steemJ.getWitnesses();
+    public List<Witness> getWitnesses(List<Integer> witnessIndex) throws SteemCommunicationException {
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
+        requestObject.setApiMethod(RequestMethods.GET_WITNESSES);
+        if (Golos4J.getInstance().getCurrentHardforkVersion() == Golos4J.HardForkVersion.HF_17)
+            requestObject.setSteemApi(SteemApis.DATABASE_API);
+        else requestObject.setSteemApi(SteemApis.WITNESS_API);
+        Integer[][] parameters = {witnessIndex.toArray(new Integer[witnessIndex.size()])};
+        requestObject.setAdditionalParameters(parameters);
+
+        return communicationHandler.performRequest(requestObject, Witness.class);
+
     }
 
+    @Nonnull
     @Override
     public WitnessSchedule getWitnessSchedule() throws SteemCommunicationException {
-        return steemJ.getWitnessSchedule();
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
+        requestObject.setApiMethod(RequestMethods.GET_WITNESS_SCHEDULE);
+        if (Golos4J.getInstance().getCurrentHardforkVersion() == Golos4J.HardForkVersion.HF_17)
+            requestObject.setSteemApi(SteemApis.DATABASE_API);
+        else requestObject.setSteemApi(SteemApis.WITNESS_API);
+        String[] parameters = {};
+        requestObject.setAdditionalParameters(parameters);
+
+        return communicationHandler.performRequest(requestObject, WitnessSchedule.class).get(0);
     }
 
     @Override
@@ -301,9 +328,19 @@ class GolosDatabaseMethodsHandler implements DatabaseMethods {
         return steemJ.lookupAccounts(pattern, limit);
     }
 
+    @Nonnull
     @Override
     public List<String> lookupWitnessAccounts(String pattern, int limit) throws SteemCommunicationException {
-        return steemJ.lookupWitnessAccounts(pattern, limit);
+
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
+        requestObject.setApiMethod(RequestMethods.LOOKUP_WITNESS_ACCOUNTS);
+        if (Golos4J.getInstance().getCurrentHardforkVersion() == Golos4J.HardForkVersion.HF_17)
+            requestObject.setSteemApi(SteemApis.DATABASE_API);
+        else requestObject.setSteemApi(SteemApis.WITNESS_API);
+        String[] parameters = {pattern, String.valueOf(limit)};
+        requestObject.setAdditionalParameters(parameters);
+
+        return communicationHandler.performRequest(requestObject, String.class);
     }
 
     @Override
