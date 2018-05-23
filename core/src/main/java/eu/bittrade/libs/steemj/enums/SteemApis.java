@@ -1,8 +1,5 @@
 package eu.bittrade.libs.steemj.enums;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 /**
  * An enumeration for all existing APIs.
  *
@@ -10,37 +7,24 @@ import javax.annotation.Nullable;
  */
 public enum SteemApis {
     @Deprecated
-    LOGIN_API(1),
-    NETWORK_NODE_API(null),
-    NETWORK_BROADCAST_API(3),
-    ACCOUNT_BY_KEY_API(2),
-    ACCOUNT_STATISTICS_API(null),
-    AUTH_UTIL_API(null),
-    BLOCK_INFO_API(null),
-    BLOCKCHAIN_STATISTICS_API(null),
-    DATABASE_API(0),
-    SOCIAL_NETWORK(null),
-    DEBUG_NODE_API(null),
-    FOLLOW_API(5),
-    FOLLOW(null),
-    MARKET_HISTORY_API(6),
-    RAW_BLOCK_API(null),
-    WITNESS_API(null);
+    LOGIN_API,
+    NETWORK_NODE_API,
+    NETWORK_BROADCAST_API,
+    ACCOUNT_BY_KEY_API,
+    ACCOUNT_STATISTICS_API,
+    AUTH_UTIL_API,
+    BLOCK_INFO_API,
+    BLOCKCHAIN_STATISTICS_API,
+    DATABASE_API,
+    SOCIAL_NETWORK,
+    DEBUG_NODE_API,
+    FOLLOW_API,
+    FOLLOW,
+    MARKET_HISTORY_API,
+    RAW_BLOCK_API,
+    WITNESS_API,
+    ACCOUNT_HISTORY,
+    OPERATION_HISTORY,
+    TAGS;
 
-    @Nullable
-    private Integer apiId;
-
-    @Nullable
-    SteemApis(Integer apiId) {
-        this.apiId = apiId;
-    }
-
-    @Nullable
-    public Integer getApiId() {
-        return apiId;
-    }
-
-    public void setApiId(@Nonnull Integer apiId) {
-        this.apiId = apiId;
-    }
 }

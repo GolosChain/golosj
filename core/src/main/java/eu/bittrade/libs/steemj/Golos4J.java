@@ -24,6 +24,7 @@ import java.util.*;
 /**
  * Created by yuri yurivladdurain@gmail.com .
  * 46.101.154.98 (testnet.golos.io)
+ * qwerty P5KbaLKyg7rWZNWHVNqewHqQwN7CamUfCpGqMm7872K7oieYwQsM
  */
 
 public class Golos4J {
@@ -42,8 +43,6 @@ public class Golos4J {
     private final CommunicationHandler communicationHandler;
     @Nonnull
     private final DatabaseMethods databaseMethodsHandler;
-    @Nonnull
-    private final LoginMethods golosLoginMethodsHandler;
     @Nonnull
     private final MarketHistory marketHistoryApiMethodsHandler;
     @Nonnull
@@ -113,7 +112,6 @@ public class Golos4J {
         steemJ = new SteemJ(true);
         this.communicationHandler = steemJ.getCommunicationHandler();
         this.databaseMethodsHandler = new GolosDatabaseMethodsHandler(this.steemJConfig, communicationHandler, steemJ);
-        this.golosLoginMethodsHandler = new GolosLoginMethodsHandler(this.steemJConfig, communicationHandler, steemJ);
         this.marketHistoryApiMethodsHandler = new GolosMarketHistoryApiHandler(this.steemJConfig, communicationHandler, steemJ);
         this.followApiMethodsHandler = new GolosFollowApiMethodsHandler(this.steemJConfig, communicationHandler, steemJ);
         this.networkBroadcastMethodsHandler = new GolosNetworkBroadcastMethodsHandler(this.steemJConfig, communicationHandler, steemJ);
@@ -213,12 +211,7 @@ public class Golos4J {
         return simplifiedOperations;
     }
 
-    @Nonnull
-    public LoginMethods getLoginMethods() {
-        return golosLoginMethodsHandler;
-    }
-
-    @Nonnull
+     @Nonnull
     public MarketHistory getMarketHistoryApiMethods() {
         return marketHistoryApiMethodsHandler;
     }

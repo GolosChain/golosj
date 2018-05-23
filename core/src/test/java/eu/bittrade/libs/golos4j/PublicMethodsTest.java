@@ -42,7 +42,7 @@ public class PublicMethodsTest {
     private static final AccountName WITNESS_ACCOUNT = new AccountName("cyberfounder");
     public static final Permlink PERMLINK = new Permlink("kriptopirozhkovo-khardfokovyi-post");
     private Golos4J golos4J;
-    private boolean useTestnet = true;
+    private boolean useTestnet = false;
 
     @Before
     public void setup() {
@@ -65,15 +65,14 @@ public class PublicMethodsTest {
         assertTrue(!appliedOperationsOnlyVirtual.isEmpty());
 
         //   assertThat(appliedOperationsOnlyVirtual);
-        assertThat(appliedOperationsOnlyVirtual.get(0).getTrxInBlock(), equalTo(0));
-        assertThat(appliedOperationsOnlyVirtual.get(0).getVirtualOp(), equalTo(0L));
-        MatcherAssert.assertThat(appliedOperationsOnlyVirtual.get(0).getOp(), instanceOf(VoteOperation.class));
+        assertThat(appliedOperationsOnlyVirtual.get(0).getTrxInBlock(), greaterThanOrEqualTo(0));
+        assertThat(appliedOperationsOnlyVirtual.get(0).getVirtualOp(), greaterThanOrEqualTo(0L));
     }
 
     @Test
     public void testGetPost() throws Exception {
-        DiscussionWithComments comments = golos4J.getDatabaseMethods().getStoryByRoute("test",
-                new AccountName("yuri-vlad"), new Permlink("b07ce6d4-6134-45d4-b2c0-771e290ce9b2"));
+        DiscussionWithComments comments = golos4J.getDatabaseMethods().getStoryWithRepliesAndInvolvedAccounts(
+                new AccountName("yuri-vlad"), new Permlink("b07ce6d4-6134-45d4-b2c0-771e290ce9b2"), -1);
         System.out.println(comments);
     }
 
@@ -417,14 +416,6 @@ public class PublicMethodsTest {
         assertThat("expect trending tags size > 0", trendingTags.size(), greaterThan(0));
     }
 
-    @Test
-    public void testVersion() throws Exception {
-        final SteemVersionInfo version = golos4J.getLoginMethods().getVersion();
-
-        assertNotEquals("expect non-empty blockchain version", "", version.getBlockchainVersion());
-        assertNotEquals("expect non-empty fc revision", "", version.getFcRevision());
-        assertNotEquals("expect non-empty steem revision", "", version.getSteemRevision());
-    }
 
     @Test
     public void testWitnessCount() throws Exception {
@@ -532,8 +523,8 @@ public class PublicMethodsTest {
 
     @Test
     public void testGetStory() throws Exception {
-        DiscussionWithComments story = golos4J.getDatabaseMethods().getStoryByRoute("ru--yestafetaulybo",
-                new AccountName("pravda"), new Permlink("obzor-estafety-ulybok-na-golose-nedelya-2"));
+        DiscussionWithComments story = golos4J.getDatabaseMethods().getStoryWithRepliesAndInvolvedAccounts(
+                new AccountName("pravda"), new Permlink("obzor-estafety-ulybok-na-golose-nedelya-2"), -1);
 
         assertNotNull(story);
         assertThat("there not null replies", story.getDiscussions().size() > 0);

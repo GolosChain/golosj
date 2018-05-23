@@ -97,6 +97,26 @@ public interface DatabaseMethods {
     List<Vote> getAccountVotes(@Nonnull AccountName accountName) throws SteemCommunicationException;
 
     /**
+     * Get a list of all votes done by a specific account.
+     *
+     * @param accountName The user name of the account.
+     * @param voteLimit The user name of the account.
+     * @return A List of votes done by the specified account.
+     * @throws SteemCommunicationException <ul>
+     *                                     <li>If the server was not able to answer the request in the
+     *                                     given time (see
+     *                                     {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(long)
+     *                                     setResponseTimeout}).</li>
+     *                                     <li>If there is a connection problem.</li>
+     *                                     <li>If the SteemJ is unable to transform the JSON response
+     *                                     into a Java object.</li>
+     *                                     <li>If the Server returned an error object.</li>
+     *                                     </ul>
+     */
+    @Nonnull
+    List<Vote> getAccountVotes(@Nonnull AccountName accountName, int voteLimit) throws SteemCommunicationException;
+
+    /**
      * Get a complete block by a given block number including all transactions
      * of this block.
      *
@@ -155,8 +175,33 @@ public interface DatabaseMethods {
     @Nullable
     Discussion getContent(@Nonnull AccountName author, @Nonnull Permlink permlink) throws SteemCommunicationException;
 
+    /**
+     * Get the details of a specific post.
+     * SINCE HF_18
+     *
+     * @param author    The authors name.
+     * @param permlink  The permlink of the article.
+     * @param voteLimit Num of active votes to return.
+     * @return The details of a specific post.
+     * @throws SteemCommunicationException <ul>
+     *                                     <li>If the server was not able to answer the request in the
+     *                                     given time (see
+     *                                     {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(long)
+     *                                     setResponseTimeout}).</li>
+     *                                     <li>If there is a connection problem.</li>
+     *                                     <li>If the SteemJ is unable to transform the JSON response
+     *                                     into a Java object.</li>
+     *                                     <li>If the Server returned an error object.</li>
+     *                                     </ul>
+     */
+    @Nullable
+    Discussion getContent(@Nonnull AccountName author, @Nonnull Permlink permlink, int voteLimit) throws SteemCommunicationException;
+
     @Nullable
     DiscussionLight getContentLight(@Nonnull AccountName author, @Nonnull Permlink permlink) throws SteemCommunicationException;
+
+    @Nullable
+    DiscussionLight getContentLight(@Nonnull AccountName author, @Nonnull Permlink permlink, int voteLimit) throws SteemCommunicationException;
 
     /**
      * TODO: Check what this method is supposed to do. In a fist test it seems
@@ -197,6 +242,28 @@ public interface DatabaseMethods {
      */
     @Nonnull
     List<VoteState> getActiveVotes(@Nonnull AccountName author, @Nonnull Permlink permlink) throws SteemCommunicationException;
+
+    /**
+     * Get the active votes for a given post of a given author.
+     * SINCE_HF_18
+     *
+     * @param author    The authors name.
+     * @param permlink  The permlink of the article.
+     * @param voteLimit active votes number limit to return. if voteLimit == 1 , 10_000 votes wil return
+     * @return A list of votes for a specific article.
+     * @throws SteemCommunicationException <ul>
+     *                                     <li>If the server was not able to answer the request in the
+     *                                     given time (see
+     *                                     {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(long)
+     *                                     setResponseTimeout}).</li>
+     *                                     <li>If there is a connection problem.</li>
+     *                                     <li>If the SteemJ is unable to transform the JSON response
+     *                                     into a Java object.</li>
+     *                                     <li>If the Server returned an error object.</li>
+     *                                     </ul>
+     */
+    @Nonnull
+    List<VoteState> getActiveVotes(@Nonnull AccountName author, @Nonnull Permlink permlink, int voteLimit) throws SteemCommunicationException;
 
     /**
      * Get the account names of the active witnesses.
@@ -272,6 +339,56 @@ public interface DatabaseMethods {
      */
     @Nonnull
     List<Discussion> getContentReplies(AccountName author, Permlink permlink) throws SteemCommunicationException;
+
+    @Nonnull
+    List<DiscussionLight> getContentRepliesLight(AccountName author, Permlink permlink) throws SteemCommunicationException;
+
+    /**
+     * Get all replies of a specific post.
+     * SINCE HF_18
+     *
+     * @param author    The authors name.
+     * @param permlink  The permlink of the article.
+     * @param voteLimit number of votes to retreive. if limit == -1  it will return 10_000 active votes per discussion item.
+     * @return A list of discussions or null if the post has no replies.
+     * @throws SteemCommunicationException <ul>
+     *                                     <li>If the server was not able to answer the request in the
+     *                                     given time (see
+     *                                     {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(long)
+     *                                     setResponseTimeout}).</li>
+     *                                     <li>If there is a connection problem.</li>
+     *                                     <li>If the SteemJ is unable to transform the JSON response
+     *                                     into a Java object.</li>
+     *                                     <li>If the Server returned an error object.</li>
+     *                                     </ul>
+     */
+    @Nonnull
+    List<Discussion> getAllContentReplies(AccountName author, Permlink permlink, int voteLimit) throws SteemCommunicationException;
+
+    /**
+     * Get the replies of a specific post.
+     * SINCE HF_18
+     *
+     * @param author    The authors name.
+     * @param permlink  The permlink of the article.
+     * @param voteLimit limit of active votes in returning object
+     * @return A list of discussions or null if the post has no replies.
+     * @throws SteemCommunicationException <ul>
+     *                                     <li>If the server was not able to answer the request in the
+     *                                     given time (see
+     *                                     {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(long)
+     *                                     setResponseTimeout}).</li>
+     *                                     <li>If there is a connection problem.</li>
+     *                                     <li>If the SteemJ is unable to transform the JSON response
+     *                                     into a Java object.</li>
+     *                                     <li>If the Server returned an error object.</li>
+     *                                     </ul>
+     */
+    @Nonnull
+    List<Discussion> getContentReplies(AccountName author, Permlink permlink, int voteLimit) throws SteemCommunicationException;
+
+    @Nonnull
+    List<DiscussionLight> getContentRepliesLight(AccountName author, Permlink permlink, int voteLimit) throws SteemCommunicationException;
 
     /**
      * TODO: Look up what this is used for and what it can return.
@@ -567,9 +684,9 @@ public interface DatabaseMethods {
      * /** Get a list of Content starting from the given post of the given user.
      * The list will be sorted by the Date of the last update.
      *
-     * @param username The name of the user.
-     * @param permlink The permlink of an article.
-     * @param limit    Number of results.
+     * @param startParentAuthor The name of the user to start from.
+     * @param startPermlink     The permlink of an article.
+     * @param limit             Number of results.
      * @return A list of Content objects.
      * @throws SteemCommunicationException <ul>
      *                                     <li>If the server was not able to answer the request in the
@@ -583,8 +700,35 @@ public interface DatabaseMethods {
      *                                     </ul>
      */
     @Nonnull
-    List<Discussion> getRepliesByLastUpdate(@Nonnull AccountName username, @Nonnull Permlink permlink, int limit)
+    List<Discussion> getRepliesByLastUpdate(@Nonnull AccountName startParentAuthor, @Nonnull Permlink startPermlink, int limit)
             throws SteemCommunicationException;
+
+    /**
+     * /** Get a list of Content starting from the given post of the given user.
+     * The list will be sorted by the Date of the last update.
+     * SINCE HF_18
+     *
+     * @param startParentAuthor The name of the user.
+     * @param startPermlink     The permlink of an article.
+     * @param limit             Number of results.
+     * @param voteLimit         number of active votes to return.
+     * @return A list of Content objects.
+     * @throws SteemCommunicationException <ul>
+     *                                     <li>If the server was not able to answer the request in the
+     *                                     given time (see
+     *                                     {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(long)
+     *                                     setResponseTimeout}).</li>
+     *                                     <li>If there is a connection problem.</li>
+     *                                     <li>If the SteemJ is unable to transform the JSON response
+     *                                     into a Java object.</li>
+     *                                     <li>If the Server returned an error object.</li>
+     *                                     </ul>
+     */
+    @Nonnull
+    List<Discussion> getRepliesByLastUpdate(@Nonnull AccountName startParentAuthor, @Nonnull Permlink startPermlink,
+                                            int limit, int voteLimit)
+            throws SteemCommunicationException;
+
 
     /**
      * Get detailed information of a specific reward fund.
@@ -627,6 +771,9 @@ public interface DatabaseMethods {
      */
     @Nonnull
     String getTransactionHex(@Nonnull SignedTransaction signedTransaction) throws SteemCommunicationException;
+
+
+    Transaction getTransaction(long transactionId) throws SteemCommunicationException;
 
     /**
      * Returns detailed values for tags that match the given conditions.
@@ -746,7 +893,6 @@ public interface DatabaseMethods {
     WitnessSchedule getWitnessSchedule() throws SteemCommunicationException;
 
 
-
     /**
      * Search for accounts.
      *
@@ -843,11 +989,24 @@ public interface DatabaseMethods {
     @Nullable
     Map<String, String> getAccountAvatar(List<AccountName> name) throws SteemCommunicationException;
 
-
+    /**
+     * Method returns post, comments, and all account in post
+     *
+     * @param authorName post author
+     * @param permlink   post permlink
+     * @param voteLimit  limit of active votes to return. set it to -1 to return 10_000 active votes per discussion item
+     * @throws SteemCommunicationException <ul>
+     *                                     <li>If the server was not able to answer the request in the
+     *                                     given time (see
+     *                                     {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(long)
+     *                                     setResponseTimeout}).</li>
+     *                                     <li>If there is a connection problem.</li>
+     *                                     <li>If the SteemJ is unable to transform the JSON response
+     *                                     into a Java object.</li>
+     *                                     <li>If the Server returned an error object.</li>
+     *                                     </ul>
+     */
     @Nullable
-    DiscussionWithComments getStoryByRoute(String blogName, AccountName authorName, Permlink permlink) throws SteemCommunicationException;
-
-    // List<Discussion> getUserFeed(AccountName userName) throws SteemCommunicationException;
-
-    //  List<DiscussionLight> getUserFeedLight(AccountName userName) throws SteemCommunicationException;
+    DiscussionWithComments getStoryWithRepliesAndInvolvedAccounts(AccountName authorName, Permlink permlink, int voteLimit)
+            throws SteemCommunicationException;
 }

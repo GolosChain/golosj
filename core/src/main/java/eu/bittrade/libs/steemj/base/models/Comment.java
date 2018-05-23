@@ -4,6 +4,7 @@ import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.List;
 
+import com.sun.istack.internal.Nullable;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -16,6 +17,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class Comment {
     // Original type is comment_id_type.
     private long id;
+    @Nullable
     private String category;
     @JsonProperty("parent_author")
     private AccountName parentAuthor;
@@ -95,6 +97,9 @@ public class Comment {
     // > beneficiaries;
     @JsonProperty("beneficiaries")
     private List<Beneficiary> beneficiaries;
+    @JsonProperty
+    @Nullable
+    private Long activeVotesCount;
 
     /**
      * This object is only used to wrap the JSON response in a POJO, so
@@ -103,7 +108,7 @@ public class Comment {
     protected Comment() {
     }
 
-    public Comment(long id, String category, AccountName parentAuthor, Permlink parentPermlink, AccountName author, Permlink permlink, String title, String body, String jsonMetadata, TimePointSec lastUpdate, TimePointSec created, TimePointSec active, TimePointSec lastPayout, short depth, int children, String childrenRshares2, long netRshares, long absRshares, long voteRshares, long childrenAbsRshares, TimePointSec cashoutTime, TimePointSec maxCashoutTime, BigInteger totalVoteWeight, long rewardWeight, Asset totalPayoutValue, Asset curatorPayoutValue, long authorRewards, int netVotes, long rootComment, String mode, Asset maxAcceptedPayout, int percentSteemDollars, Boolean allowReplies, Boolean allowVotes, Boolean allowCurationRewards, List<Beneficiary> beneficiaries) {
+    public Comment(long id, String category, AccountName parentAuthor, Permlink parentPermlink, AccountName author, Permlink permlink, String title, String body, String jsonMetadata, TimePointSec lastUpdate, TimePointSec created, TimePointSec active, TimePointSec lastPayout, short depth, int children, String childrenRshares2, long netRshares, long absRshares, long voteRshares, long childrenAbsRshares, TimePointSec cashoutTime, TimePointSec maxCashoutTime, BigInteger totalVoteWeight, long rewardWeight, Asset totalPayoutValue, Asset curatorPayoutValue, long authorRewards, int netVotes, long rootComment, String mode, Asset maxAcceptedPayout, int percentSteemDollars, Boolean allowReplies, Boolean allowVotes, Boolean allowCurationRewards, List<Beneficiary> beneficiaries, Long activeVotesCount) {
         this.id = id;
         this.category = category;
         this.parentAuthor = parentAuthor;
@@ -140,6 +145,15 @@ public class Comment {
         this.allowVotes = allowVotes;
         this.allowCurationRewards = allowCurationRewards;
         this.beneficiaries = beneficiaries;
+        this.activeVotesCount = activeVotesCount;
+    }
+    @Nullable
+    public Long getActiveVotesCount() {
+        return activeVotesCount;
+    }
+
+    public void setActiveVotesCount(Long activeVotesCount) {
+        this.activeVotesCount = activeVotesCount;
     }
 
     public void setId(long id) {
@@ -296,6 +310,7 @@ public class Comment {
     /**
      * @return the category
      */
+    @Nullable
     public String getCategory() {
         return category;
     }
@@ -354,6 +369,123 @@ public class Comment {
      */
     public TimePointSec getLastUpdate() {
         return lastUpdate;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Comment comment = (Comment) o;
+
+        if (id != comment.id) return false;
+        if (depth != comment.depth) return false;
+        if (children != comment.children) return false;
+        if (netRshares != comment.netRshares) return false;
+        if (absRshares != comment.absRshares) return false;
+        if (voteRshares != comment.voteRshares) return false;
+        if (childrenAbsRshares != comment.childrenAbsRshares) return false;
+        if (rewardWeight != comment.rewardWeight) return false;
+        if (authorRewards != comment.authorRewards) return false;
+        if (netVotes != comment.netVotes) return false;
+        if (rootComment != comment.rootComment) return false;
+        if (percentSteemDollars != comment.percentSteemDollars) return false;
+        if (category != null ? !category.equals(comment.category) : comment.category != null) return false;
+        if (parentAuthor != null ? !parentAuthor.equals(comment.parentAuthor) : comment.parentAuthor != null)
+            return false;
+        if (parentPermlink != null ? !parentPermlink.equals(comment.parentPermlink) : comment.parentPermlink != null)
+            return false;
+        if (author != null ? !author.equals(comment.author) : comment.author != null) return false;
+        if (permlink != null ? !permlink.equals(comment.permlink) : comment.permlink != null) return false;
+        if (title != null ? !title.equals(comment.title) : comment.title != null) return false;
+        if (body != null ? !body.equals(comment.body) : comment.body != null) return false;
+        if (jsonMetadata != null ? !jsonMetadata.equals(comment.jsonMetadata) : comment.jsonMetadata != null)
+            return false;
+        if (lastUpdate != null ? !lastUpdate.equals(comment.lastUpdate) : comment.lastUpdate != null) return false;
+        if (created != null ? !created.equals(comment.created) : comment.created != null) return false;
+        if (active != null ? !active.equals(comment.active) : comment.active != null) return false;
+        if (lastPayout != null ? !lastPayout.equals(comment.lastPayout) : comment.lastPayout != null) return false;
+        if (childrenRshares2 != null ? !childrenRshares2.equals(comment.childrenRshares2) : comment.childrenRshares2 != null)
+            return false;
+        if (cashoutTime != null ? !cashoutTime.equals(comment.cashoutTime) : comment.cashoutTime != null) return false;
+        if (maxCashoutTime != null ? !maxCashoutTime.equals(comment.maxCashoutTime) : comment.maxCashoutTime != null)
+            return false;
+        if (totalVoteWeight != null ? !totalVoteWeight.equals(comment.totalVoteWeight) : comment.totalVoteWeight != null)
+            return false;
+        if (totalPayoutValue != null ? !totalPayoutValue.equals(comment.totalPayoutValue) : comment.totalPayoutValue != null)
+            return false;
+        if (curatorPayoutValue != null ? !curatorPayoutValue.equals(comment.curatorPayoutValue) : comment.curatorPayoutValue != null)
+            return false;
+        if (mode != null ? !mode.equals(comment.mode) : comment.mode != null) return false;
+        if (maxAcceptedPayout != null ? !maxAcceptedPayout.equals(comment.maxAcceptedPayout) : comment.maxAcceptedPayout != null)
+            return false;
+        if (allowReplies != null ? !allowReplies.equals(comment.allowReplies) : comment.allowReplies != null)
+            return false;
+        if (allowVotes != null ? !allowVotes.equals(comment.allowVotes) : comment.allowVotes != null) return false;
+        if (allowCurationRewards != null ? !allowCurationRewards.equals(comment.allowCurationRewards) : comment.allowCurationRewards != null)
+            return false;
+        if (beneficiaries != null ? !beneficiaries.equals(comment.beneficiaries) : comment.beneficiaries != null)
+            return false;
+        return activeVotesCount != null ? activeVotesCount.equals(comment.activeVotesCount) : comment.activeVotesCount == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (int) (id ^ (id >>> 32));
+        result = 31 * result + (category != null ? category.hashCode() : 0);
+        result = 31 * result + (parentAuthor != null ? parentAuthor.hashCode() : 0);
+        result = 31 * result + (parentPermlink != null ? parentPermlink.hashCode() : 0);
+        result = 31 * result + (author != null ? author.hashCode() : 0);
+        result = 31 * result + (permlink != null ? permlink.hashCode() : 0);
+        result = 31 * result + (title != null ? title.hashCode() : 0);
+        result = 31 * result + (body != null ? body.hashCode() : 0);
+        result = 31 * result + (jsonMetadata != null ? jsonMetadata.hashCode() : 0);
+        result = 31 * result + (lastUpdate != null ? lastUpdate.hashCode() : 0);
+        result = 31 * result + (created != null ? created.hashCode() : 0);
+        result = 31 * result + (active != null ? active.hashCode() : 0);
+        result = 31 * result + (lastPayout != null ? lastPayout.hashCode() : 0);
+        result = 31 * result + (int) depth;
+        result = 31 * result + children;
+        result = 31 * result + (childrenRshares2 != null ? childrenRshares2.hashCode() : 0);
+        result = 31 * result + (int) (netRshares ^ (netRshares >>> 32));
+        result = 31 * result + (int) (absRshares ^ (absRshares >>> 32));
+        result = 31 * result + (int) (voteRshares ^ (voteRshares >>> 32));
+        result = 31 * result + (int) (childrenAbsRshares ^ (childrenAbsRshares >>> 32));
+        result = 31 * result + (cashoutTime != null ? cashoutTime.hashCode() : 0);
+        result = 31 * result + (maxCashoutTime != null ? maxCashoutTime.hashCode() : 0);
+        result = 31 * result + (totalVoteWeight != null ? totalVoteWeight.hashCode() : 0);
+        result = 31 * result + (int) (rewardWeight ^ (rewardWeight >>> 32));
+        result = 31 * result + (totalPayoutValue != null ? totalPayoutValue.hashCode() : 0);
+        result = 31 * result + (curatorPayoutValue != null ? curatorPayoutValue.hashCode() : 0);
+        result = 31 * result + (int) (authorRewards ^ (authorRewards >>> 32));
+        result = 31 * result + netVotes;
+        result = 31 * result + (int) (rootComment ^ (rootComment >>> 32));
+        result = 31 * result + (mode != null ? mode.hashCode() : 0);
+        result = 31 * result + (maxAcceptedPayout != null ? maxAcceptedPayout.hashCode() : 0);
+        result = 31 * result + percentSteemDollars;
+        result = 31 * result + (allowReplies != null ? allowReplies.hashCode() : 0);
+        result = 31 * result + (allowVotes != null ? allowVotes.hashCode() : 0);
+        result = 31 * result + (allowCurationRewards != null ? allowCurationRewards.hashCode() : 0);
+        result = 31 * result + (beneficiaries != null ? beneficiaries.hashCode() : 0);
+        result = 31 * result + (activeVotesCount != null ? activeVotesCount.hashCode() : 0);
+        return result;
+    }
+
+    /**
+     * @return the beneficiaries
+     */
+    @Override
+    public String toString() {
+        return "Comment{" +
+                "id=" + id +
+                ", category='" + category + '\'' +
+                ", parentAuthor=" + parentAuthor +
+                ", parentPermlink=" + parentPermlink +
+                ", author=" + author +
+                ", permlink=" + permlink +
+                ", title='" + title + '\'' +
+                ", jsonMetadata='" + jsonMetadata + '\'' +
+                '}';
     }
 
     /**
@@ -535,48 +667,4 @@ public class Comment {
         return beneficiaries;
     }
 
-    /**
-     * @return the beneficiaries
-     */
-    @Override
-    public String toString() {
-        return "Comment{" +
-                "id=" + id +
-                ", category='" + category + '\'' +
-                ", parentAuthor=" + parentAuthor +
-                ", parentPermlink=" + parentPermlink +
-                ", author=" + author +
-                ", permlink=" + permlink +
-                ", title='" + title + '\'' +
-                ", body='" + body + '\'' +
-                ", jsonMetadata='" + jsonMetadata + '\'' +
-                ", lastUpdate=" + lastUpdate +
-                ", created=" + created +
-                ", active=" + active +
-                ", lastPayout=" + lastPayout +
-                ", depth=" + depth +
-                ", children=" + children +
-                ", childrenRshares2='" + childrenRshares2 + '\'' +
-                ", netRshares=" + netRshares +
-                ", absRshares=" + absRshares +
-                ", voteRshares=" + voteRshares +
-                ", childrenAbsRshares=" + childrenAbsRshares +
-                ", cashoutTime=" + cashoutTime +
-                ", maxCashoutTime=" + maxCashoutTime +
-                ", totalVoteWeight=" + totalVoteWeight +
-                ", rewardWeight=" + rewardWeight +
-                ", totalPayoutValue=" + totalPayoutValue +
-                ", curatorPayoutValue=" + curatorPayoutValue +
-                ", authorRewards=" + authorRewards +
-                ", netVotes=" + netVotes +
-                ", rootComment=" + rootComment +
-                ", mode='" + mode + '\'' +
-                ", maxAcceptedPayout=" + maxAcceptedPayout +
-                ", percentSteemDollars=" + percentSteemDollars +
-                ", allowReplies=" + allowReplies +
-                ", allowVotes=" + allowVotes +
-                ", allowCurationRewards=" + allowCurationRewards +
-                ", beneficiaries=" + beneficiaries +
-                '}';
-    }
 }

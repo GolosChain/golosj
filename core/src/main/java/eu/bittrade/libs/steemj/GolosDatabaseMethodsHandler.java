@@ -1,6 +1,7 @@
 package eu.bittrade.libs.steemj;
 
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import eu.bittrade.libs.steemj.base.models.*;
 import eu.bittrade.libs.steemj.communication.BlockAppliedCallback;
 import eu.bittrade.libs.steemj.communication.CommunicationHandler;
@@ -47,7 +48,25 @@ class GolosDatabaseMethodsHandler implements DatabaseMethods {
     @Override
     public Map<Integer, AppliedOperation> getAccountHistory(AccountName accountName, int from, int limit)
             throws SteemCommunicationException {
-        return steemJ.getAccountHistory(accountName, from, limit);
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
+        if (Golos4J.getInstance().getCurrentHardforkVersion() == Golos4J.HardForkVersion.HF_17)
+            requestObject.setSteemApi(SteemApis.DATABASE_API);
+        else requestObject.setSteemApi(SteemApis.ACCOUNT_HISTORY);
+        requestObject.setApiMethod(RequestMethods.GET_ACCOUNT_HISTORY);
+        String[] parameters = {accountName.getName(), String.valueOf(from), String.valueOf(limit)};
+        requestObject.setAdditionalParameters(parameters);
+
+        Map<Integer, AppliedOperation> accountActivities = new HashMap<>();
+        List<Object[]> history = communicationHandler.performRequest(requestObject, Object[].class);
+        if (history.isEmpty() || history.get(0) == null) return new HashMap<>();
+
+        for (Object[] accountActivity : history) {
+            accountActivities.put((Integer) accountActivity[0], (AppliedOperation) CommunicationHandler
+                    .getObjectMapper().convertValue(accountActivity[1], new TypeReference<AppliedOperation>() {
+                    }));
+        }
+
+        return accountActivities;
     }
 
     @Override
@@ -57,7 +76,25 @@ class GolosDatabaseMethodsHandler implements DatabaseMethods {
 
     @Override
     public List<Vote> getAccountVotes(AccountName accountName) throws SteemCommunicationException {
-        return steemJ.getAccountVotes(accountName);
+        return getAccountVotes(accountName, -1);
+    }
+
+    @Nonnull
+    @Override
+    public List<Vote> getAccountVotes(@Nonnull AccountName accountName, int voteLimit) throws SteemCommunicationException {
+        return communicationHandler.performRequest(getAccountVotesRW(accountName, voteLimit), Vote.class);
+    }
+
+    public RequestWrapperDTO getAccountVotesRW(@Nonnull AccountName accountName, int voteLimit) {
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
+        requestObject.setSteemApi(SteemApis.SOCIAL_NETWORK);
+        requestObject.setApiMethod(RequestMethods.GET_ACCOUNT_VOTES);
+        String[] parameters;
+        if (voteLimit < 0)
+            parameters = new String[]{accountName.getName()};
+        else parameters = new String[]{accountName.getName(), String.valueOf(voteLimit)};
+        requestObject.setAdditionalParameters(parameters);
+        return requestObject;
     }
 
     @Override
@@ -72,19 +109,46 @@ class GolosDatabaseMethodsHandler implements DatabaseMethods {
 
     @Override
     public Discussion getContent(AccountName authorName, Permlink permlink) throws SteemCommunicationException {
-        return steemJ.getContent(authorName, permlink);
+        return getContent(authorName, permlink, -1);
     }
 
     @Nullable
     @Override
-    public DiscussionLight getContentLight(@Nonnull AccountName author, @Nonnull Permlink permlink) throws SteemCommunicationException {
+    public Discussion getContent(@Nonnull AccountName author, @Nonnull Permlink permlink,
+                                 int voteLimit) throws SteemCommunicationException {
+        return communicationHandler.performRequest(getContentRequestWrapper(author, permlink, voteLimit), Discussion.class).get(0);
+    }
+
+
+    @Nullable
+    @Override
+    public DiscussionLight getContentLight(@Nonnull AccountName author,
+                                           @Nonnull Permlink permlink) throws SteemCommunicationException {
+        return getContentLight(author, permlink, -1);
+
+
+    }
+
+    @Nullable
+    @Override
+    public DiscussionLight getContentLight(@Nonnull AccountName author,
+                                           @Nonnull Permlink permlink, int voteLimit) throws SteemCommunicationException {
+        return communicationHandler.performRequest(getContentRequestWrapper(author, permlink, voteLimit), DiscussionLight.class).get(0);
+
+
+    }
+
+    private RequestWrapperDTO getContentRequestWrapper(@Nonnull AccountName author, @Nonnull Permlink permlink,
+                                                       int voteLimit) {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_CONTENT);
         requestObject.setSteemApi(SteemApis.SOCIAL_NETWORK);
-        String[] parameters = {author.getName(), permlink.getLink()};
+        String[] parameters;
+        if (voteLimit < 0)
+            parameters = new String[]{author.getName(), permlink.getLink()};
+        else parameters = new String[]{author.getName(), permlink.getLink(), String.valueOf(voteLimit)};
         requestObject.setAdditionalParameters(parameters);
-
-        return communicationHandler.performRequest(requestObject, DiscussionLight.class).get(0);
+        return requestObject;
     }
 
     @Override
@@ -94,7 +158,25 @@ class GolosDatabaseMethodsHandler implements DatabaseMethods {
 
     @Override
     public List<VoteState> getActiveVotes(AccountName author, Permlink permlink) throws SteemCommunicationException {
-        return steemJ.getActiveVotes(author, permlink);
+        return getActiveVotes(author, permlink, -1);
+    }
+
+    @Nonnull
+    @Override
+    public List<VoteState> getActiveVotes(@Nonnull AccountName author, @Nonnull Permlink permlink, int voteLimit) throws SteemCommunicationException {
+        return communicationHandler.performRequest(getActiveVotesRW(author, permlink, voteLimit), VoteState.class);
+    }
+
+    private RequestWrapperDTO getActiveVotesRW(@Nonnull AccountName author, @Nonnull Permlink permlink, int voteLimit) {
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
+        requestObject.setApiMethod(RequestMethods.GET_ACTIVE_VOTES);
+        requestObject.setSteemApi(SteemApis.SOCIAL_NETWORK);
+        String[] parameters;
+        if (voteLimit < 0)
+            parameters = new String[]{author.getName(), permlink.getLink()};
+        else parameters = new String[]{author.getName(), permlink.getLink(), String.valueOf(voteLimit)};
+        requestObject.setAdditionalParameters(parameters);
+        return requestObject;
     }
 
     @Override
@@ -102,8 +184,8 @@ class GolosDatabaseMethodsHandler implements DatabaseMethods {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_ACTIVE_WITNESSES);
         if (Golos4J.getInstance().getCurrentHardforkVersion() == Golos4J.HardForkVersion.HF_17)
-        requestObject.setSteemApi(SteemApis.DATABASE_API);
-        else    requestObject.setSteemApi(SteemApis.WITNESS_API);
+            requestObject.setSteemApi(SteemApis.DATABASE_API);
+        else requestObject.setSteemApi(SteemApis.WITNESS_API);
         String[] parameters = {};
         requestObject.setAdditionalParameters(parameters);
         return communicationHandler.performRequest(requestObject, String.class);
@@ -121,7 +203,53 @@ class GolosDatabaseMethodsHandler implements DatabaseMethods {
 
     @Override
     public List<Discussion> getContentReplies(AccountName author, Permlink permlink) throws SteemCommunicationException {
-        return steemJ.getContentReplies(author, permlink);
+        return getContentReplies(author, permlink, -1);
+    }
+
+    @Nonnull
+    @Override
+    public List<Discussion> getAllContentReplies(AccountName author, Permlink permlink, int voteLimit) throws SteemCommunicationException {
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
+        requestObject.setApiMethod(RequestMethods.GET_ALL_CONTENT_REPLIES);
+        requestObject.setSteemApi(SteemApis.SOCIAL_NETWORK);
+        String[] parameters;
+        if (voteLimit < 0)
+            parameters = new String[]{author.getName(), permlink.getLink()};
+        else parameters = new String[]{author.getName(), permlink.getLink(), String.valueOf(voteLimit)};
+        requestObject.setAdditionalParameters(parameters);
+
+        return communicationHandler.performRequest(requestObject, Discussion.class);
+    }
+
+    @Nonnull
+    @Override
+    public List<DiscussionLight> getContentRepliesLight(AccountName author, Permlink permlink) throws SteemCommunicationException {
+        return getContentRepliesLight(author, permlink, -1);
+    }
+
+    @Nonnull
+    @Override
+    public List<Discussion> getContentReplies(AccountName author, Permlink permlink, int voteLimit) throws SteemCommunicationException {
+        return communicationHandler.performRequest(getGetContentRepliesRW(author, permlink, voteLimit), Discussion.class);
+    }
+
+    @Nonnull
+    @Override
+    public List<DiscussionLight> getContentRepliesLight(AccountName author, Permlink permlink, int voteLimit) throws SteemCommunicationException {
+        return communicationHandler.performRequest(getGetContentRepliesRW(author, permlink, voteLimit), DiscussionLight.class);
+    }
+
+    private RequestWrapperDTO getGetContentRepliesRW(AccountName author, Permlink permlink, int voteLimit) {
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
+        requestObject.setApiMethod(RequestMethods.GET_CONTENT_REPLIES);
+        requestObject.setSteemApi(SteemApis.SOCIAL_NETWORK);
+        String[] parameters;
+        if (voteLimit < 0)
+            parameters = new String[]{author.getName(), permlink.getLink()};
+        else parameters = new String[]{author.getName(), permlink.getLink(), String.valueOf(voteLimit)};
+        requestObject.setAdditionalParameters(parameters);
+
+        return requestObject;
     }
 
     @Override
@@ -146,7 +274,16 @@ class GolosDatabaseMethodsHandler implements DatabaseMethods {
     @Override
     public List<Discussion> getDiscussionsBy(DiscussionQuery discussionQuery, DiscussionSortType sortBy)
             throws SteemCommunicationException {
-        return steemJ.getDiscussionsBy(discussionQuery, sortBy);
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
+
+        requestObject.setApiMethod(RequestMethods.valueOf(sortBy.name()));
+        if (Golos4J.getInstance().getCurrentHardforkVersion() == Golos4J.HardForkVersion.HF_17)
+            requestObject.setSteemApi(SteemApis.SOCIAL_NETWORK);
+        else requestObject.setSteemApi(SteemApis.TAGS);
+        Object[] parameters = {discussionQuery};
+        requestObject.setAdditionalParameters(parameters);
+
+        return communicationHandler.performRequest(requestObject, Discussion.class);
     }
 
     @Override
@@ -209,7 +346,9 @@ class GolosDatabaseMethodsHandler implements DatabaseMethods {
     public List<DiscussionLight> getDiscussionsLightBy(@Nonnull DiscussionQuery discussionQuery, @Nonnull DiscussionSortType sortBy) throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.valueOf(sortBy.name()));
-        requestObject.setSteemApi(SteemApis.SOCIAL_NETWORK);
+        if (Golos4J.getInstance().getCurrentHardforkVersion() == Golos4J.HardForkVersion.HF_17)
+            requestObject.setSteemApi(SteemApis.SOCIAL_NETWORK);
+        else requestObject.setSteemApi(SteemApis.TAGS);
         Object[] parameters = {discussionQuery};
         requestObject.setAdditionalParameters(parameters);
         List<DiscussionLight> out = communicationHandler.performRequest(requestObject, DiscussionLight.class);
@@ -229,7 +368,15 @@ class GolosDatabaseMethodsHandler implements DatabaseMethods {
     @Override
     public List<AppliedOperation> getOpsInBlock(int blockNumber, boolean onlyVirtual)
             throws SteemCommunicationException {
-        return steemJ.getOpsInBlock(blockNumber, onlyVirtual);
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
+        requestObject.setApiMethod(RequestMethods.GET_OPS_IN_BLOCK);
+        if (Golos4J.getInstance().getCurrentHardforkVersion() == Golos4J.HardForkVersion.HF_17)
+            requestObject.setSteemApi(SteemApis.DATABASE_API);
+        else requestObject.setSteemApi(SteemApis.OPERATION_HISTORY);
+        String[] parameters = {String.valueOf(blockNumber), String.valueOf(onlyVirtual)};
+        requestObject.setAdditionalParameters(parameters);
+
+        return communicationHandler.performRequest(requestObject, AppliedOperation.class);
     }
 
     @Override
@@ -238,11 +385,39 @@ class GolosDatabaseMethodsHandler implements DatabaseMethods {
     }
 
     @Override
-    public List<Discussion> getRepliesByLastUpdate(AccountName username, Permlink permlink, int limit)
-            throws SteemCommunicationException {
-        return steemJ.getRepliesByLastUpdate(username, permlink, limit);
+    public Transaction getTransaction(long transactionId) throws SteemCommunicationException {
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
+        requestObject.setApiMethod(RequestMethods.GET_TRANSACTION);
+        if (Golos4J.getInstance().getCurrentHardforkVersion() == Golos4J.HardForkVersion.HF_17)
+            requestObject.setSteemApi(SteemApis.DATABASE_API);
+        else requestObject.setSteemApi(SteemApis.OPERATION_HISTORY);
+        String[] parameters = {String.valueOf(transactionId)};
+        requestObject.setAdditionalParameters(parameters);
+
+        return communicationHandler.performRequest(requestObject, Transaction.class).get(0);
     }
 
+    @Override
+    public List<Discussion> getRepliesByLastUpdate(AccountName startParentAuthor, Permlink permlink, int limit)
+            throws SteemCommunicationException {
+        return getRepliesByLastUpdate(startParentAuthor, permlink, limit, -1);
+    }
+
+    @Nonnull
+    @Override
+    public List<Discussion> getRepliesByLastUpdate(@Nonnull AccountName startParentAuthor, @Nonnull Permlink startPermlink,
+                                                   int limit, int voteLimit) throws SteemCommunicationException {
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
+        requestObject.setApiMethod(RequestMethods.GET_REPLIES_BY_LAST_UPDATE);
+        requestObject.setSteemApi(SteemApis.SOCIAL_NETWORK);
+        Object[] parameters;
+        if (voteLimit < 0)
+            parameters = new Object[]{startParentAuthor, startPermlink.getLink(), String.valueOf(limit)};
+        else parameters = new Object[]{startParentAuthor, startPermlink.getLink(), String.valueOf(limit), voteLimit};
+        requestObject.setAdditionalParameters(parameters);
+
+        return communicationHandler.performRequest(requestObject, Discussion.class);
+    }
 
     @Override
     public String getTransactionHex(SignedTransaction signedTransaction) throws SteemCommunicationException {
@@ -396,48 +571,14 @@ class GolosDatabaseMethodsHandler implements DatabaseMethods {
 
 
     @Override
-    public DiscussionWithComments getStoryByRoute(String blogName, AccountName authorName, Permlink permlink) throws SteemCommunicationException {
-        if (Golos4J.getInstance().getCurrentHardforkVersion() == Golos4J.HardForkVersion.HF_17)
-            return getStoryByRouteHf17(authorName, permlink);
+    public DiscussionWithComments getStoryWithRepliesAndInvolvedAccounts(AccountName authorName,
+                                                                         Permlink permlink,
+                                                                         int voteLimit) throws SteemCommunicationException {
+        if (Golos4J.getInstance().getCurrentHardforkVersion() == Golos4J.HardForkVersion.HF_17) voteLimit = -1;
+        Discussion discussion = getContent(authorName, permlink, voteLimit);
+        if (discussion == null) return null;
 
-        RequestWrapperDTO requestObject = new RequestWrapperDTO();
-        requestObject.setSteemApi(SteemApis.DATABASE_API);
-        requestObject.setApiMethod(RequestMethods.GET_STATE);
-        String[] parameters = {new Route(blogName, authorName, permlink).constructDiscussionRoute()};
-        requestObject.setAdditionalParameters(parameters);
-
-        List<DiscussionWithComments> response = communicationHandler.performRequest(requestObject, DiscussionWithComments.class);
-        if (!response.isEmpty()) {
-            return response.get(0);
-        }
-
-        return null;
-
-    }
-
-    private DiscussionWithComments getStoryByRouteHf17(AccountName authorName, Permlink permlink) throws SteemCommunicationException {
-        RequestWrapperDTO requestObject = new RequestWrapperDTO();
-        requestObject.setSteemApi(SteemApis.SOCIAL_NETWORK);
-        requestObject.setApiMethod(RequestMethods.GET_CONTENT);
-        String[] parameters = new String[]{authorName.getName(), permlink.getLink()};
-        requestObject.setAdditionalParameters(parameters);
-
-        List<Discussion> response = communicationHandler.performRequest(requestObject, Discussion.class);
-        if (response.isEmpty()) return null;
-
-        Discussion discussion = response.get(0);
-
-       /* requestObject = new RequestWrapperDTO();
-        requestObject.setSteemApi(SteemApis.SOCIAL_NETWORK);
-        requestObject.setApiMethod(RequestMethods.GET_ALL_CONTENT_REPLIES);
-        parameters = new String[]{authorName.getName(), permlink.getLink()};
-        requestObject.setAdditionalParameters(parameters);
-
-
-*/
-
-
-        List<Discussion> comments = getAllContentReplies(discussion.getAuthor(), discussion.getPermlink());
+        List<Discussion> comments = getAllContentReplies(discussion.getAuthor(), discussion.getPermlink(), voteLimit);
 
         List<AccountName> accountNames = new ArrayList<>();
         accountNames.add(discussion.getAuthor());
@@ -460,35 +601,8 @@ class GolosDatabaseMethodsHandler implements DatabaseMethods {
             if (comment != null) all.add(comment);
 
         }
-
-
         discussionWithComments.setDiscussions(all);
         discussionWithComments.setInvolvedAccounts(accounts);
-
-
         return discussionWithComments;
-    }
-
-    private List<Discussion> getAllContentReplies(AccountName nameOfPost, Permlink permlinkOfPost) throws SteemCommunicationException {
-        ArrayList<Discussion> out = new ArrayList<>();
-
-        List<Discussion> replies = getContentReplies(nameOfPost, permlinkOfPost);
-
-        for (Discussion discussion : replies) {
-            if (discussion != null) out.add(discussion);
-        }
-        ArrayList<Discussion> supplementary = new ArrayList<>();
-        for (Discussion discussion : out) {
-            if (discussion.getChildren() != 0) {
-                supplementary.addAll(getAllContentReplies(discussion.getAuthor(), discussion.getPermlink()));
-            }
-        }
-        out.addAll(supplementary);
-        for (Discussion discussion : out) {
-            if (discussion.getNetVotes() != 0) {
-                discussion.setActiveVotes(getActiveVotes(discussion.getAuthor(), discussion.getPermlink()));
-            }
-        }
-        return out;
     }
 }
