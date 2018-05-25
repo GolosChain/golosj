@@ -100,7 +100,7 @@ public interface DatabaseMethods {
      * Get a list of all votes done by a specific account.
      *
      * @param accountName The user name of the account.
-     * @param voteLimit The user name of the account.
+     * @param voteLimit   The user name of the account.
      * @return A List of votes done by the specified account.
      * @throws SteemCommunicationException <ul>
      *                                     <li>If the server was not able to answer the request in the
@@ -474,7 +474,37 @@ public interface DatabaseMethods {
      *                                     </ul>
      */
     @Nonnull
-    List<Discussion> getDiscussionsByAuthorBeforeDate(@Nonnull AccountName author, @Nonnull Permlink permlink, long date, int limit)
+    List<Discussion> getDiscussionsByAuthorBeforeDate(@Nonnull AccountName author,
+                                                      @Nonnull Permlink permlink, long date, int limit)
+            throws SteemCommunicationException;
+
+    /**
+     * Get a list of discussion for a given author.
+     *
+     * @param author   The authors name.
+     * @param permlink The permlink of the article.
+     * @param date     Only return articles before this date. (This field seems to be
+     *                 ignored by the Steem api)
+     * @param limit    The number of results you want to receive.
+     * @param voteLimit  vote limit to return
+     * @return A list of discussions.
+     * @throws SteemCommunicationException <ul>
+     *                                     <li>If the server was not able to answer the request in the
+     *                                     given time (see
+     *                                     {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(long)
+     *                                     setResponseTimeout}).</li>
+     *                                     <li>If there is a connection problem.</li>
+     *                                     <li>If the SteemJ is unable to transform the JSON response
+     *                                     into a Java object.</li>
+     *                                     <li>If the Server returned an error object.</li>
+     *                                     </ul>
+     */
+    @Nonnull
+    List<Discussion> getDiscussionsByAuthorBeforeDate(@Nonnull AccountName author,
+                                                      @Nonnull Permlink permlink,
+                                                      long date,
+                                                      int limit,
+                                                      int voteLimit)
             throws SteemCommunicationException;
 
     /**
@@ -576,26 +606,7 @@ public interface DatabaseMethods {
     @Nonnull
     List<String[]> getKeyReferences(@Nonnull String[] publicKeys) throws SteemCommunicationException;
 
-    /**
-     * Get the liquidity queue for a specified account.
-     *
-     * @param accoutName The name of the account you want to request the queue entries
-     *                   for.
-     * @param limit      Number of results.
-     * @return A list of liquidity queue entries.
-     * @throws SteemCommunicationException <ul>
-     *                                     <li>If the server was not able to answer the request in the
-     *                                     given time (see
-     *                                     {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(long)
-     *                                     setResponseTimeout}).</li>
-     *                                     <li>If there is a connection problem.</li>
-     *                                     <li>If the SteemJ is unable to transform the JSON response
-     *                                     into a Java object.</li>
-     *                                     <li>If the Server returned an error object.</li>
-     *                                     </ul>
-     */
-    @Nonnull
-    List<LiquidityBalance> getLiquidityQueue(@Nonnull AccountName accoutName, int limit) throws SteemCommunicationException;
+
 
     /**
      * Get the current miner queue.
@@ -700,7 +711,7 @@ public interface DatabaseMethods {
      *                                     </ul>
      */
     @Nonnull
-    List<Discussion> getRepliesByLastUpdate(@Nonnull AccountName startParentAuthor, @Nonnull Permlink startPermlink, int limit)
+    List<Discussion>  getRepliesByLastUpdate(@Nonnull AccountName startParentAuthor, @Nonnull Permlink startPermlink, int limit)
             throws SteemCommunicationException;
 
     /**
@@ -795,6 +806,11 @@ public interface DatabaseMethods {
      */
     @Nonnull
     List<TrendingTag> getTrendingTags(@Nonnull String firstTag, int limit) throws SteemCommunicationException;
+
+    /**method is broken and dont works in bc*/
+    @Nonnull
+    @Deprecated
+    List<TrendingTag> getTagsUsedByAuthor(@Nonnull AccountName author) throws SteemCommunicationException;
 
     /**
      * Get the witness information for a given witness account name.

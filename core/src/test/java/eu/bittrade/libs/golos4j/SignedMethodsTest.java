@@ -1,7 +1,15 @@
 package eu.bittrade.libs.golos4j;
 
+import eu.bittrade.libs.steemj.Golos4J;
+import eu.bittrade.libs.steemj.base.models.*;
+import eu.bittrade.libs.steemj.base.models.operations.AccountUpdateOperation;
+import eu.bittrade.libs.steemj.base.models.operations.Operation;
+import eu.bittrade.libs.steemj.base.models.operations.VoteOperation;
+import eu.bittrade.libs.steemj.communication.CommunicationHandler;
+import eu.bittrade.libs.steemj.enums.DiscussionSortType;
+import eu.bittrade.libs.steemj.enums.PrivateKeyType;
+import eu.bittrade.libs.steemj.util.ImmutablePair;
 import junit.framework.TestCase;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.internal.runners.JUnit38ClassRunner;
@@ -10,65 +18,54 @@ import org.junit.runner.RunWith;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Nonnull;
-
-import eu.bittrade.libs.steemj.Golos4J;
-import eu.bittrade.libs.steemj.base.models.AccountName;
-import eu.bittrade.libs.steemj.base.models.AppliedOperation;
-import eu.bittrade.libs.steemj.base.models.GlobalProperties;
-import eu.bittrade.libs.steemj.base.models.GolosIoFilePath;
-import eu.bittrade.libs.steemj.base.models.GolosProfile;
-import eu.bittrade.libs.steemj.base.models.Permlink;
-import eu.bittrade.libs.steemj.base.models.PublicKey;
-import eu.bittrade.libs.steemj.base.models.SignedTransaction;
-import eu.bittrade.libs.steemj.base.models.TimePointSec;
-import eu.bittrade.libs.steemj.base.models.operations.AccountUpdateOperation;
-import eu.bittrade.libs.steemj.base.models.operations.Operation;
-import eu.bittrade.libs.steemj.base.models.operations.VoteOperation;
-import eu.bittrade.libs.steemj.communication.CommunicationHandler;
-import eu.bittrade.libs.steemj.enums.PrivateKeyType;
-import eu.bittrade.libs.steemj.util.AuthUtils;
-import eu.bittrade.libs.steemj.util.ImmutablePair;
+import java.util.Random;
+import java.util.UUID;
 
 /**
  * Created by yuri yurivladdurain@gmail.com .
  */
 @RunWith(JUnit38ClassRunner.class)
 public class SignedMethodsTest extends TestCase {
-    @Nonnull
-    Golos4J golos4J = Golos4J.getInstance();
+    private boolean useTestNet = true;
+    private AccountName ACCOUNT = new AccountName("yuri-vlad-second");
+    private String accountActiveKey = "5K7YbhJZqGnw3hYzsmH5HbDixWP5ByCBdnJxM5uoe9LuMX5rcZV";
+    private AccountName TESTNET_ACCOUNT = new AccountName("qwerty");
+    private String testnetAccPosting = "P5KbaLKyg7rWZNWHVNqewHqQwN7CamUfCpGqMm7872K7oieYwQsM";
+    private Golos4J golos4J;
+
 
     @Before
     public void setUp() {
-        //  golos4J.addAccount(new AccountName("yuri-vlad-second"), new ImmutablePair<>(PrivateKeyType.POSTING, "5JeKh4taphREBdqfKzfapu6ar3gCNPPKgG5QbUzEwmuasSAQFs3"), true);
-        golos4J.addAccount(new AccountName("yuri-vlad"), new ImmutablePair<>(PrivateKeyType.ACTIVE, "5KGbRrb7AcZruv2ECPzDDVYBhe2451oRgZ9RjZbwx7QhRSU6onK"), true);
+        if (useTestNet) golos4J = Golos4J.getTestnet();
+        else golos4J = Golos4J.getInstance();
+        if (useTestNet)
+            golos4J.addAccountUsingMasterPassword(TESTNET_ACCOUNT, testnetAccPosting);
+        else golos4J.addAccount(ACCOUNT, new ImmutablePair<>(PrivateKeyType.ACTIVE, accountActiveKey), true);
     }
 
     @Test
-    public void testVote() throws Exception {
-        //    golos4J.getSimplifiedOperations().vote(PublicMethodsTest.ACCOUNT, PublicMethodsTest.PERMLINK, (short) 50);
-        Map<Integer, AppliedOperation> operationMap = golos4J.getDatabaseMethods().getAccountHistory(new AccountName("yuri-vlad"), 1000, 5);
-        AppliedOperation operation = operationMap.get(operationMap.size() - 1);
-        assertTrue(operation.getOp() instanceof VoteOperation);
+    public void testVote() {
+
+        Discussion discussion =
+                null;
+        try {
+            discussion = golos4J.getDatabaseMethods().getDiscussionsBy(DiscussionQuery.newBuilder().setLimit(1).setTruncateBody(0).setSelectedAuthor(
+                    useTestNet ? TESTNET_ACCOUNT : ACCOUNT).build(),
+                    DiscussionSortType.GET_DISCUSSIONS_BY_BLOG).get(0);
+            golos4J.getSimplifiedOperations().vote(discussion.getAuthor(), discussion.getPermlink(), (short) new Random().nextInt(100));
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+
     }
 
-    @Test
-    public void testCreateAccount() throws Exception {
-        String login2 = "yuri-vlad-second";
-        String newPassword = "234sfdgkh1ezedsiU234wewe235ym8jhlq1unA0tlkJKfdhyn";
-        Map<PrivateKeyType, String> keysNew = AuthUtils.generatePrivateWiFs(login2, newPassword, PrivateKeyType.values());
-        System.out.println(keysNew);
-    }
 
     @Test
     public void testUploadImage() throws Exception {
-        String login2 = "yuri-vlad";
-        golos4J.addAccountUsingMasterPassword(new AccountName(login2), "234sfdgkh1ezedsiU234wewe235ym8jhlq1unA0tlkJKfdhyn");
-        GolosIoFilePath filePath = golos4J.getGolosIoSpecificMethods().uploadFile(new AccountName(login2), new File(getClass().getClassLoader().getResource("ThemeColors.png").getFile()));
+        GolosIoFilePath filePath = golos4J.getGolosIoSpecificMethods().uploadFile(useTestNet ? TESTNET_ACCOUNT : ACCOUNT, new File(getClass().getClassLoader().getResource("ThemeColors.png").getFile()));
         assertNotNull(filePath);
-
+        System.out.println(filePath);
         String value = filePath.getError() == null ? filePath.getUrlString() : filePath.getError();
         assertNotNull(value);
     }
@@ -76,6 +73,7 @@ public class SignedMethodsTest extends TestCase {
     @Test
 
     public void testVerifyAuthority() throws Exception {
+        if (useTestNet) return;
         golos4J.addAccount(new AccountName("yuri-vlad"), new ImmutablePair<>(PrivateKeyType.ACTIVE, "5KZPvXWyLVeJ3prqwvEgqFuWghwMLWGuYAgGCJutVdfwWJZXWHm"), true);
         VoteOperation voteOperation = new VoteOperation(
                 new AccountName("yuri-vlad"),
@@ -98,44 +96,48 @@ public class SignedMethodsTest extends TestCase {
 
     @Test
     public void testAccUpdate() throws Exception {
-        golos4J.addAccount(new AccountName("yuri-vlad"), new ImmutablePair<>(PrivateKeyType.ACTIVE, "5KGbRrb7AcZruv2ECPzDDVYBhe2451oRgZ9RjZbwx7QhRSU6onK"), true);
+        if (useTestNet) {
+            GolosProfile golosProfile = new GolosProfile();
+            String newName = UUID.randomUUID().toString();
+            golosProfile.setShownName(newName);
+            String s = "{\"profile\":" + CommunicationHandler.getObjectMapper().writeValueAsString(golosProfile) + "}";
+            AccountUpdateOperation aoo = new AccountUpdateOperation(TESTNET_ACCOUNT, null,
+                    null,
+                    null,
+                    null,
+                    s);
 
-        GolosProfile gp = new GolosProfile();
-        gp.setShownName("Yuri");
-        String s = "{\"profile\":" + CommunicationHandler.getObjectMapper().writeValueAsString(gp) + "}";
-        AccountUpdateOperation aoo = new AccountUpdateOperation(new AccountName("yuri-vlad"), null,
-                null,
-                null,
-                new PublicKey("GLS69FZuT6LjUXmcQboMaJZQAFMF4RnbhBtQC3wNkeJGMSW3YXEQD"),
-                s);
+            List<Operation> operations = new ArrayList<>();
+            operations.add(aoo);
 
-        List<Operation> operations = new ArrayList<>();
-        operations.add(aoo);
+            GlobalProperties globalProperties = Golos4J.getInstance().getDatabaseMethods().getDynamicGlobalProperties();
 
-        GlobalProperties globalProperties = Golos4J.getInstance().getDatabaseMethods().getDynamicGlobalProperties();
+            SignedTransaction signedTransaction = new SignedTransaction(globalProperties.getHeadBlockId(), operations,
+                    null);
 
-        SignedTransaction signedTransaction = new SignedTransaction(globalProperties.getHeadBlockId(), operations,
-                null);
+            signedTransaction.sign();
+            golos4J.getNetworkBroadcastMethods().broadcastTransaction(signedTransaction);
+        } else {
+            golos4J.addAccount(new AccountName("yuri-vlad"), new ImmutablePair<>(PrivateKeyType.ACTIVE, "5KGbRrb7AcZruv2ECPzDDVYBhe2451oRgZ9RjZbwx7QhRSU6onK"), true);
 
-        signedTransaction.sign();
+            GolosProfile gp = new GolosProfile();
+            gp.setShownName("Yuri");
+            String s = "{\"profile\":" + CommunicationHandler.getObjectMapper().writeValueAsString(gp) + "}";
+            AccountUpdateOperation aoo = new AccountUpdateOperation(new AccountName("yuri-vlad"), null,
+                    null,
+                    null,
+                    new PublicKey("GLS69FZuT6LjUXmcQboMaJZQAFMF4RnbhBtQC3wNkeJGMSW3YXEQD"),
+                    s);
 
+            List<Operation> operations = new ArrayList<>();
+            operations.add(aoo);
 
-        // Golos4J.getInstance().getNetworkBroadcastMethods().broadcastTransaction(signedTransaction);
-    }
+            GlobalProperties globalProperties = Golos4J.getInstance().getDatabaseMethods().getDynamicGlobalProperties();
 
-    @Test
-    public void testSerialize() throws Exception {
-        golos4J.addAccount(new AccountName("yuri-vlad-second"), new ImmutablePair<>(PrivateKeyType.ACTIVE, "5K7YbhJZqGnw3hYzsmH5HbDixWP5ByCBdnJxM5uoe9LuMX5rcZV"), true);
-        VoteOperation operation = new VoteOperation(new AccountName("yuri-vlad-second"), new AccountName("oksaxa"), new Permlink("ru--kitaijskaya-czivilizacziya"), (short) 10000);
-        ArrayList<Operation> operations = new ArrayList<>();
-        operations.add(operation);
+            SignedTransaction signedTransaction = new SignedTransaction(globalProperties.getHeadBlockId(), operations,
+                    null);
 
-        SignedTransaction signedTransaction = new SignedTransaction(51322, 3809751608L,
-                new TimePointSec("2018-04-26T08:21:37")
-                , operations,
-                null);
-        signedTransaction.sign();
-        System.out.println(signedTransaction);
-
+            signedTransaction.sign();
+        }
     }
 }

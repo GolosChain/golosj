@@ -2,7 +2,10 @@ package eu.bittrade.libs.steemj;
 
 import eu.bittrade.libs.steemj.base.models.SignedTransaction;
 import eu.bittrade.libs.steemj.communication.CommunicationHandler;
+import eu.bittrade.libs.steemj.communication.dto.RequestWrapperDTO;
 import eu.bittrade.libs.steemj.configuration.SteemJConfig;
+import eu.bittrade.libs.steemj.enums.RequestMethods;
+import eu.bittrade.libs.steemj.enums.SteemApis;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 
 import javax.annotation.Nonnull;
@@ -27,9 +30,18 @@ class GolosNetworkBroadcastMethodsHandler implements NetworkBroadcastMethods {
         this.communicationHandler = communicationHandler;
         this.steemJ = steemJ;
     }
+
     @Override
     public void broadcastTransaction(@Nonnull SignedTransaction transaction) throws SteemCommunicationException {
-        steemJ.broadcastTransaction(transaction);
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
+        requestObject.setApiMethod(RequestMethods.BROADCAST_TRANSACTION);
+        requestObject.setSteemApi(SteemApis.NETWORK_BROADCAST_API);
+
+        // TODO: transaction.sign();
+        Object[] parameters = {transaction};
+        requestObject.setAdditionalParameters(parameters);
+
+        communicationHandler.performRequest(requestObject, Object.class);
     }
 
     @Override

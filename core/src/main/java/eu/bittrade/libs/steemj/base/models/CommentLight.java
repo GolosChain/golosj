@@ -12,6 +12,7 @@ public class CommentLight {
     // Original type is comment_id_type.
     long id;
     @Nullable
+    @Deprecated
     String category;
     @JsonProperty("parent_author")
     String parentAuthor;
@@ -52,7 +53,6 @@ public class CommentLight {
 
     public CommentLight() {
     }
-
 
 
     public CommentLight(long id, String category, String parentAuthor, String parentPermlink, String author, String permlink, String title, String body, String jsonMetadata, TimePointSec created, short depth, int children, Asset totalPayoutValue, long authorRewards, int netVotes, String mode, int percentSteemDollars, Boolean allowReplies, Boolean allowVotes, Boolean allowCurationRewards, TimePointSec lastUpdate, Long activeVotesCount) {
@@ -159,6 +159,7 @@ public class CommentLight {
     }
 
     @Nullable
+    @Deprecated
     public String getCategory() {
         return category;
     }

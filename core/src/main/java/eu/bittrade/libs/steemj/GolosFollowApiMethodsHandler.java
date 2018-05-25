@@ -141,24 +141,39 @@ class GolosFollowApiMethodsHandler implements FollowApiMethods {
         requestObject.setApiMethod(RequestMethods.GET_ACCOUNT_REPUTATIONS);
         requestObject.setSteemApi(SteemApis.FOLLOW);
 
-        Object[] parameters = {accountName.getName(), limit};
+        Object[] parameters;
+        if (Golos4J.getInstance().getCurrentHardforkVersion() == Golos4J.HardForkVersion.HF_17)
+            parameters = new Object[]{accountName.getName(), limit};
+        else parameters = new Object[]{new String[]{
+                accountName.getName()}};
         requestObject.setAdditionalParameters(parameters);
-
         return communicationHandler.performRequest(requestObject, AccountReputation.class);
+    }
 
+    @Override
+    public List<AccountReputation> getAccountReputations(List<AccountName> accountName) throws SteemCommunicationException {
+
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
+        requestObject.setApiMethod(RequestMethods.GET_ACCOUNT_REPUTATIONS);
+        requestObject.setSteemApi(SteemApis.FOLLOW);
+
+        Object[] parameters = new Object[]{accountName.toArray(new Object[accountName.size()])};
+
+        requestObject.setAdditionalParameters(parameters);
+        return communicationHandler.performRequest(requestObject, AccountReputation.class);
     }
 
     @Override
     public List<AccountName> getRebloggedBy(AccountName author, Permlink permlink) throws SteemCommunicationException {
 
-            RequestWrapperDTO requestObject = new RequestWrapperDTO();
-            requestObject.setApiMethod(RequestMethods.GET_REBLOGGED_BY);
-            requestObject.setSteemApi(SteemApis.FOLLOW);
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
+        requestObject.setApiMethod(RequestMethods.GET_REBLOGGED_BY);
+        requestObject.setSteemApi(SteemApis.FOLLOW);
 
-            Object[] parameters = {author.getName(), permlink.getLink()};
-            requestObject.setAdditionalParameters(parameters);
+        Object[] parameters = {author.getName(), permlink.getLink()};
+        requestObject.setAdditionalParameters(parameters);
 
-            return communicationHandler.performRequest(requestObject, AccountName.class);
+        return communicationHandler.performRequest(requestObject, AccountName.class);
 
     }
 

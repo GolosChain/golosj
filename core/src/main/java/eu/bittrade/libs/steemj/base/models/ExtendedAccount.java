@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
+import com.sun.istack.internal.Nullable;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.math.BigInteger;
@@ -33,6 +34,7 @@ public class ExtendedAccount extends Account {
      */
     @JsonProperty("transfer_history")
     @JsonDeserialize(using = BigIntegerAppliedOperationsDeserializer.class)
+    @Nullable
     private Map<BigInteger, AppliedOperation> transferHistory;
     // The original tpye is map<uint64_t,applied_operation>
     /**
@@ -40,27 +42,35 @@ public class ExtendedAccount extends Account {
      */
     @JsonProperty("market_history")
     @JsonDeserialize(using = BigIntegerAppliedOperationsDeserializer.class)
+    @Nullable
     private Map<BigInteger, AppliedOperation> marketHistory;
     // The original tpye is map<uint64_t,applied_operation>
     @JsonProperty("post_history")
     @JsonDeserialize(using = BigIntegerAppliedOperationsDeserializer.class)
+    @Nullable
     private Map<BigInteger, AppliedOperation> postHistory;
     // The original tpye is map<uint64_t,applied_operation>
     @JsonProperty("vote_history")
+    @Nullable
+    @Deprecated
     @JsonDeserialize(using = BigIntegerAppliedOperationsDeserializer.class)
     private Map<BigInteger, AppliedOperation> voteHistory;
     // The original tpye is map<uint64_t,applied_operation>
     @JsonProperty("other_history")
     @JsonDeserialize(using = BigIntegerAppliedOperationsDeserializer.class)
+    @Nullable
     private Map<BigInteger, AppliedOperation> otherHistory;
     // Original type is set<string>.
     @JsonProperty("witness_votes")
+    @Nullable
     private List<AccountName> witnessVotes;
     // Original type is "vector<pair<string,uint32_t>>".
     @JsonProperty("tags_usage")
+    @Nullable
     private List<Pair<String, Long>> tagsUsage;
     // Original type is "vector<pair<account_name_type,uint32_t>>".
     @JsonProperty("guest_bloggers")
+    @Nullable
     private List<Pair<AccountName, Long>> guestBloggers;
     // Original type is "optional<map<uint32_t,extended_limit_order>>".
     @JsonProperty("open_orders")
@@ -99,6 +109,7 @@ public class ExtendedAccount extends Account {
      * @deprecated This field is deprecated since HF 0.19.0 and may be null.
      */
     @JsonProperty("blog_category")
+    @Nullable
     private Object[] blogCategory;
 
     /**
@@ -117,7 +128,10 @@ public class ExtendedAccount extends Account {
 
     /**
      * @return the reputation
+     * Deprecated since HF_18
      */
+    @Deprecated
+
     public long getReputation() {
         return reputation;
     }
@@ -125,6 +139,8 @@ public class ExtendedAccount extends Account {
     /**
      * @return the transferHistory
      */
+    @Nullable
+    @Deprecated
     public Map<BigInteger, AppliedOperation> getTransferHistory() {
         return transferHistory;
     }
@@ -132,6 +148,8 @@ public class ExtendedAccount extends Account {
     /**
      * @return the marketHistory
      */
+    @Nullable
+    @Deprecated
     public Map<BigInteger, AppliedOperation> getMarketHistory() {
         return marketHistory;
     }
@@ -139,6 +157,8 @@ public class ExtendedAccount extends Account {
     /**
      * @return the postHistory
      */
+    @Nullable
+    @Deprecated
     public Map<BigInteger, AppliedOperation> getPostHistory() {
         return postHistory;
     }
@@ -146,6 +166,8 @@ public class ExtendedAccount extends Account {
     /**
      * @return the voteHistory
      */
+    @Nullable
+    @Deprecated
     public Map<BigInteger, AppliedOperation> getVoteHistory() {
         return voteHistory;
     }
@@ -153,6 +175,8 @@ public class ExtendedAccount extends Account {
     /**
      * @return the otherHistory
      */
+    @Nullable
+    @Deprecated
     public Map<BigInteger, AppliedOperation> getOtherHistory() {
         return otherHistory;
     }
@@ -160,6 +184,8 @@ public class ExtendedAccount extends Account {
     /**
      * @return the witnessVotes
      */
+    @Nullable
+    @Deprecated
     public List<AccountName> getWitnessVotes() {
         return witnessVotes;
     }
@@ -167,6 +193,8 @@ public class ExtendedAccount extends Account {
     /**
      * @return the tagsUsage
      */
+    @Nullable
+    @Deprecated
     public List<Pair<String, Long>> getTagsUsage() {
         return tagsUsage;
     }
@@ -174,6 +202,8 @@ public class ExtendedAccount extends Account {
     /**
      * @return the guestBloggers
      */
+    @Nullable
+    @Deprecated
     public List<Pair<AccountName, Long>> getGuestBloggers() {
         return guestBloggers;
     }
@@ -223,6 +253,8 @@ public class ExtendedAccount extends Account {
     /**
      * @return the blogCategory
      */
+    @Nullable
+    @Deprecated
     public Object[] getBlogCategory() {
         return blogCategory;
     }

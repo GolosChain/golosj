@@ -18,6 +18,7 @@ public class Comment {
     // Original type is comment_id_type.
     private long id;
     @Nullable
+    @Deprecated
     private String category;
     @JsonProperty("parent_author")
     private AccountName parentAuthor;
@@ -309,8 +310,10 @@ public class Comment {
 
     /**
      * @return the category
+     * deprecated since HF_18
      */
     @Nullable
+    @Deprecated
     public String getCategory() {
         return category;
     }

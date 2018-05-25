@@ -138,7 +138,6 @@ public class CommunicationHandler extends Endpoint implements MessageHandler.Who
 
             sendMessageSynchronously(requestObject);
 
-            System.out.println(rawJsonResponse);
             @SuppressWarnings("unchecked")
             ResponseWrapperDTO<T> response = mapper.readValue(rawJsonResponse, ResponseWrapperDTO.class);
 
@@ -161,9 +160,11 @@ public class CommunicationHandler extends Endpoint implements MessageHandler.Who
             return mapper.convertValue(response.getResult(), type);
         } catch (JsonParseException | JsonMappingException e) {
             LOGGER.debug("Could not parse the response. Trying to transform it to an error object.", e);
-
+            if (rawJsonResponse.contains("N5boost16exception"))return new ArrayList<>();// server error,
+            // that returns server error instead of empty array
             try {
                 // TODO: Find a better solution for errors in general.
+
                 throw new SteemResponseError(mapper.readValue(rawJsonResponse, SteemError.class));
             } catch (IOException ex) {
                 ex.printStackTrace();

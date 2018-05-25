@@ -49,8 +49,7 @@ public class Golos4J {
     private final FollowApiMethods followApiMethodsHandler;
     @Nonnull
     private final NetworkBroadcastMethods networkBroadcastMethodsHandler;
-    @Nonnull
-    private final AccountByKeyMethods accountByKeyMethodsHandler;
+
     @Nonnull
     private final SimplifiedOperations simplifiedOperations;
     @Nonnull
@@ -115,7 +114,6 @@ public class Golos4J {
         this.marketHistoryApiMethodsHandler = new GolosMarketHistoryApiHandler(this.steemJConfig, communicationHandler, steemJ);
         this.followApiMethodsHandler = new GolosFollowApiMethodsHandler(this.steemJConfig, communicationHandler, steemJ);
         this.networkBroadcastMethodsHandler = new GolosNetworkBroadcastMethodsHandler(this.steemJConfig, communicationHandler, steemJ);
-        this.accountByKeyMethodsHandler = new GolosAccountByKeyMethodsHandler(this.steemJConfig, communicationHandler, steemJ);
         this.simplifiedOperations = new GolosSimplifiedOperationsHandler(this.steemJConfig, communicationHandler, steemJ);
         this.golosIoSpecificMethods = new GolosIoSpecificMethodsHandler(this.steemJConfig, CommunicationHandler.getObjectMapper());
     }
@@ -175,6 +173,7 @@ public class Golos4J {
             set.add(new ImmutablePair<>(pair.getKey(), pair.getValue()));
         }
         addKeysToAccount(account, set);
+        setDefaultAccount(account);
     }
 
     public void addKeysToAccount(@Nonnull AccountName account, @Nonnull Set<ImmutablePair<PrivateKeyType, String>> keys) {
@@ -191,10 +190,6 @@ public class Golos4J {
         }
     }
 
-    @Nonnull
-    public SteemJ getSteemJ() {
-        return steemJ;
-    }
 
     @Nonnull
     public CommunicationHandler getCommunicationHandler() {
@@ -211,7 +206,7 @@ public class Golos4J {
         return simplifiedOperations;
     }
 
-     @Nonnull
+    @Nonnull
     public MarketHistory getMarketHistoryApiMethods() {
         return marketHistoryApiMethodsHandler;
     }
@@ -226,8 +221,4 @@ public class Golos4J {
         return networkBroadcastMethodsHandler;
     }
 
-    @Nonnull
-    public AccountByKeyMethods getAccountByKeyMethodsHandler() {
-        return accountByKeyMethodsHandler;
-    }
 }

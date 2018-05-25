@@ -1,3 +1,4 @@
+/*
 package eu.bittrade.libs.steemj.base.models.operations;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -19,12 +20,14 @@ import eu.bittrade.libs.steemj.base.models.SignedBlockWithInfo;
 import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 
+*/
 /**
  * Verify the functionality of the "comment options operation" under the use of
  * real api calls.
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
- */
+ *//*
+
 public class CommentOptionsOperationIT extends BaseTransactionalIntegrationTest {
     private static final long BLOCK_NUMBER_CONTAINING_OPERATION = 5716958;
     private static final int TRANSACTION_INDEX = 2;
@@ -39,7 +42,8 @@ public class CommentOptionsOperationIT extends BaseTransactionalIntegrationTest 
             + "85cbc3aec6f27ae22993820349d93b4060af92386305517c0f3c85a04b34b074226b8b5bb6384"
             + "2ee3cb208a52b6c0c01e6b8d0d838a38aba";
 
-    /**
+    */
+/**
      * <b>Attention:</b> This test class requires a valid posting key of the
      * used "author". If no posting key is provided or the posting key is not
      * valid an Exception will be thrown. The private key is passed as a -D
@@ -47,7 +51,8 @@ public class CommentOptionsOperationIT extends BaseTransactionalIntegrationTest 
      * 
      * @throws Exception
      *             If something went wrong.
-     */
+     *//*
+
     @BeforeClass()
     public static void prepareTestClass() throws Exception {
         setupIntegrationTestEnvironmentForTransactionalTests();
@@ -103,3 +108,4 @@ public class CommentOptionsOperationIT extends BaseTransactionalIntegrationTest 
         assertThat(steemJ.getTransactionHex(signedTransaction), equalTo(EXPECTED_TRANSACTION_HEX));
     }
 }
+*/

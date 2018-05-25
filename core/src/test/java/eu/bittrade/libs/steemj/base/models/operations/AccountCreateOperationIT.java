@@ -1,3 +1,4 @@
+/*
 package eu.bittrade.libs.steemj.base.models.operations;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -22,12 +23,14 @@ import eu.bittrade.libs.steemj.base.models.SignedBlockWithInfo;
 import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 
+*/
 /**
  * Verify the functionality of the "account create operation" under the use of
  * real api calls.
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
- */
+ *//*
+
 public class AccountCreateOperationIT extends BaseTransactionalIntegrationTest {
     private static final long BLOCK_NUMBER_CONTAINING_OPERATION = 5726699;
     private static final int TRANSACTION_INDEX = 6;
@@ -43,7 +46,8 @@ public class AccountCreateOperationIT extends BaseTransactionalIntegrationTest {
             + "3c62699e0000011b45bfc693eb47ee2f002d0c2a6f432ce023e0dda97c2e76692a063b241752df0b37bd558"
             + "982f2978e7923b44ba4c349845e3bd3dff50ce7785051918162dc64bc";
 
-    /**
+    */
+/**
      * <b>Attention:</b> This test class requires a valid active key of the used
      * "creator". If no active key is provided or the active key is not valid an
      * Exception will be thrown. The active key is passed as a -D parameter
@@ -51,7 +55,8 @@ public class AccountCreateOperationIT extends BaseTransactionalIntegrationTest {
      * 
      * @throws Exception
      *             If something went wrong.
-     */
+     *//*
+
     @BeforeClass()
     public static void prepareTestClass() throws Exception {
         setupIntegrationTestEnvironmentForTransactionalTests();
@@ -120,3 +125,4 @@ public class AccountCreateOperationIT extends BaseTransactionalIntegrationTest {
         assertThat(steemJ.getTransactionHex(signedTransaction), equalTo(EXPECTED_TRANSACTION_HEX));
     }
 }
+*/

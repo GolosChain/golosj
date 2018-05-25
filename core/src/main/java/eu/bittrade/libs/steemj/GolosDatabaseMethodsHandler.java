@@ -12,11 +12,13 @@ import eu.bittrade.libs.steemj.enums.RequestMethods;
 import eu.bittrade.libs.steemj.enums.RewardFundType;
 import eu.bittrade.libs.steemj.enums.SteemApis;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
+import eu.bittrade.libs.steemj.exceptions.SteemTransformationException;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -42,7 +44,13 @@ class GolosDatabaseMethodsHandler implements DatabaseMethods {
 
     @Override
     public Integer getAccountCount() throws SteemCommunicationException {
-        return steemJ.getAccountCount();
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
+        requestObject.setApiMethod(RequestMethods.GET_ACCOUNT_COUNT);
+        requestObject.setSteemApi(SteemApis.DATABASE_API);
+        String[] parameters = {};
+        requestObject.setAdditionalParameters(parameters);
+
+        return communicationHandler.performRequest(requestObject, Integer.class).get(0);
     }
 
     @Override
@@ -71,7 +79,20 @@ class GolosDatabaseMethodsHandler implements DatabaseMethods {
 
     @Override
     public List<ExtendedAccount> getAccounts(List<AccountName> accountNames) throws SteemCommunicationException {
-        return steemJ.getAccounts(accountNames);
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
+        requestObject.setSteemApi(SteemApis.DATABASE_API);
+        requestObject.setApiMethod(RequestMethods.GET_ACCOUNTS);
+
+        // The API expects an array of arrays here.
+        String[] innerParameters = new String[accountNames.size()];
+        for (int i = 0; i < accountNames.size(); i++) {
+            innerParameters[i] = accountNames.get(i).getName();
+        }
+
+        String[][] parameters = {innerParameters};
+
+        requestObject.setAdditionalParameters(parameters);
+        return communicationHandler.performRequest(requestObject, ExtendedAccount.class);
     }
 
     @Override
@@ -99,12 +120,26 @@ class GolosDatabaseMethodsHandler implements DatabaseMethods {
 
     @Override
     public SignedBlockWithInfo getBlock(long blockNumber) throws SteemCommunicationException {
-        return steemJ.getBlock(blockNumber);
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
+        requestObject.setApiMethod(RequestMethods.GET_BLOCK);
+        requestObject.setSteemApi(SteemApis.DATABASE_API);
+        String[] parameters = {String.valueOf(blockNumber)};
+        requestObject.setAdditionalParameters(parameters);
+
+        return communicationHandler.performRequest(requestObject, SignedBlockWithInfo.class).get(0);
+
     }
 
     @Override
     public BlockHeader getBlockHeader(long blockNumber) throws SteemCommunicationException {
-        return steemJ.getBlockHeader(blockNumber);
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
+        requestObject.setApiMethod(RequestMethods.GET_BLOCK_HEADER);
+        requestObject.setSteemApi(SteemApis.DATABASE_API);
+        String[] parameters = {String.valueOf(blockNumber)};
+        requestObject.setAdditionalParameters(parameters);
+
+        return communicationHandler.performRequest(requestObject, BlockHeader.class).get(0);
+
     }
 
     @Override
@@ -153,7 +188,13 @@ class GolosDatabaseMethodsHandler implements DatabaseMethods {
 
     @Override
     public ScheduledHardfork getNextScheduledHarfork() throws SteemCommunicationException {
-        return steemJ.getNextScheduledHarfork();
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
+        requestObject.setApiMethod(RequestMethods.GET_NEXT_SCHEDULED_HARDFORK);
+        requestObject.setSteemApi(SteemApis.DATABASE_API);
+        String[] parameters = {};
+        requestObject.setAdditionalParameters(parameters);
+
+        return communicationHandler.performRequest(requestObject, ScheduledHardfork.class).get(0);
     }
 
     @Override
@@ -193,12 +234,24 @@ class GolosDatabaseMethodsHandler implements DatabaseMethods {
 
     @Override
     public ChainProperties getChainProperties() throws SteemCommunicationException {
-        return steemJ.getChainProperties();
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
+        requestObject.setApiMethod(RequestMethods.GET_CHAIN_PROPERTIES);
+        requestObject.setSteemApi(SteemApis.DATABASE_API);
+        String[] parameters = {};
+        requestObject.setAdditionalParameters(parameters);
+
+        return communicationHandler.performRequest(requestObject, ChainProperties.class).get(0);
     }
 
     @Override
     public Config getConfig() throws SteemCommunicationException {
-        return steemJ.getConfig();
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
+        requestObject.setApiMethod(RequestMethods.GET_CONFIG);
+        requestObject.setSteemApi(SteemApis.DATABASE_API);
+        String[] parameters = {};
+        requestObject.setAdditionalParameters(parameters);
+
+        return communicationHandler.performRequest(requestObject, Config.class).get(0);
     }
 
     @Override
@@ -254,7 +307,13 @@ class GolosDatabaseMethodsHandler implements DatabaseMethods {
 
     @Override
     public Object[] getConversionRequests(AccountName account) throws SteemCommunicationException {
-        return steemJ.getConversionRequests(account);
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
+        requestObject.setApiMethod(RequestMethods.GET_CONVERSION_REQUESTS);
+        requestObject.setSteemApi(SteemApis.DATABASE_API);
+        String[] parameters = {account.getName()};
+        requestObject.setAdditionalParameters(parameters);
+
+        return communicationHandler.performRequest(requestObject, Object[].class).get(0);
     }
 
     @Override
@@ -289,18 +348,61 @@ class GolosDatabaseMethodsHandler implements DatabaseMethods {
     @Override
     public List<Discussion> getDiscussionsByAuthorBeforeDate(AccountName author, Permlink permlink, long date, int limit)
             throws SteemCommunicationException {
-        return steemJ.getDiscussionsByAuthorBeforeDate(author, permlink, SteemJUtils.transformDateToString(new Date(date)), limit);
+        return getDiscussionsByAuthorBeforeDate(author, permlink, date, limit, -1);
+    }
+
+    @Nonnull
+    @Override
+    public List<Discussion> getDiscussionsByAuthorBeforeDate(@Nonnull AccountName author, @Nonnull Permlink permlink,
+                                                             long date, int limit, int voteLimit) throws SteemCommunicationException {
+        return communicationHandler.performRequest(getDiscussionsByAuthorBeforeDateRW(author, permlink,
+                SteemJUtils.transformDateToString(new Date(date)), limit, voteLimit), Discussion.class);
+    }
+
+    private RequestWrapperDTO getDiscussionsByAuthorBeforeDateRW(@Nonnull AccountName author, @Nonnull Permlink permlink,
+                                                                 String date, int limit, int voteLimit) throws SteemCommunicationException {
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
+
+        requestObject.setApiMethod(RequestMethods.GET_DISCUSSIONS_BY_AUTHOR_BEFORE_DATE);
+        if (Golos4J.getInstance().getCurrentHardforkVersion() == Golos4J.HardForkVersion.HF_17)
+            requestObject.setSteemApi(SteemApis.SOCIAL_NETWORK);
+        else requestObject.setSteemApi(SteemApis.TAGS);
+
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(SteemJConfig.getInstance().getDateTimePattern());
+        simpleDateFormat.setTimeZone(TimeZone.getTimeZone(SteemJConfig.getInstance().getTimeZoneId()));
+        Date beforeDate;
+        try {
+            beforeDate = simpleDateFormat.parse(date);
+        } catch (ParseException e) {
+            throw new SteemTransformationException("Could not parse the received date to a Date object.", e);
+        }
+        String[] parameters;
+        if (voteLimit < 0)
+            parameters = new String[]{author.getName(), permlink.getLink(), simpleDateFormat.format(beforeDate),
+                    String.valueOf(limit)};
+        else parameters = new String[]{author.getName(), permlink.getLink(), simpleDateFormat.format(beforeDate),
+                String.valueOf(limit), String.valueOf(voteLimit)};
+        requestObject.setAdditionalParameters(parameters);
+        return requestObject;
     }
 
     @Override
     public List<Discussion> getDiscussionsByAuthorBeforeDate(AccountName author, Permlink permlink, String date, int limit)
             throws SteemCommunicationException, ParseException {
-        return steemJ.getDiscussionsByAuthorBeforeDate(author, permlink, date, limit);
+        return communicationHandler.performRequest(getDiscussionsByAuthorBeforeDateRW(author, permlink, date, limit, -1), Discussion.class);
+
     }
 
     @Override
     public GlobalProperties getDynamicGlobalProperties() throws SteemCommunicationException {
-        return steemJ.getDynamicGlobalProperties();
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
+        requestObject.setApiMethod(RequestMethods.GET_DYNAMIC_GLOBAL_PROPERTIES);
+        requestObject.setSteemApi(SteemApis.DATABASE_API);
+        String[] parameters = {};
+        requestObject.setAdditionalParameters(parameters);
+
+        return communicationHandler.performRequest(requestObject, GlobalProperties.class).get(0);
     }
 
     @Override
@@ -319,11 +421,6 @@ class GolosDatabaseMethodsHandler implements DatabaseMethods {
     @Override
     public String getHardforkVersion() throws SteemCommunicationException {
         return steemJ.getHardforkVersion();
-    }
-
-    @Override
-    public List<LiquidityBalance> getLiquidityQueue(AccountName accoutName, int limit) throws SteemCommunicationException {
-        return steemJ.getLiquidityQueue(accoutName, limit);
     }
 
     @Override
@@ -357,12 +454,24 @@ class GolosDatabaseMethodsHandler implements DatabaseMethods {
 
     @Override
     public List<ExtendedLimitOrder> getOpenOrders(AccountName accountName) throws SteemCommunicationException {
-        return steemJ.getOpenOrders(accountName);
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
+        requestObject.setApiMethod(RequestMethods.GET_OPEN_ORDERS);
+        requestObject.setSteemApi(SteemApis.DATABASE_API);
+        String[] parameters = {accountName.getName()};
+        requestObject.setAdditionalParameters(parameters);
+
+        return communicationHandler.performRequest(requestObject, ExtendedLimitOrder.class);
     }
 
     @Override
     public OrderBook getOrderBookUsingDatabaseApi(int limit) throws SteemCommunicationException {
-        return steemJ.getOrderBookUsingDatabaseApi(limit);
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
+        requestObject.setApiMethod(RequestMethods.GET_ORDER_BOOK);
+        requestObject.setSteemApi(SteemApis.DATABASE_API);
+        String[] parameters = {String.valueOf(limit)};
+        requestObject.setAdditionalParameters(parameters);
+
+        return communicationHandler.performRequest(requestObject, OrderBook.class).get(0);
     }
 
     @Override
@@ -421,12 +530,41 @@ class GolosDatabaseMethodsHandler implements DatabaseMethods {
 
     @Override
     public String getTransactionHex(SignedTransaction signedTransaction) throws SteemCommunicationException {
-        return steemJ.getTransactionHex(signedTransaction);
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
+        requestObject.setApiMethod(RequestMethods.GET_TRANSACTION_HEX);
+        requestObject.setSteemApi(SteemApis.DATABASE_API);
+
+        Object[] parameters = {signedTransaction};
+        requestObject.setAdditionalParameters(parameters);
+
+        return communicationHandler.performRequest(requestObject, String.class).get(0);
+    }
+
+    @Nonnull
+    @Override
+    public List<TrendingTag> getTagsUsedByAuthor(@Nonnull AccountName author) throws SteemCommunicationException {
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
+        requestObject.setApiMethod(RequestMethods.GET_TAGS_USED_BY_AUTHOR);
+        if (Golos4J.getInstance().getCurrentHardforkVersion() == Golos4J.HardForkVersion.HF_17)
+            requestObject.setSteemApi(SteemApis.SOCIAL_NETWORK);
+        else requestObject.setSteemApi(SteemApis.TAGS);
+        String[] parameters = {author.getName()};
+        requestObject.setAdditionalParameters(parameters);
+
+        return communicationHandler.performRequest(requestObject, TrendingTag.class);
     }
 
     @Override
     public List<TrendingTag> getTrendingTags(String firstTag, int limit) throws SteemCommunicationException {
-        return steemJ.getTrendingTags(firstTag, limit);
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
+        requestObject.setApiMethod(RequestMethods.GET_TRENDING_TAGS);
+        if (Golos4J.getInstance().getCurrentHardforkVersion() == Golos4J.HardForkVersion.HF_17)
+            requestObject.setSteemApi(SteemApis.SOCIAL_NETWORK);
+        else requestObject.setSteemApi(SteemApis.TAGS);
+        String[] parameters = {firstTag, String.valueOf(limit)};
+        requestObject.setAdditionalParameters(parameters);
+
+        return communicationHandler.performRequest(requestObject, TrendingTag.class);
     }
 
     @Override
@@ -500,7 +638,13 @@ class GolosDatabaseMethodsHandler implements DatabaseMethods {
 
     @Override
     public List<String> lookupAccounts(String pattern, int limit) throws SteemCommunicationException {
-        return steemJ.lookupAccounts(pattern, limit);
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
+        requestObject.setApiMethod(RequestMethods.LOOKUP_ACCOUNTS);
+        requestObject.setSteemApi(SteemApis.DATABASE_API);
+        String[] parameters = {pattern, String.valueOf(limit)};
+        requestObject.setAdditionalParameters(parameters);
+
+        return communicationHandler.performRequest(requestObject, String.class);
     }
 
     @Nonnull
@@ -535,7 +679,13 @@ class GolosDatabaseMethodsHandler implements DatabaseMethods {
 
     @Override
     public RewardFund getRewardFund(RewardFundType rewordFundType) throws SteemCommunicationException {
-        return steemJ.getRewardFund(rewordFundType);
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
+        requestObject.setApiMethod(RequestMethods.GET_REWARD_FUND);
+        requestObject.setSteemApi(SteemApis.DATABASE_API);
+        Object[] parameters = {rewordFundType.name().toLowerCase()};
+        requestObject.setAdditionalParameters(parameters);
+
+        return communicationHandler.performRequest(requestObject, RewardFund.class).get(0);
     }
 
     @Override

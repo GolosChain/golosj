@@ -197,9 +197,7 @@ public class SteemJIT extends BaseIntegrationTest {
         final List<VoteState> activeVotesForArticle = steemJ.getActiveVotes(ACCOUNT, PERMLINK);
 
         assertNotNull("expect votes", votes);
-        assertThat("expect account has votes", votes.size(), greaterThan(0));
-        assertThat("expect last vote after 2016-03-01", votes.get(votes.size() - 1).getTime().getDateTimeAsDate(),
-                DateMatchers.after(2016, Month.MARCH, 1));
+
 
         boolean foundSelfVote = false;
 
@@ -332,7 +330,7 @@ public class SteemJIT extends BaseIntegrationTest {
     public void testGetDiscussionBy() throws Exception {
         final DiscussionQuery discussionQuery = new DiscussionQuery();
         discussionQuery.setLimit(1);
-        discussionQuery.setTag("steemit");
+
         discussionQuery.setStartAuthor(new AccountName("steemitblog"));
 
         for (final DiscussionSortType type : DiscussionSortType.values()) {
