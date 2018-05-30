@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
-import com.sun.istack.internal.Nullable;
+import javax.annotation.Nullable;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.math.BigInteger;

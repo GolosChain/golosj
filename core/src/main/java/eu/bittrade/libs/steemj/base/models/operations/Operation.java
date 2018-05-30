@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import eu.bittrade.libs.steemj.base.models.AccountMetadataUpdateOperation;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -95,7 +96,8 @@ import eu.bittrade.libs.steemj.interfaces.Validatable;
         @Type(value = LiquidityRewardOperation.class, name = "liquidity_reward"),
         @Type(value = ReturnVestingDelegationOperation.class, name = "return_vesting_delegation"),
         @Type(value = ShutdownWitnessOpeartion.class, name = "shutdown_witness"),
-        @Type(value = ProducerRewardOperation.class, name = "producer_reward") })
+        @Type(value = ProducerRewardOperation.class, name = "producer_reward"),
+        @Type(value = AccountMetadataUpdateOperation.class, name = "account_metadata")})
 public abstract class Operation implements ByteTransformable, Validatable {
     /**
      * This field is used to store the operation type.

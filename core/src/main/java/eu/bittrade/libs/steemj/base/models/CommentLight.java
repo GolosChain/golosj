@@ -2,7 +2,8 @@ package eu.bittrade.libs.steemj.base.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.sun.istack.internal.Nullable;
+
+import javax.annotation.Nullable;
 
 /**
  * Created by yuri on 27.11.17.
@@ -11,8 +12,8 @@ import com.sun.istack.internal.Nullable;
 public class CommentLight {
     // Original type is comment_id_type.
     long id;
-    @Nullable
-    @Deprecated
+
+
     String category;
     @JsonProperty("parent_author")
     String parentAuthor;
@@ -81,8 +82,12 @@ public class CommentLight {
     }
 
     @Nullable
-    public long getActiveVotesCount() {
+    public Long getActiveVotesCount() {
         return activeVotesCount;
+    }
+
+    public void setActiveVotesCount(@Nullable Long activeVotesCount) {
+        this.activeVotesCount = activeVotesCount;
     }
 
     public void setActiveVotesCount(long activeVotesCount) {
@@ -158,8 +163,6 @@ public class CommentLight {
         this.id = id;
     }
 
-    @Nullable
-    @Deprecated
     public String getCategory() {
         return category;
     }

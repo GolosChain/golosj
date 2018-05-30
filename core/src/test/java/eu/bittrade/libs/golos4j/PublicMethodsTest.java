@@ -38,7 +38,7 @@ public class PublicMethodsTest {
     private static final Permlink TESTNET_PERMLINK = new Permlink("qwerty");
     public static final Permlink PERMLINK = new Permlink("kriptopirozhkovo-khardfokovyi-post");
     private Golos4J golos4J;
-    private boolean useTestnet = false;
+    private boolean useTestnet = true;
 
     @Before
     public void setup() {
@@ -542,6 +542,9 @@ public class PublicMethodsTest {
 
     @Test
     public void getFeedTest() throws Exception {
+        DiscussionQuery query1 = DiscussionQuery.newBuilder().setLimit(20).setTruncateBody(0).build();
+        List<DiscussionLight> discussions1 = golos4J.getDatabaseMethods().getDiscussionsLightBy(query1, DiscussionSortType.GET_DISCUSSIONS_BY_TRENDING);
+
         if (useTestnet) {
             DiscussionQuery query = new DiscussionQuery();
             query.setSelectAuthors(Collections.singletonList(new AccountName("qwerty")));

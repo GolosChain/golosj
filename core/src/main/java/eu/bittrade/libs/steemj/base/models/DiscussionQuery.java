@@ -3,7 +3,7 @@ package eu.bittrade.libs.steemj.base.models;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.sun.istack.internal.Nullable;
+import javax.annotation.Nullable;
 
 import javax.annotation.Nonnull;
 import java.util.Collections;

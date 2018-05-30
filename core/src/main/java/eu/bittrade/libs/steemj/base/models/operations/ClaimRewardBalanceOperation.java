@@ -1,29 +1,23 @@
 package eu.bittrade.libs.steemj.base.models.operations;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.security.InvalidParameterException;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.lang3.builder.ToStringBuilder;
-
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Asset;
 import eu.bittrade.libs.steemj.enums.AssetSymbolType;
-import eu.bittrade.libs.steemj.enums.OperationType;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.enums.ValidationType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.interfaces.SignatureObject;
-import eu.bittrade.libs.steemj.util.SteemJUtils;
+
+import java.security.InvalidParameterException;
+import java.util.List;
+import java.util.Map;
 
 /**
  * This class represents the Steem "claim_reward_balance_operation" object.
- * 
+ * UNSUPPORTED by GOLOS
+ *
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class ClaimRewardBalanceOperation extends Operation {
@@ -38,25 +32,20 @@ public class ClaimRewardBalanceOperation extends Operation {
 
     /**
      * Create a new and empty claim reward balance operation.
-     * 
-     * @param account
-     *            The account to claim the rewards for (see
-     *            {@link #setAccount(AccountName)}).
-     * @param rewardSteem
-     *            The amount of Steem to claim (see
-     *            {@link #setRewardSteem(Asset)}).
-     * @param rewardSbd
-     *            The amount of SBD to claim (see {@link #setRewardSbd(Asset)}).
-     * @param rewardVests
-     *            The amount of VESTS to claim (see
-     *            {@link #setRewardVests(Asset)}).
-     * @throws InvalidParameterException
-     *             If one of the parameters does not fulfill the requirements.
+     *
+     * @param account     The account to claim the rewards for (see
+     *                    {@link #setAccount(AccountName)}).
+     * @param rewardSteem The amount of Steem to claim (see
+     *                    {@link #setRewardSteem(Asset)}).
+     * @param rewardSbd   The amount of SBD to claim (see {@link #setRewardSbd(Asset)}).
+     * @param rewardVests The amount of VESTS to claim (see
+     *                    {@link #setRewardVests(Asset)}).
+     * @throws InvalidParameterException If one of the parameters does not fulfill the requirements.
      */
     @JsonCreator
     public ClaimRewardBalanceOperation(@JsonProperty("account") AccountName account,
-            @JsonProperty("reward_steem") Asset rewardSteem, @JsonProperty("reward_sbd") Asset rewardSbd,
-            @JsonProperty("reward_vests") Asset rewardVests) {
+                                       @JsonProperty("reward_steem") Asset rewardSteem, @JsonProperty("reward_sbd") Asset rewardSbd,
+                                       @JsonProperty("reward_vests") Asset rewardVests) {
         super(false);
 
         this.setAccount(account);
@@ -67,7 +56,7 @@ public class ClaimRewardBalanceOperation extends Operation {
 
     /**
      * Get the account the reward should be collected for.
-     * 
+     *
      * @return The account name.
      */
     public AccountName getAccount() {
@@ -78,11 +67,9 @@ public class ClaimRewardBalanceOperation extends Operation {
      * Set the account the reward should be collected for. <b>Notice:</b> The
      * private posting key of this account needs to be stored in the key
      * storage.
-     * 
-     * @param account
-     *            The account name.
-     * @throws InvalidParameterException
-     *             If the <code>account</code> is null.
+     *
+     * @param account The account name.
+     * @throws InvalidParameterException If the <code>account</code> is null.
      */
     public void setAccount(AccountName account) {
         if (account == null) {
@@ -94,7 +81,7 @@ public class ClaimRewardBalanceOperation extends Operation {
 
     /**
      * Get the amount of Steem that should be collected.
-     * 
+     *
      * @return The amount of Steem.
      */
     public Asset getRewardSteem() {
@@ -107,13 +94,11 @@ public class ClaimRewardBalanceOperation extends Operation {
      * the available amount by requesting the Account information using
      * {@link eu.bittrade.libs.steemj.SteemJ#getAccounts(List)
      * getAccounts(List)} method.
-     * 
-     * @param rewardSteem
-     *            The amount of Steem to collect.
-     * @throws InvalidParameterException
-     *             If the provided <code>rewardSteem</code> is null, does not
-     *             have the symbol type STEEM or the amount to claim is
-     *             negative.
+     *
+     * @param rewardSteem The amount of Steem to collect.
+     * @throws InvalidParameterException If the provided <code>rewardSteem</code> is null, does not
+     *                                   have the symbol type STEEM or the amount to claim is
+     *                                   negative.
      */
     public void setRewardSteem(Asset rewardSteem) {
         if (rewardSteem == null) {
@@ -129,7 +114,7 @@ public class ClaimRewardBalanceOperation extends Operation {
 
     /**
      * Get the amount of Steem Doller that should be collected.
-     * 
+     *
      * @return The amount of Steem Doller.
      */
     public Asset getRewardSbd() {
@@ -142,12 +127,10 @@ public class ClaimRewardBalanceOperation extends Operation {
      * can check the available amount by requesting the Account information
      * using {@link eu.bittrade.libs.steemj.SteemJ#getAccounts(List)
      * getAccounts(List)} method.
-     * 
-     * @param rewardSbd
-     *            The amount of Steem Dollers to collect.
-     * @throws InvalidParameterException
-     *             If the provided <code>rewardSbd</code> is null, does not have
-     *             the symbol type SBD or the amount to claim is negative.
+     *
+     * @param rewardSbd The amount of Steem Dollers to collect.
+     * @throws InvalidParameterException If the provided <code>rewardSbd</code> is null, does not have
+     *                                   the symbol type SBD or the amount to claim is negative.
      */
     public void setRewardSbd(Asset rewardSbd) {
         if (rewardSbd == null) {
@@ -163,7 +146,7 @@ public class ClaimRewardBalanceOperation extends Operation {
 
     /**
      * Get the amount of Vests that should be collected.
-     * 
+     *
      * @return The amount of Vests.
      */
     public Asset getRewardVests() {
@@ -176,13 +159,11 @@ public class ClaimRewardBalanceOperation extends Operation {
      * the available amount by requesting the Account information using
      * {@link eu.bittrade.libs.steemj.SteemJ#getAccounts(List)
      * getAccounts(List)} method.
-     * 
-     * @param rewardVests
-     *            The amount of Vests to collect.
-     * @throws InvalidParameterException
-     *             If the provided <code>rewardVests</code> is null, does not
-     *             have the symbol type VESTS or the amount to claim is
-     *             negative.
+     *
+     * @param rewardVests The amount of Vests to collect.
+     * @throws InvalidParameterException If the provided <code>rewardVests</code> is null, does not
+     *                                   have the symbol type VESTS or the amount to claim is
+     *                                   negative.
      */
     public void setRewardVests(Asset rewardVests) {
         if (rewardVests == null) {
@@ -217,7 +198,8 @@ public class ClaimRewardBalanceOperation extends Operation {
 
     @Override
     public byte[] toByteArray() throws SteemInvalidTransactionException {
-        try (ByteArrayOutputStream serializedClaimRewardOperation = new ByteArrayOutputStream()) {
+        return new byte[0];
+     /*   try (ByteArrayOutputStream serializedClaimRewardOperation = new ByteArrayOutputStream()) {
             serializedClaimRewardOperation.write(
                     SteemJUtils.transformIntToVarIntByteArray(OperationType.CLAIM_REWARD_BALANCE_OPERATION.ordinal()));
             serializedClaimRewardOperation.write(this.getAccount().toByteArray());
@@ -229,7 +211,7 @@ public class ClaimRewardBalanceOperation extends Operation {
         } catch (IOException e) {
             throw new SteemInvalidTransactionException(
                     "A problem occured while transforming the operation into a byte array.", e);
-        }
+        }*/
     }
 
     @Override

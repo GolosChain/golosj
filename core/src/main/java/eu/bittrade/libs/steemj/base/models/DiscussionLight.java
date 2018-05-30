@@ -18,28 +18,28 @@ import eu.bittrade.libs.steemj.util.ArrayMap;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DiscussionLight extends CommentLight {
-    public String url;
+    String url;
     @JsonProperty("root_title")
-    public String rootTitle;
+    String rootTitle;
     @JsonProperty("pending_payout_value")
-    public Asset pendingPayoutValue;
+    Asset pendingPayoutValue;
     @JsonProperty("total_pending_payout_value")
-    public Asset totalPendingPayoutValue;
+    Asset totalPendingPayoutValue;
     @JsonProperty("active_votes")
     @JsonDeserialize(using = VoteLightDeserializer.class)
-    public List<VoteLight> votes;
+    List<VoteLight> votes;
     @JsonProperty("author_reputation")
-    public long authorReputation;
+    long authorReputation;
     @JsonProperty("body_length")
-    public Long bodyLength;
+    Long bodyLength;
     @JsonProperty("reblogged_by")
-    public List<String> rebloggedBy;
+    List<String> rebloggedBy;
     @JsonProperty("first_reblogged_by")
     @Nullable
-    public String firstRebloggedBy;
+    String firstRebloggedBy;
     @JsonProperty("first_reblogged_on")
     @Nullable
-    public Date firstRebloggedOn;
+    Date firstRebloggedOn;
     @JsonProperty("vote_rshares")
     public long voteRshares;
 
@@ -150,6 +150,8 @@ public class DiscussionLight extends CommentLight {
     public void setVoteRshares(long voteRshares) {
         this.voteRshares = voteRshares;
     }
+
+
 
     @Override
     public boolean equals(Object o) {

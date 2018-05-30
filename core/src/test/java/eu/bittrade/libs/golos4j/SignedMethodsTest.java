@@ -99,13 +99,9 @@ public class SignedMethodsTest extends TestCase {
         if (useTestNet) {
             GolosProfile golosProfile = new GolosProfile();
             String newName = UUID.randomUUID().toString();
-            golosProfile.setShownName(newName);
-            String s = "{\"profile\":" + CommunicationHandler.getObjectMapper().writeValueAsString(golosProfile) + "}";
-            AccountUpdateOperation aoo = new AccountUpdateOperation(TESTNET_ACCOUNT, null,
-                    null,
-                    null,
-                    null,
-                    s);
+            golosProfile.setAbout(newName);
+
+            Operation aoo = new AccountMetadataUpdateOperation(TESTNET_ACCOUNT,golosProfile);
 
             List<Operation> operations = new ArrayList<>();
             operations.add(aoo);
@@ -138,6 +134,7 @@ public class SignedMethodsTest extends TestCase {
                     null);
 
             signedTransaction.sign();
+            golos4J.getNetworkBroadcastMethods().broadcastTransaction(signedTransaction);
         }
     }
 }

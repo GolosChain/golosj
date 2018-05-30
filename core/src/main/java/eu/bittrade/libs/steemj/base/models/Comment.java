@@ -1,24 +1,20 @@
 package eu.bittrade.libs.steemj.base.models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.math.BigInteger;
-import java.util.Arrays;
 import java.util.List;
 
-import com.sun.istack.internal.Nullable;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
+import javax.annotation.Nullable;
 
 /**
  * This class represents the Steem "comment_api_obj".
- * 
+ *
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class Comment {
     // Original type is comment_id_type.
     private long id;
-    @Nullable
-    @Deprecated
     private String category;
     @JsonProperty("parent_author")
     private AccountName parentAuthor;
@@ -98,8 +94,9 @@ public class Comment {
     // > beneficiaries;
     @JsonProperty("beneficiaries")
     private List<Beneficiary> beneficiaries;
-    @JsonProperty
+
     @Nullable
+    @JsonProperty("active_votes_count")
     private Long activeVotesCount;
 
     /**
@@ -148,6 +145,9 @@ public class Comment {
         this.beneficiaries = beneficiaries;
         this.activeVotesCount = activeVotesCount;
     }
+
+
+
     @Nullable
     public Long getActiveVotesCount() {
         return activeVotesCount;
@@ -310,10 +310,8 @@ public class Comment {
 
     /**
      * @return the category
-     * deprecated since HF_18
+     *
      */
-    @Nullable
-    @Deprecated
     public String getCategory() {
         return category;
     }
@@ -393,24 +391,30 @@ public class Comment {
         if (netVotes != comment.netVotes) return false;
         if (rootComment != comment.rootComment) return false;
         if (percentSteemDollars != comment.percentSteemDollars) return false;
-        if (category != null ? !category.equals(comment.category) : comment.category != null) return false;
+        if (category != null ? !category.equals(comment.category) : comment.category != null)
+            return false;
         if (parentAuthor != null ? !parentAuthor.equals(comment.parentAuthor) : comment.parentAuthor != null)
             return false;
         if (parentPermlink != null ? !parentPermlink.equals(comment.parentPermlink) : comment.parentPermlink != null)
             return false;
         if (author != null ? !author.equals(comment.author) : comment.author != null) return false;
-        if (permlink != null ? !permlink.equals(comment.permlink) : comment.permlink != null) return false;
+        if (permlink != null ? !permlink.equals(comment.permlink) : comment.permlink != null)
+            return false;
         if (title != null ? !title.equals(comment.title) : comment.title != null) return false;
         if (body != null ? !body.equals(comment.body) : comment.body != null) return false;
         if (jsonMetadata != null ? !jsonMetadata.equals(comment.jsonMetadata) : comment.jsonMetadata != null)
             return false;
-        if (lastUpdate != null ? !lastUpdate.equals(comment.lastUpdate) : comment.lastUpdate != null) return false;
-        if (created != null ? !created.equals(comment.created) : comment.created != null) return false;
+        if (lastUpdate != null ? !lastUpdate.equals(comment.lastUpdate) : comment.lastUpdate != null)
+            return false;
+        if (created != null ? !created.equals(comment.created) : comment.created != null)
+            return false;
         if (active != null ? !active.equals(comment.active) : comment.active != null) return false;
-        if (lastPayout != null ? !lastPayout.equals(comment.lastPayout) : comment.lastPayout != null) return false;
+        if (lastPayout != null ? !lastPayout.equals(comment.lastPayout) : comment.lastPayout != null)
+            return false;
         if (childrenRshares2 != null ? !childrenRshares2.equals(comment.childrenRshares2) : comment.childrenRshares2 != null)
             return false;
-        if (cashoutTime != null ? !cashoutTime.equals(comment.cashoutTime) : comment.cashoutTime != null) return false;
+        if (cashoutTime != null ? !cashoutTime.equals(comment.cashoutTime) : comment.cashoutTime != null)
+            return false;
         if (maxCashoutTime != null ? !maxCashoutTime.equals(comment.maxCashoutTime) : comment.maxCashoutTime != null)
             return false;
         if (totalVoteWeight != null ? !totalVoteWeight.equals(comment.totalVoteWeight) : comment.totalVoteWeight != null)
@@ -424,7 +428,8 @@ public class Comment {
             return false;
         if (allowReplies != null ? !allowReplies.equals(comment.allowReplies) : comment.allowReplies != null)
             return false;
-        if (allowVotes != null ? !allowVotes.equals(comment.allowVotes) : comment.allowVotes != null) return false;
+        if (allowVotes != null ? !allowVotes.equals(comment.allowVotes) : comment.allowVotes != null)
+            return false;
         if (allowCurationRewards != null ? !allowCurationRewards.equals(comment.allowCurationRewards) : comment.allowCurationRewards != null)
             return false;
         if (beneficiaries != null ? !beneficiaries.equals(comment.beneficiaries) : comment.beneficiaries != null)

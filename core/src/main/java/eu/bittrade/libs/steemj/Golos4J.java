@@ -29,7 +29,7 @@ import java.util.*;
 
 public class Golos4J {
 
-    enum HardForkVersion {
+    public  enum HardForkVersion {
         HF_17, HF_18
     }
 

@@ -1,0 +1,62 @@
+[
+  {
+    "id": 38,
+    "method": "call",
+    "jsonrpc": "2.0",
+    "params": [
+      "network_broadcast_api",
+      "broadcast_transaction",
+      [
+        {
+          "ref_block_num": 54570,
+          "ref_block_prefix": 738061416,
+          "expiration": "2018-05-28T08:43:57",
+          "operations": [
+            [
+              "account_update",
+              {
+                "account": "yuri-vlad",
+                "memo_key": "GLS7an3RjzAMH9u8ejzcMq2fcCVj7vj95uwBuDoYiPVz4JCM55a5u",
+                "json_metadata": "{\"profile\":{\"gender\":\"male\",\"location\":\"vladivostok\"}}"
+              }
+            ]
+          ],
+          "extensions": [],
+          "signatures": [
+            "1f3bf46de6bc611ac9ffe7af11c03180dba068251748661c87c6cebfd3768083cb04d9dcec6a7b20a419906ac641c3e49e22964d60e40542c577f92b77060d8a55"
+          ]
+        }
+      ]
+    ]
+  },
+  {
+    "id": 1,
+    "method": "call",
+    "params": [
+      "network_broadcast_api",
+      "broadcast_transaction",
+      [
+        {
+          "ref_block_num": 14106,
+          "ref_block_prefix": 540284444,
+          "expiration": "2018-05-28T11:10:09",
+          "operations": [
+            [
+              "account_metadata",
+              {
+                "accountName": "qwerty",
+                "account": "qwerty",
+                "json_metadata": "{\"profile\":{\"about\":\"3de4d49c-0fa1-43e1-81aa-3bbb94f60e89\"}}"
+              }
+            ]
+          ],
+          "extensions": [],
+          "signatures": [
+            "1b17b8df59ec407e4d758dd3e27c8c474a3dfead48e108f557717492a93d753f703707770aa825cc438dc080d59ed367235afef9c89d05813e8fa6445b1371994a"
+          ]
+        }
+      ]
+    ],
+    "jsonrpc": "2.0"
+  }
+]
