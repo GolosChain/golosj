@@ -260,7 +260,11 @@ public class SignedTransaction extends Transaction implements ByteTransformable,
                                                           PrivateKeyType privateKeyType) throws SteemInvalidTransactionException {
         ECKey privateKey;
         Map<PrivateKeyType, ECKey> keys = new HashMap<>();
-        for (ImmutablePair<PrivateKeyType, ECKey> pair : SteemJConfig.getInstance().getPrivateKeyStorage().getPrivateKeysPerAccounts().get(accountName)) {
+        List<ImmutablePair<PrivateKeyType, ECKey>> userKeys = SteemJConfig.getInstance().getPrivateKeyStorage().getPrivateKeysPerAccounts().get(accountName);
+        if (userKeys == null)throw new SteemInvalidTransactionException(
+                "Could not find private " + privateKeyType + " key for the user " + accountName.getName() + ".");
+
+        for (ImmutablePair<PrivateKeyType, ECKey> pair : userKeys) {
             keys.put(pair.getLeft(), pair.getRight());
         }
         if (keys.containsKey(privateKeyType)) privateKey = keys.get(privateKeyType);

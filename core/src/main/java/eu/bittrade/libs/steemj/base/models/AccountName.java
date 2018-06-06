@@ -1,11 +1,9 @@
 package eu.bittrade.libs.steemj.base.models;
 
-import java.security.InvalidParameterException;
-
-import org.apache.commons.lang3.builder.ToStringBuilder;
-
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+
+import java.security.InvalidParameterException;
 
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.interfaces.ByteTransformable;
@@ -14,7 +12,7 @@ import eu.bittrade.libs.steemj.util.SteemJUtils;
 
 /**
  * This class represents the Steem data type "account_name_type".
- * 
+ *
  * @author <a href="http://Steemit.com/@dez1337">dez1337</a>
  */
 public class AccountName implements ByteTransformable, SignatureObject {
@@ -29,12 +27,9 @@ public class AccountName implements ByteTransformable, SignatureObject {
 
     /**
      * Create an account name object containing the given account name.
-     * 
-     * @param name
-     *            The name for the account to set.
-     * @throws InvalidParameterException
-     *             If the account name is not valid (@see #setName(String)).
-     * 
+     *
+     * @param name The name for the account to set.
+     * @throws InvalidParameterException If the account name is not valid (@see #setName(String)).
      */
     @JsonCreator
     public AccountName(String name) {
@@ -43,7 +38,7 @@ public class AccountName implements ByteTransformable, SignatureObject {
 
     /**
      * Get the account name of this instance.
-     * 
+     *
      * @return The account name.
      */
     @JsonValue
@@ -53,27 +48,26 @@ public class AccountName implements ByteTransformable, SignatureObject {
 
     /**
      * Set the account name of this instance.
-     * 
-     * @param name
-     *            An account name in its String representation. The account name
-     *            can either be empty or needs to have a length between 3 and 16
-     *            characters. If provided, the account name has to follow
-     *            specific rules:
-     *            <ul>
-     *            <li>The account name must start with: a-z</li>
-     *            <li>Followed by: a-z,0-9,-</li>
-     *            <li>End with: a-z, 0-9</li>
-     *            </ul>
-     *            If the account name contains a '.', the rules above are only
-     *            checked for the characters before the first '.' occurred.
-     * @throws InvalidParameterException
-     *             If the account does not fulfill the requirements describes
-     *             above.
+     *
+     * @param name An account name in its String representation. The account name
+     *             can either be empty or needs to have a length between 3 and 16
+     *             characters. If provided, the account name has to follow
+     *             specific rules:
+     *             <ul>
+     *             <li>The account name must start with: a-z</li>
+     *             <li>Followed by: a-z,0-9,-</li>
+     *             <li>End with: a-z, 0-9</li>
+     *             </ul>
+     *             If the account name contains a '.', the rules above are only
+     *             checked for the characters before the first '.' occurred.
+     * @throws InvalidParameterException If the account does not fulfill the requirements describes
+     *                                   above.
      */
     public void setName(String name) {
         if (name == null) {
             this.name = "";
         } else {
+            if (name.length() > 1 && name.startsWith("@")) name = name.substring(1);
             if (!name.isEmpty()) {
                 if (name.length() < 3 || name.length() > 16) {
                     throw new InvalidParameterException(
@@ -123,7 +117,7 @@ public class AccountName implements ByteTransformable, SignatureObject {
      * {@code 0} characters.
      *
      * @return {@code true} if the account name has more than {@code 0},
-     *         otherwise {@code false}
+     * otherwise {@code false}
      */
     public boolean isEmpty() {
         return this.getName().isEmpty();
