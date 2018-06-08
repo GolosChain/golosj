@@ -38,7 +38,7 @@ public class PublicMethodsTest {
     private static final Permlink TESTNET_PERMLINK = new Permlink("qwerty");
     public static final Permlink PERMLINK = new Permlink("kriptopirozhkovo-khardfokovyi-post");
     private Golos4J golos4J;
-    private boolean useTestnet = true;
+    private boolean useTestnet = false;
 
     @Before
     public void setup() {
@@ -74,17 +74,20 @@ public class PublicMethodsTest {
 
     @Test
     public void getProfileImagePath() throws Exception {
-        List<AccountName> accountNames = new ArrayList<>();
-        accountNames.add(new AccountName("yuri-vlad"));
-        accountNames.add(new AccountName("yuri-vlad-second"));
 
-        Map<String, String> avatars = golos4J.getDatabaseMethods().getAccountAvatar(accountNames);
+            List<AccountName> accountNames = new ArrayList<>();
+            accountNames.add(new AccountName("yuri-vlad"));
+            accountNames.add(new AccountName("yuri-vlad-second"));
 
-        assertNotNull(avatars);
-        assertTrue(avatars.size() > 0);
-        System.out.println(avatars);
-        assertTrue(avatars.containsKey("yuri-vlad"));
-        assertTrue(avatars.containsKey("yuri-vlad-second"));
+            Map<String, String> avatars = golos4J.getDatabaseMethods().getAccountAvatar(accountNames);
+
+            assertNotNull(avatars);
+            assertTrue(avatars.size() > 0);
+            System.out.println(avatars);
+            assertTrue(avatars.containsKey("yuri-vlad"));
+            assertTrue(avatars.containsKey("yuri-vlad-second"));
+
+
     }
 
 
@@ -285,12 +288,15 @@ public class PublicMethodsTest {
         DiscussionQuery discussionQuery = new DiscussionQuery();
         discussionQuery.setLimit(1);
         discussionQuery.setTruncateBody(100);
+
         for (final DiscussionSortType type : sortTypes) {
             final List<DiscussionLight> discussions = golos4J.getDatabaseMethods().getDiscussionsLightBy(discussionQuery, type);
             assertNotNull("expect discussions", discussions);
             assertThat("expect discussions in " + type + " greater than zero", discussions.size(),
                     greaterThanOrEqualTo(0));
         }
+
+
     }
 
     @Test
