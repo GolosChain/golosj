@@ -176,14 +176,14 @@ public class CommunicationHandler extends Endpoint implements MessageHandler.Who
                 // TODO: Find a better solution for errors in general.
 
                 SteemResponseError responseError = new SteemResponseError(mapper.readValue(rawJsonResponse, SteemError.class));
-              /*  if (responseError.getError() != null &&
+                if (responseError.getError() != null &&
                         responseError.getError().getSteemErrorDetails() != null &&
                         responseError.getError().getSteemErrorDetails().getMessage() != null &&
                         responseError.getError().getSteemErrorDetails().getMessage().toLowerCase()
                                 .contains("unable to acquire read lock".toLowerCase())) {
                     System.out.println("unable to acquire read lock");
                     return performRequest(requestObject, targetClass);
-                } else*/ throw responseError;
+                } else throw responseError;
 
             } catch (IOException ex) {
                 ex.printStackTrace();
