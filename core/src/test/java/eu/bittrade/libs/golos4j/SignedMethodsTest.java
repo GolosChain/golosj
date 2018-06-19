@@ -26,7 +26,7 @@ import java.util.UUID;
  */
 @RunWith(JUnit38ClassRunner.class)
 public class SignedMethodsTest extends TestCase {
-    private boolean useTestNet = true;
+    private boolean useTestNet = false;
     private AccountName ACCOUNT = new AccountName("yuri-vlad-second");
     private String accountActiveKey = "5K7YbhJZqGnw3hYzsmH5HbDixWP5ByCBdnJxM5uoe9LuMX5rcZV";
     private AccountName TESTNET_ACCOUNT = new AccountName("qwerty");
@@ -41,6 +41,10 @@ public class SignedMethodsTest extends TestCase {
         if (useTestNet)
             golos4J.addAccountUsingMasterPassword(TESTNET_ACCOUNT, testnetAccPosting);
         else golos4J.addAccount(ACCOUNT, new ImmutablePair<>(PrivateKeyType.ACTIVE, accountActiveKey), true);
+    }
+    @Test
+    public void testCreatePost() throws Exception{
+        golos4J.getSimplifiedOperations().createPost("test title","test content", new String[]{"test"});
     }
 
     @Test
