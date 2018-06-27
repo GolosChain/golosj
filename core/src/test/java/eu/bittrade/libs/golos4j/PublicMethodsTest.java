@@ -88,6 +88,7 @@ public class PublicMethodsTest {
             assertTrue(avatars.containsKey("yuri-vlad-second"));
 
 
+
     }
 
 
