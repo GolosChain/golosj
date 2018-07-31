@@ -1,20 +1,20 @@
 package eu.bittrade.libs.golos4j;
 
 
-import eu.bittrade.libs.steemj.Golos4J;
-import eu.bittrade.libs.steemj.apis.follow.enums.FollowType;
-import eu.bittrade.libs.steemj.apis.follow.model.*;
-import eu.bittrade.libs.steemj.base.models.*;
-import eu.bittrade.libs.steemj.base.models.operations.AccountCreateOperation;
-import eu.bittrade.libs.steemj.base.models.operations.Operation;
-import eu.bittrade.libs.steemj.base.models.operations.VoteOperation;
-import eu.bittrade.libs.steemj.enums.AssetSymbolType;
-import eu.bittrade.libs.steemj.enums.DiscussionSortType;
-import eu.bittrade.libs.steemj.enums.PrivateKeyType;
-import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
-import eu.bittrade.libs.steemj.exceptions.SteemResponseError;
-import eu.bittrade.libs.steemj.util.AuthUtils;
-import eu.bittrade.libs.steemj.util.SteemJUtils;
+import eu.bittrade.libs.golosj.Golos4J;
+import eu.bittrade.libs.golosj.apis.follow.enums.FollowType;
+import eu.bittrade.libs.golosj.apis.follow.model.*;
+import eu.bittrade.libs.golosj.base.models.*;
+import eu.bittrade.libs.golosj.base.models.operations.AccountCreateOperation;
+import eu.bittrade.libs.golosj.base.models.operations.Operation;
+import eu.bittrade.libs.golosj.base.models.operations.VoteOperation;
+import eu.bittrade.libs.golosj.enums.AssetSymbolType;
+import eu.bittrade.libs.golosj.enums.DiscussionSortType;
+import eu.bittrade.libs.golosj.enums.PrivateKeyType;
+import eu.bittrade.libs.golosj.exceptions.SteemCommunicationException;
+import eu.bittrade.libs.golosj.exceptions.SteemResponseError;
+import eu.bittrade.libs.golosj.util.AuthUtils;
+import eu.bittrade.libs.golosj.util.SteemJUtils;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,8 +23,11 @@ import org.slf4j.LoggerFactory;
 
 import java.math.BigInteger;
 import java.util.*;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
-import static eu.bittrade.libs.steemj.enums.PrivateKeyType.POSTING;
+import static eu.bittrade.libs.golosj.enums.PrivateKeyType.POSTING;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.hamcrest.core.IsEqual.equalTo;
@@ -75,18 +78,17 @@ public class PublicMethodsTest {
     @Test
     public void getProfileImagePath() throws Exception {
 
-            List<AccountName> accountNames = new ArrayList<>();
-            accountNames.add(new AccountName("yuri-vlad"));
-            accountNames.add(new AccountName("yuri-vlad-second"));
+        List<AccountName> accountNames = new ArrayList<>();
+        accountNames.add(new AccountName("yuri-vlad"));
+        accountNames.add(new AccountName("yuri-vlad-second"));
 
-            Map<String, String> avatars = golos4J.getDatabaseMethods().getAccountAvatar(accountNames);
+        Map<String, String> avatars = golos4J.getDatabaseMethods().getAccountAvatar(accountNames);
 
-            assertNotNull(avatars);
-            assertTrue(avatars.size() > 0);
-            System.out.println(avatars);
-            assertTrue(avatars.containsKey("yuri-vlad"));
-            assertTrue(avatars.containsKey("yuri-vlad-second"));
-
+        assertNotNull(avatars);
+        assertTrue(avatars.size() > 0);
+        System.out.println(avatars);
+        assertTrue(avatars.containsKey("yuri-vlad"));
+        assertTrue(avatars.containsKey("yuri-vlad-second"));
 
 
     }
@@ -213,6 +215,7 @@ public class PublicMethodsTest {
 
     }
 
+
     @Test
     public void getBlogsPosts() throws SteemCommunicationException {
         if (useTestnet) {
@@ -260,15 +263,45 @@ public class PublicMethodsTest {
                         DiscussionSortType.GET_DISCUSSIONS_BY_CASHOUT
                 };
 
-        DiscussionQuery discussionQuery = new DiscussionQuery();
+        final DiscussionQuery discussionQuery = new DiscussionQuery();
         discussionQuery.setLimit(1);
-        discussionQuery.setTruncateBody(100);
-        for (final DiscussionSortType type : sortTypes) {
-            final List<Discussion> discussions = golos4J.getDatabaseMethods().getDiscussionsBy(discussionQuery, type);
-            assertNotNull("expect discussions", discussions);
-            assertThat("expect discussions in " + type + " greater than zero", discussions.size(),
-                    greaterThanOrEqualTo(0));
+        discussionQuery.setTruncateBody(1);
+
+        Executor executor = Executors.newFixedThreadPool(35);
+        final CountDownLatch latch = new CountDownLatch(1);
+        for (int i = 0; i < 10_000; i++) {
+            final int finalI = i;
+            final int finalI1 = i;
+            executor.execute(new Runnable() {
+                @Override
+                public void run() {
+                    System.out.println(" i = " + finalI);
+                    Random random = new Random();
+                    DiscussionSortType discussioType = sortTypes[random.nextInt(sortTypes.length)];
+                    DiscussionQuery query = new DiscussionQuery();
+                    query.setLimit(1);
+                    query.setTruncateBody(10);
+                    query.setVoteLimit(0);
+                    try {
+                        Discussion discussion = golos4J.getDatabaseMethods().getDiscussionsBy(discussionQuery, discussioType).get(0);
+                        if (discussioType == DiscussionSortType.GET_DISCUSSIONS_BY_HOT) {
+                            if (!discussion.getRootTitle().contains("Проект TAPEUR. Токен GOLOS. Из серии Жизнь Замечательных "))
+                                throw new RuntimeException("wring discussion type");
+                        } else if (discussioType == DiscussionSortType.GET_DISCUSSIONS_BY_TRENDING) {
+                            if (!discussion.getRootTitle().contains("Японцы пошли в атаку на Паркинсона"))
+                                throw new RuntimeException("wring discussion type");
+                        }
+                    } catch (SteemCommunicationException e) {
+                        throw new RuntimeException(e.getMessage());
+                    }
+                    if (finalI1 == 9_999) latch.countDown();
+                }
+            });
+
+
         }
+        latch.await();
+
     }
 
     @Test

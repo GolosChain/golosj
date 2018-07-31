@@ -19,7 +19,10 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.TimeZone;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -35,6 +38,7 @@ import javax.websocket.MessageHandler;
 import javax.websocket.Session;
 
 import eu.bittrade.libs.golosj.base.models.SignedBlockHeader;
+import eu.bittrade.libs.golosj.base.models.WithId;
 import eu.bittrade.libs.golosj.base.models.deserializer.SteemJNodeFactory;
 import eu.bittrade.libs.golosj.base.models.error.SteemError;
 import eu.bittrade.libs.golosj.base.models.serializer.BooleanSerializer;
@@ -56,12 +60,11 @@ public class CommunicationHandler extends Endpoint implements MessageHandler.Who
     private static final Logger LOGGER = LoggerFactory.getLogger(CommunicationHandler.class);
 
     private static ObjectMapper mapper = getObjectMapper();
-
-    private CountDownLatch responseCountDownLatch = new CountDownLatch(1);
     private ClientManager client;
     private Session session;
-    private String rawJsonResponse;
-    private RequestWrapperDTO lastRequestObject;
+    private volatile String rawJsonResponse;
+    private final Map<Long, CountDownLatch> locksMap = Collections.synchronizedMap(new HashMap<Long, CountDownLatch>());
+    private final Object globalLock = new Object();
 
     /**
      * Initialize the Connection Handler.
@@ -104,9 +107,7 @@ public class CommunicationHandler extends Endpoint implements MessageHandler.Who
     public void onClose(Session session, CloseReason closeReason) {
         LOGGER.error("Connection has been closed.", closeReason);
         LOGGER.error("reason  = " + closeReason);
-        if ((closeReason.getCloseCode().getCode() == 1006
-                && responseCountDownLatch != null
-                && responseCountDownLatch.getCount() == 1) || closeReason.getCloseCode().getCode() == 1000)
+        if (closeReason.getCloseCode().getCode() == 1006 || closeReason.getCloseCode().getCode() == 1000)
             try {
                 connect();
             } catch (Exception e) {
@@ -139,9 +140,12 @@ public class CommunicationHandler extends Endpoint implements MessageHandler.Who
     public <T> List<T> performRequest(RequestWrapperDTO requestObject, Class<T> targetClass)
             throws SteemCommunicationException {
         if (session == null || !session.isOpen()) {
-            connect();
+            synchronized (globalLock) {
+                if (session == null || !session.isOpen()) {
+                    connect();
+                }
+            }
         }
-
         try {
             LOGGER.debug(requestObject.toString());
 
@@ -229,20 +233,22 @@ public class CommunicationHandler extends Endpoint implements MessageHandler.Who
     private void sendMessageSynchronously(RequestWrapperDTO requestObject)
             throws IOException, EncodeException, SteemTimeoutException, InterruptedException {
         System.out.println("send message sync from " + Thread.currentThread().getName());
-        responseCountDownLatch = new CountDownLatch(1);
-        lastRequestObject = requestObject;
+
+        CountDownLatch latch = new CountDownLatch(1);
+
+        locksMap.put(requestObject.getId(), latch);
 
         session.getBasicRemote().sendObject(requestObject);
 
         // Wait until we received a response from the Server.
         if (SteemJConfig.getInstance().getResponseTimeout() == 0) {
-            responseCountDownLatch.await();
+            latch.await();
         } else {
             long timeout = 25_000L;
             int trysCount = (int) (SteemJConfig.getInstance().getResponseTimeout() / timeout);
             for (int i = 0; i < trysCount; i++) {
                 try {
-                    if (!responseCountDownLatch.await(timeout, TimeUnit.MILLISECONDS)) {
+                    if (!latch.await(timeout, TimeUnit.MILLISECONDS)) {
                         session.close();
                         session.getBasicRemote().sendObject(requestObject);
                     } else {
@@ -272,12 +278,26 @@ public class CommunicationHandler extends Endpoint implements MessageHandler.Who
     @Override
     public void onMessage(String message) {
         // Check if we are waiting for an answer.
-        if (responseCountDownLatch.getCount() > 0) {
+
+        if (locksMap.size() > 0) {
             LOGGER.debug("Raw JSON response: {}", message);
 
             this.rawJsonResponse = message;
 
-            responseCountDownLatch.countDown();
+
+            WithId withId = null;
+            try {
+                withId = mapper.readValue(message, WithId.class);
+                CountDownLatch latch = locksMap.get(withId.getResponseId());
+                if (latch != null) {
+                    locksMap.remove(withId.getResponseId());
+                    latch.countDown();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+
         } else {
             // A message has been send while we are not waiting for it - It can
             // be a callback.

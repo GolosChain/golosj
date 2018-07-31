@@ -145,7 +145,7 @@ class SteemJ {
      *                                     <li>If the Server returned an error object.</li>
      *                                     </ul>
      */
-    public GlobalProperties getDynamicGlobalProperties() throws SteemCommunicationException {
+    public GlobalProperties  getDynamicGlobalProperties() throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_DYNAMIC_GLOBAL_PROPERTIES);
         requestObject.setSteemApi(SteemApis.DATABASE_API);

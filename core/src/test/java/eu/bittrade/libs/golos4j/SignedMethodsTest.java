@@ -1,14 +1,16 @@
 package eu.bittrade.libs.golos4j;
 
-import eu.bittrade.libs.steemj.Golos4J;
-import eu.bittrade.libs.steemj.base.models.*;
-import eu.bittrade.libs.steemj.base.models.operations.AccountUpdateOperation;
-import eu.bittrade.libs.steemj.base.models.operations.Operation;
-import eu.bittrade.libs.steemj.base.models.operations.VoteOperation;
-import eu.bittrade.libs.steemj.communication.CommunicationHandler;
-import eu.bittrade.libs.steemj.enums.DiscussionSortType;
-import eu.bittrade.libs.steemj.enums.PrivateKeyType;
-import eu.bittrade.libs.steemj.util.ImmutablePair;
+import eu.bittrade.libs.golosj.Golos4J;
+import eu.bittrade.libs.golosj.base.models.*;
+import eu.bittrade.libs.golosj.base.models.operations.AccountUpdateOperation;
+import eu.bittrade.libs.golosj.base.models.operations.Operation;
+import eu.bittrade.libs.golosj.base.models.operations.VoteOperation;
+import eu.bittrade.libs.golosj.communication.CommunicationHandler;
+import eu.bittrade.libs.golosj.enums.DiscussionSortType;
+import eu.bittrade.libs.golosj.enums.PrivateKeyType;
+import eu.bittrade.libs.golosj.exceptions.SteemCommunicationException;
+import eu.bittrade.libs.golosj.exceptions.SteemInvalidTransactionException;
+import eu.bittrade.libs.golosj.util.ImmutablePair;
 import junit.framework.TestCase;
 import org.junit.Before;
 import org.junit.Test;
