@@ -345,6 +345,7 @@ public class SteemJUtils {
      * @return The signed Transaction.
      */
     public static byte[] createSignedTransaction(int keyType, ECKey.ECDSASignature signature, ECKey requiredPrivateKey) {
+
         int headerByte = keyType + 27 + (requiredPrivateKey.isCompressed() ? 4 : 0);
 
         byte[] signedTransaction = new byte[65];

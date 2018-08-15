@@ -3,25 +3,6 @@ package eu.bittrade.libs.golosj.base.models;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.annotations.VisibleForTesting;
-
-import org.bitcoinj.core.ECKey;
-import org.bitcoinj.core.ECKey.ECDSASignature;
-import org.bitcoinj.core.Sha256Hash;
-import org.bitcoinj.core.Utils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import javax.annotation.Nullable;
-
 import eu.bittrade.libs.golosj.base.models.operations.Operation;
 import eu.bittrade.libs.golosj.configuration.SteemJConfig;
 import eu.bittrade.libs.golosj.enums.PrivateKeyType;
@@ -30,6 +11,22 @@ import eu.bittrade.libs.golosj.interfaces.ByteTransformable;
 import eu.bittrade.libs.golosj.interfaces.SignatureObject;
 import eu.bittrade.libs.golosj.util.ImmutablePair;
 import eu.bittrade.libs.golosj.util.SteemJUtils;
+import org.bitcoinj.core.ECKey;
+import org.bitcoinj.core.ECKey.ECDSASignature;
+import org.bitcoinj.core.Sha256Hash;
+import org.bitcoinj.core.Utils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.annotation.Nullable;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * This class represents a Steem "signed_transaction" object.
@@ -181,6 +178,8 @@ public class SignedTransaction extends Transaction implements ByteTransformable,
             boolean isCanonical = false;
 
             Sha256Hash messageAsHash;
+
+
             while (!isCanonical) {
                 try {
                     messageAsHash = Sha256Hash.wrap(Sha256Hash.hash(this.toByteArray(chainId)));
@@ -191,12 +190,13 @@ public class SignedTransaction extends Transaction implements ByteTransformable,
 
                 ECDSASignature signature = requiredPrivateKey.sign(messageAsHash);
 
-                /*
+
+                /*   *//*
                  * Use 0 as the key type until the signature is canonical as the
                  * key type does not effect the canonical test. The correct key
                  * type will be tested later on. This technique improves the
                  * performance (thanks to ray66rus).
-                 */
+                 * */
                 if (isCanonical(createSignedTransaction(0, signature, requiredPrivateKey))) {
                     this.getExpirationDate().setDateTime(this.getExpirationDate().getDateTimeAsTimestamp() + 2);
                 } else {
@@ -208,6 +208,25 @@ public class SignedTransaction extends Transaction implements ByteTransformable,
                 }
             }
         }
+    }
+
+    public String createSignWithoutCanonicalTest() throws SteemInvalidTransactionException {
+        ECKey requiredPrivateKey = getRequiredSignatureKeys().get(0);
+        Sha256Hash messageAsHash;
+
+        try {
+            messageAsHash = Sha256Hash.wrap(Sha256Hash.hash(this.toByteArray(SteemJConfig.getInstance().getChainId())));
+        } catch (SteemInvalidTransactionException e) {
+            throw new SteemInvalidTransactionException(
+                    "The required encoding is not supported by your platform.", e);
+        }
+
+        ECDSASignature signature = requiredPrivateKey.sign(messageAsHash);
+
+        int keyType = SteemJUtils.getKeyType(signature, messageAsHash, requiredPrivateKey);
+        return Utils.HEX
+                .encode(SteemJUtils.createSignedTransaction(keyType, signature, requiredPrivateKey));
+
     }
 
     /**
@@ -261,7 +280,7 @@ public class SignedTransaction extends Transaction implements ByteTransformable,
         ECKey privateKey;
         Map<PrivateKeyType, ECKey> keys = new HashMap<>();
         List<ImmutablePair<PrivateKeyType, ECKey>> userKeys = SteemJConfig.getInstance().getPrivateKeyStorage().getPrivateKeysPerAccounts().get(accountName);
-        if (userKeys == null)throw new SteemInvalidTransactionException(
+        if (userKeys == null) throw new SteemInvalidTransactionException(
                 "Could not find private " + privateKeyType + " key for the user " + accountName.getName() + ".");
 
         for (ImmutablePair<PrivateKeyType, ECKey> pair : userKeys) {

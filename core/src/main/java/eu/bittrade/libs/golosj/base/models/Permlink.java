@@ -72,7 +72,7 @@ public class Permlink implements ByteTransformable {
             if (!link.isEmpty()) {
                 if (link.length() < 0 || link.length() > 256) {
                     this.link = link.substring(256);
-                } else if (!link.matches("^[a-z0-9\\-]{0,256}")) {
+                } else if (!link.matches("^[a-zA-Z0-9\\-]{0,256}")) {
                     throw new InvalidParameterException("current link is " + link + " "+
                             "The provided permlink contains invalid characters. Only 'a-z', '0-9' and '-' are allowed. "
                                     + "If copied from steemit.com, the permlink is only the part of the URL after the last '/'.");

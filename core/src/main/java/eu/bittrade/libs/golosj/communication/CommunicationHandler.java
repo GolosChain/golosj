@@ -147,7 +147,7 @@ public class CommunicationHandler extends Endpoint implements MessageHandler.Who
             }
         }
         try {
-            LOGGER.debug(requestObject.toString());
+            System.out.println(requestObject.toString());
 
             sendMessageSynchronously(requestObject);
 
@@ -169,6 +169,9 @@ public class CommunicationHandler extends Endpoint implements MessageHandler.Who
 
             // Make sure that the inner result object has the correct type.
             JavaType type = mapper.getTypeFactory().constructCollectionType(List.class, targetClass);
+
+            System.out.println(rawJsonResponse.length() > 200 ? rawJsonResponse.substring(0, 200) : rawJsonResponse);
+
 
             return mapper.convertValue(response.getResult(), type);
         } catch (JsonParseException | JsonMappingException e) {
