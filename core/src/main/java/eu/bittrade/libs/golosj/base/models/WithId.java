@@ -6,13 +6,20 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class WithId {
     @JsonProperty("id")
-    private long responseId;
+    private long id;
 
-    public long getResponseId() {
-        return responseId;
+    public long getId() {
+        return id;
     }
 
-    public void setResponseId(long responseId) {
-        this.responseId = responseId;
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    @Override
+    public String toString() {
+        return "WithId{" +
+                "id=" + id +
+                '}';
     }
 }

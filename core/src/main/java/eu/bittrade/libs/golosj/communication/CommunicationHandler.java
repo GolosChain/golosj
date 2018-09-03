@@ -64,6 +64,7 @@ public class CommunicationHandler extends Endpoint implements MessageHandler.Who
     private Session session;
     private volatile String rawJsonResponse;
     private final Map<Long, CountDownLatch> locksMap = Collections.synchronizedMap(new HashMap<Long, CountDownLatch>());
+    private final Map<Long, String> mResponcesMap = Collections.synchronizedMap(new HashMap<Long, String>());
     private final Object globalLock = new Object();
 
     /**
@@ -147,12 +148,14 @@ public class CommunicationHandler extends Endpoint implements MessageHandler.Who
             }
         }
         try {
-            System.out.println(requestObject.toString());
+            System.out.println(requestObject.toString() + " target class is " + targetClass);
 
             sendMessageSynchronously(requestObject);
 
+            System.out.println(rawJsonResponse);
+
             @SuppressWarnings("unchecked")
-            ResponseWrapperDTO<T> response = mapper.readValue(rawJsonResponse, ResponseWrapperDTO.class);
+            ResponseWrapperDTO<T> response = mapper.readValue(mResponcesMap.get(requestObject.getId()), ResponseWrapperDTO.class);
 
             if (response == null || response.isEmpty() || rawJsonResponse.contains("\"name\":\"N5boost16exception_detail10clone_implINS0_19error_info")) {
 
@@ -169,8 +172,6 @@ public class CommunicationHandler extends Endpoint implements MessageHandler.Who
 
             // Make sure that the inner result object has the correct type.
             JavaType type = mapper.getTypeFactory().constructCollectionType(List.class, targetClass);
-
-            System.out.println(rawJsonResponse.length() > 200 ? rawJsonResponse.substring(0, 200) : rawJsonResponse);
 
 
             return mapper.convertValue(response.getResult(), type);
@@ -283,17 +284,17 @@ public class CommunicationHandler extends Endpoint implements MessageHandler.Who
         // Check if we are waiting for an answer.
 
         if (locksMap.size() > 0) {
-            LOGGER.debug("Raw JSON response: {}", message);
-
             this.rawJsonResponse = message;
 
 
             WithId withId = null;
             try {
                 withId = mapper.readValue(message, WithId.class);
-                CountDownLatch latch = locksMap.get(withId.getResponseId());
+                System.out.println("id = " + withId);
+                CountDownLatch latch = locksMap.get(withId.getId());
                 if (latch != null) {
-                    locksMap.remove(withId.getResponseId());
+                    locksMap.remove(withId.getId());
+                    mResponcesMap.put(withId.getId(), message);
                     latch.countDown();
                 }
             } catch (IOException e) {
