@@ -152,10 +152,10 @@ public class CommunicationHandler extends Endpoint implements MessageHandler.Who
 
             sendMessageSynchronously(requestObject);
 
-            System.out.println(rawJsonResponse);
-
             @SuppressWarnings("unchecked")
             ResponseWrapperDTO<T> response = mapper.readValue(mResponcesMap.get(requestObject.getId()), ResponseWrapperDTO.class);
+            mResponcesMap.remove(requestObject.getId());
+
 
             if (response == null || response.isEmpty() || rawJsonResponse.contains("\"name\":\"N5boost16exception_detail10clone_implINS0_19error_info")) {
 
