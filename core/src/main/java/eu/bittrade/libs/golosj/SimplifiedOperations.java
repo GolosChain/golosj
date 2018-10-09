@@ -1,5 +1,7 @@
 package eu.bittrade.libs.golosj;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+
 import eu.bittrade.libs.golosj.base.models.AccountName;
 import eu.bittrade.libs.golosj.base.models.Asset;
 import eu.bittrade.libs.golosj.base.models.Permlink;
@@ -452,5 +454,19 @@ public interface SimplifiedOperations {
                        @Nonnull PublicKey memoKey,
                        @Nonnull String jsonMetadata)
             throws SteemCommunicationException, SteemInvalidTransactionException;
+
+    /**
+     * Create a new reblog operation to reblog a comment or a post.
+     * to invoke this method default account must be set.
+     *
+     * @param authorOfTheAuthor        author of original post
+     * @param permlink                 permlink of original post
+     * @throws SteemCommunicationException      If there is a problem reaching the Steem Node.
+     * @throws SteemInvalidTransactionException If there is a problem while signing the transaction.
+     * @throws JsonProcessingException        if there were some json converting errors
+     */
+
+    public void reblog(@Nonnull AccountName authorOfTheAuthor, @Nonnull Permlink permlink) throws SteemCommunicationException,
+            SteemInvalidTransactionException, JsonProcessingException;
 
 }

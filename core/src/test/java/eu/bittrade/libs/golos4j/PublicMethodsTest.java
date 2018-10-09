@@ -56,6 +56,11 @@ public class PublicMethodsTest {
         assertNotNull(blockHeader.getPrevious());
         assertNotNull(blockHeader.getTimestamp());
     }
+    @Test
+    public void testProps() throws Exception {
+       GlobalProperties props =  golos4J.getDatabaseMethods().getDynamicGlobalProperties();
+        System.out.println(props);
+    }
 
     @Test
     public void testGetOpsInBlock() throws Exception {

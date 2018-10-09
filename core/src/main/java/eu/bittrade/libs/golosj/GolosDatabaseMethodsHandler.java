@@ -2,7 +2,46 @@ package eu.bittrade.libs.golosj;
 
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import eu.bittrade.libs.golosj.base.models.*;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.TimeZone;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import eu.bittrade.libs.golosj.base.models.AccountName;
+import eu.bittrade.libs.golosj.base.models.AppliedOperation;
+import eu.bittrade.libs.golosj.base.models.BlockHeader;
+import eu.bittrade.libs.golosj.base.models.ChainProperties;
+import eu.bittrade.libs.golosj.base.models.Config;
+import eu.bittrade.libs.golosj.base.models.Discussion;
+import eu.bittrade.libs.golosj.base.models.DiscussionLight;
+import eu.bittrade.libs.golosj.base.models.DiscussionQuery;
+import eu.bittrade.libs.golosj.base.models.DiscussionWithComments;
+import eu.bittrade.libs.golosj.base.models.ExtendedAccount;
+import eu.bittrade.libs.golosj.base.models.ExtendedLimitOrder;
+import eu.bittrade.libs.golosj.base.models.FeedHistory;
+import eu.bittrade.libs.golosj.base.models.GlobalProperties;
+import eu.bittrade.libs.golosj.base.models.OrderBook;
+import eu.bittrade.libs.golosj.base.models.Permlink;
+import eu.bittrade.libs.golosj.base.models.Price;
+import eu.bittrade.libs.golosj.base.models.ProfileImage;
+import eu.bittrade.libs.golosj.base.models.RewardFund;
+import eu.bittrade.libs.golosj.base.models.ScheduledHardfork;
+import eu.bittrade.libs.golosj.base.models.SignedBlockWithInfo;
+import eu.bittrade.libs.golosj.base.models.SignedTransaction;
+import eu.bittrade.libs.golosj.base.models.Transaction;
+import eu.bittrade.libs.golosj.base.models.TrendingTag;
+import eu.bittrade.libs.golosj.base.models.Vote;
+import eu.bittrade.libs.golosj.base.models.VoteState;
+import eu.bittrade.libs.golosj.base.models.Witness;
+import eu.bittrade.libs.golosj.base.models.WitnessSchedule;
 import eu.bittrade.libs.golosj.communication.BlockAppliedCallback;
 import eu.bittrade.libs.golosj.communication.CommunicationHandler;
 import eu.bittrade.libs.golosj.communication.dto.RequestWrapperDTO;
@@ -14,12 +53,6 @@ import eu.bittrade.libs.golosj.enums.SteemApis;
 import eu.bittrade.libs.golosj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.golosj.exceptions.SteemTransformationException;
 import eu.bittrade.libs.golosj.util.SteemJUtils;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
 
 /**
  * Created by yuri yurivladdurain@gmail.com
@@ -181,7 +214,8 @@ class GolosDatabaseMethodsHandler implements DatabaseMethods {
         String[] parameters;
         if (voteLimit < 0)
             parameters = new String[]{author.getName(), permlink.getLink()};
-        else parameters = new String[]{author.getName(), permlink.getLink(), String.valueOf(voteLimit)};
+        else
+            parameters = new String[]{author.getName(), permlink.getLink(), String.valueOf(voteLimit)};
         requestObject.setAdditionalParameters(parameters);
         return requestObject;
     }
@@ -215,7 +249,8 @@ class GolosDatabaseMethodsHandler implements DatabaseMethods {
         String[] parameters;
         if (voteLimit < 0)
             parameters = new String[]{author.getName(), permlink.getLink()};
-        else parameters = new String[]{author.getName(), permlink.getLink(), String.valueOf(voteLimit)};
+        else
+            parameters = new String[]{author.getName(), permlink.getLink(), String.valueOf(voteLimit)};
         requestObject.setAdditionalParameters(parameters);
         return requestObject;
     }
@@ -268,7 +303,8 @@ class GolosDatabaseMethodsHandler implements DatabaseMethods {
         String[] parameters;
         if (voteLimit < 0)
             parameters = new String[]{author.getName(), permlink.getLink()};
-        else parameters = new String[]{author.getName(), permlink.getLink(), String.valueOf(voteLimit)};
+        else
+            parameters = new String[]{author.getName(), permlink.getLink(), String.valueOf(voteLimit)};
         requestObject.setAdditionalParameters(parameters);
 
         return communicationHandler.performRequest(requestObject, Discussion.class);
@@ -299,7 +335,8 @@ class GolosDatabaseMethodsHandler implements DatabaseMethods {
         String[] parameters;
         if (voteLimit < 0)
             parameters = new String[]{author.getName(), permlink.getLink()};
-        else parameters = new String[]{author.getName(), permlink.getLink(), String.valueOf(voteLimit)};
+        else
+            parameters = new String[]{author.getName(), permlink.getLink(), String.valueOf(voteLimit)};
         requestObject.setAdditionalParameters(parameters);
 
         return requestObject;
@@ -381,8 +418,9 @@ class GolosDatabaseMethodsHandler implements DatabaseMethods {
         if (voteLimit < 0)
             parameters = new String[]{author.getName(), permlink.getLink(), simpleDateFormat.format(beforeDate),
                     String.valueOf(limit)};
-        else parameters = new String[]{author.getName(), permlink.getLink(), simpleDateFormat.format(beforeDate),
-                String.valueOf(limit), String.valueOf(voteLimit)};
+        else
+            parameters = new String[]{author.getName(), permlink.getLink(), simpleDateFormat.format(beforeDate),
+                    String.valueOf(limit), String.valueOf(voteLimit)};
         requestObject.setAdditionalParameters(parameters);
         return requestObject;
     }
@@ -514,18 +552,37 @@ class GolosDatabaseMethodsHandler implements DatabaseMethods {
 
     @Nonnull
     @Override
-    public List<Discussion> getRepliesByLastUpdate(@Nonnull AccountName startParentAuthor, @Nonnull Permlink startPermlink,
-                                                   int limit, int voteLimit) throws SteemCommunicationException {
+    public List<Discussion> getRepliesByLastUpdate(@Nonnull AccountName startParentAuthor,
+                                                   Permlink startPermlink,
+                                                   int limit,
+                                                   int voteLimit) throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_REPLIES_BY_LAST_UPDATE);
         requestObject.setSteemApi(SteemApis.SOCIAL_NETWORK);
         Object[] parameters;
+        String link = "";
+        if (startPermlink != null) link = startPermlink.getLink();
         if (voteLimit < 0)
-            parameters = new Object[]{startParentAuthor, startPermlink.getLink(), String.valueOf(limit)};
-        else parameters = new Object[]{startParentAuthor, startPermlink.getLink(), String.valueOf(limit), voteLimit};
+            parameters = new Object[]{startParentAuthor, link, String.valueOf(limit)};
+        else parameters = new Object[]{startParentAuthor, link, String.valueOf(limit), voteLimit};
         requestObject.setAdditionalParameters(parameters);
 
         return communicationHandler.performRequest(requestObject, Discussion.class);
+    }
+
+    @Nonnull
+    @Override
+    public List<DiscussionLight> getRepliesLightByLastUpdate(@Nonnull AccountName startParentAuthor, Permlink startPermlink, int limit) throws SteemCommunicationException {
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
+        requestObject.setApiMethod(RequestMethods.GET_REPLIES_BY_LAST_UPDATE);
+        requestObject.setSteemApi(SteemApis.SOCIAL_NETWORK);
+        Object[] parameters;
+        String link = "";
+        if (startPermlink != null) link = startPermlink.getLink();
+        parameters = new Object[]{startParentAuthor, link, String.valueOf(limit)};
+        requestObject.setAdditionalParameters(parameters);
+
+        return communicationHandler.performRequest(requestObject, DiscussionLight.class);
     }
 
     @Override
@@ -724,7 +781,8 @@ class GolosDatabaseMethodsHandler implements DatabaseMethods {
     public DiscussionWithComments getStoryWithRepliesAndInvolvedAccounts(AccountName authorName,
                                                                          Permlink permlink,
                                                                          int voteLimit) throws SteemCommunicationException {
-        if (Golos4J.getInstance().getCurrentHardforkVersion() == Golos4J.HardForkVersion.HF_17) voteLimit = -1;
+        if (Golos4J.getInstance().getCurrentHardforkVersion() == Golos4J.HardForkVersion.HF_17)
+            voteLimit = -1;
         Discussion discussion = getContent(authorName, permlink, voteLimit);
         if (discussion == null) return null;
 

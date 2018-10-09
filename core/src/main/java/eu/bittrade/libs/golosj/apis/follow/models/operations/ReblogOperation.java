@@ -17,6 +17,8 @@ import eu.bittrade.libs.golosj.enums.ValidationType;
  * This class represents the Steem "reblog_operation" object.
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
+ *
+ *
  */
 public class ReblogOperation extends CustomJsonOperationPayload {
     @JsonProperty("account")

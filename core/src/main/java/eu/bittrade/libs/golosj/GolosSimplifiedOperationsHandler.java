@@ -1,8 +1,23 @@
 package eu.bittrade.libs.golosj;
 
-import eu.bittrade.libs.golosj.base.models.*;
+import com.fasterxml.jackson.core.JsonProcessingException;
+
+import java.util.ArrayList;
+import java.util.Collections;
+
+import javax.annotation.Nonnull;
+
+import eu.bittrade.libs.golosj.apis.follow.models.operations.ReblogOperation;
+import eu.bittrade.libs.golosj.base.models.AccountName;
+import eu.bittrade.libs.golosj.base.models.Asset;
+import eu.bittrade.libs.golosj.base.models.Authority;
+import eu.bittrade.libs.golosj.base.models.GlobalProperties;
+import eu.bittrade.libs.golosj.base.models.Permlink;
+import eu.bittrade.libs.golosj.base.models.PublicKey;
+import eu.bittrade.libs.golosj.base.models.SignedTransaction;
 import eu.bittrade.libs.golosj.base.models.operations.AccountCreateOperation;
 import eu.bittrade.libs.golosj.base.models.operations.CommentOperation;
+import eu.bittrade.libs.golosj.base.models.operations.CustomJsonOperation;
 import eu.bittrade.libs.golosj.base.models.operations.Operation;
 import eu.bittrade.libs.golosj.communication.CommunicationHandler;
 import eu.bittrade.libs.golosj.configuration.SteemJConfig;
@@ -10,10 +25,6 @@ import eu.bittrade.libs.golosj.enums.PrivateKeyType;
 import eu.bittrade.libs.golosj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.golosj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.golosj.util.ImmutablePair;
-
-
-import javax.annotation.Nonnull;
-import java.util.ArrayList;
 
 /**
  * Created by yuri yurivladdurain@gmail.com .
@@ -178,6 +189,22 @@ class GolosSimplifiedOperationsHandler implements SimplifiedOperations {
 
         signedTransaction.sign();
 
+        Golos4J.getInstance().getNetworkBroadcastMethods().broadcastTransaction(signedTransaction);
+    }
+
+
+    public void reblog(@Nonnull AccountName authorOfTheAuthor, @Nonnull Permlink permlink) throws SteemCommunicationException,
+            SteemInvalidTransactionException, JsonProcessingException {
+        ReblogOperation reblogOperation = new ReblogOperation(SteemJConfig.getInstance().getDefaultAccount(), authorOfTheAuthor, permlink);
+        GlobalProperties globalProperties = Golos4J.getInstance().getDatabaseMethods().getDynamicGlobalProperties();
+        CustomJsonOperation customJsonOperation = new CustomJsonOperation(Collections.<AccountName>emptyList(),
+                Collections.singletonList(SteemJConfig.getInstance().getDefaultAccount()),
+                "follow",reblogOperation.toJson());
+        ArrayList<Operation> operations = new ArrayList<>();
+        operations.add(customJsonOperation);
+        SignedTransaction signedTransaction = new SignedTransaction(globalProperties.getHeadBlockId(), operations,
+                null);
+        signedTransaction.sign();
         Golos4J.getInstance().getNetworkBroadcastMethods().broadcastTransaction(signedTransaction);
     }
 }

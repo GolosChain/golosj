@@ -711,7 +711,11 @@ public interface DatabaseMethods {
      *                                     </ul>
      */
     @Nonnull
-    List<Discussion>  getRepliesByLastUpdate(@Nonnull AccountName startParentAuthor, @Nonnull Permlink startPermlink, int limit)
+    List<Discussion>  getRepliesByLastUpdate(@Nonnull AccountName startParentAuthor,  Permlink startPermlink, int limit)
+            throws SteemCommunicationException;
+
+    @Nonnull
+    List<DiscussionLight>  getRepliesLightByLastUpdate(@Nonnull AccountName startParentAuthor,  Permlink startPermlink, int limit)
             throws SteemCommunicationException;
 
     /**

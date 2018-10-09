@@ -1,17 +1,7 @@
 package eu.bittrade.libs.golos4j;
 
-import eu.bittrade.libs.golosj.Golos4J;
-import eu.bittrade.libs.golosj.base.models.*;
-import eu.bittrade.libs.golosj.base.models.operations.AccountUpdateOperation;
-import eu.bittrade.libs.golosj.base.models.operations.Operation;
-import eu.bittrade.libs.golosj.base.models.operations.VoteOperation;
-import eu.bittrade.libs.golosj.communication.CommunicationHandler;
-import eu.bittrade.libs.golosj.enums.DiscussionSortType;
-import eu.bittrade.libs.golosj.enums.PrivateKeyType;
-import eu.bittrade.libs.golosj.exceptions.SteemCommunicationException;
-import eu.bittrade.libs.golosj.exceptions.SteemInvalidTransactionException;
-import eu.bittrade.libs.golosj.util.ImmutablePair;
 import junit.framework.TestCase;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.internal.runners.JUnit38ClassRunner;
@@ -22,6 +12,25 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
+
+import eu.bittrade.libs.golosj.Golos4J;
+import eu.bittrade.libs.golosj.base.models.AccountMetadataUpdateOperation;
+import eu.bittrade.libs.golosj.base.models.AccountName;
+import eu.bittrade.libs.golosj.base.models.Discussion;
+import eu.bittrade.libs.golosj.base.models.DiscussionQuery;
+import eu.bittrade.libs.golosj.base.models.GlobalProperties;
+import eu.bittrade.libs.golosj.base.models.GolosIoFilePath;
+import eu.bittrade.libs.golosj.base.models.GolosProfile;
+import eu.bittrade.libs.golosj.base.models.Permlink;
+import eu.bittrade.libs.golosj.base.models.PublicKey;
+import eu.bittrade.libs.golosj.base.models.SignedTransaction;
+import eu.bittrade.libs.golosj.base.models.operations.AccountUpdateOperation;
+import eu.bittrade.libs.golosj.base.models.operations.Operation;
+import eu.bittrade.libs.golosj.base.models.operations.VoteOperation;
+import eu.bittrade.libs.golosj.communication.CommunicationHandler;
+import eu.bittrade.libs.golosj.enums.DiscussionSortType;
+import eu.bittrade.libs.golosj.enums.PrivateKeyType;
+import eu.bittrade.libs.golosj.util.ImmutablePair;
 
 /**
  * Created by yuri yurivladdurain@gmail.com .
@@ -42,11 +51,13 @@ public class SignedMethodsTest extends TestCase {
         else golos4J = Golos4J.getInstance();
         if (useTestNet)
             golos4J.addAccountUsingMasterPassword(TESTNET_ACCOUNT, testnetAccPosting);
-        else golos4J.addAccount(ACCOUNT, new ImmutablePair<>(PrivateKeyType.ACTIVE, accountActiveKey), true);
+        else
+            golos4J.addAccount(ACCOUNT, new ImmutablePair<>(PrivateKeyType.ACTIVE, accountActiveKey), true);
     }
+
     @Test
-    public void testCreatePost() throws Exception{
-        golos4J.getSimplifiedOperations().createPost("test title","test content", new String[]{"test"});
+    public void testCreatePost() throws Exception {
+        golos4J.getSimplifiedOperations().createPost("test title", "test content", new String[]{"test"});
     }
 
     @Test
@@ -107,7 +118,7 @@ public class SignedMethodsTest extends TestCase {
             String newName = UUID.randomUUID().toString();
             golosProfile.setAbout(newName);
 
-            Operation aoo = new AccountMetadataUpdateOperation(TESTNET_ACCOUNT,golosProfile);
+            Operation aoo = new AccountMetadataUpdateOperation(TESTNET_ACCOUNT, golosProfile);
 
             List<Operation> operations = new ArrayList<>();
             operations.add(aoo);
@@ -142,5 +153,13 @@ public class SignedMethodsTest extends TestCase {
             signedTransaction.sign();
             golos4J.getNetworkBroadcastMethods().broadcastTransaction(signedTransaction);
         }
+    }
+
+    @Test
+    public void testReblog() throws Exception {
+        Discussion discussion = golos4J.getDatabaseMethods().getDiscussionsBy(
+                DiscussionQuery.newBuilder().setLimit(1).setVoteLimit(0).setTruncateBody(1).build(), DiscussionSortType.GET_DISCUSSIONS_BY_ACTIVE).get(0);
+        golos4J.getSimplifiedOperations().reblog(discussion.getAuthor(), discussion.getPermlink());
+
     }
 }

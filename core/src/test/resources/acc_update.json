@@ -1,62 +1,65 @@
-[
-  {
-    "id": 38,
-    "method": "call",
-    "jsonrpc": "2.0",
-    "params": [
-      "network_broadcast_api",
-      "broadcast_transaction",
-      [
-        {
-          "ref_block_num": 54570,
-          "ref_block_prefix": 738061416,
-          "expiration": "2018-05-28T08:43:57",
-          "operations": [
-            [
-              "account_update",
-              {
-                "account": "yuri-vlad",
-                "memo_key": "GLS7an3RjzAMH9u8ejzcMq2fcCVj7vj95uwBuDoYiPVz4JCM55a5u",
-                "json_metadata": "{\"profile\":{\"gender\":\"male\",\"location\":\"vladivostok\"}}"
-              }
-            ]
-          ],
-          "extensions": [],
-          "signatures": [
-            "1f3bf46de6bc611ac9ffe7af11c03180dba068251748661c87c6cebfd3768083cb04d9dcec6a7b20a419906ac641c3e49e22964d60e40542c577f92b77060d8a55"
+{
+  "id": 12,
+  "method": "call",
+  "jsonrpc": "2.0",
+  "params": [
+    "network_broadcast_api",
+    "broadcast_transaction",
+    [
+      {
+        "ref_block_num": 34465,
+        "ref_block_prefix": 4066308260,
+        "expiration": "2018-10-09T01:37:36",
+        "operations": [
+          [
+            "custom_json",
+            {
+              "required_auths": [],
+              "required_posting_auths": [
+                "yuri-vlad"
+              ],
+              "id": "follow",
+              "json": "[\"reblog\",{\"account\":\"yuri-vlad\",\"author\":\"captain\",\"permlink\":\"pochemu-vy-pishete--1538561459\"}]"
+            }
           ]
-        }
-      ]
+        ],
+        "extensions": [],
+        "signatures": [
+          "206e47362b1b4a112395f16f0a788392746dc0661cd4f48be4f36d30f702a360b1189ed0f192af6e726a5e58928c2c2f7a7ab5cf0a557e2dbaff2c48fb6f79abb9"
+        ]
+      }
     ]
-  },
-  {
-    "id": 1,
-    "method": "call",
-    "params": [
-      "network_broadcast_api",
-      "broadcast_transaction",
-      [
-        {
-          "ref_block_num": 14106,
-          "ref_block_prefix": 540284444,
-          "expiration": "2018-05-28T11:10:09",
-          "operations": [
-            [
-              "account_metadata",
-              {
-                "accountName": "qwerty",
-                "account": "qwerty",
-                "json_metadata": "{\"profile\":{\"about\":\"3de4d49c-0fa1-43e1-81aa-3bbb94f60e89\"}}"
-              }
-            ]
-          ],
-          "extensions": [],
-          "signatures": [
-            "1b17b8df59ec407e4d758dd3e27c8c474a3dfead48e108f557717492a93d753f703707770aa825cc438dc080d59ed367235afef9c89d05813e8fa6445b1371994a"
+  ]
+},
+
+{
+  "id": 3,
+  "method": "call",
+  "params": [
+    "network_broadcast_api",
+    "broadcast_transaction",
+    [
+      {
+        "ref_block_num": 39168,
+        "ref_block_prefix": 543177417,
+        "expiration": "2018-10-09T06:26:56",
+        "operations": [
+          [
+            "custom_json",
+            {
+              "required_auths": [],
+              "required_posting_auths": [
+                "yuri-vlad-second"
+              ],
+              "id": "follow",
+              "json": "[\"reblog\",[\"reblog\",{\"account\":\"yuri-vlad-second\",\"author\":\"vgomulka\",\"permlink\":\"professor-sergeij-savelxev-zhenshchiny-igrushki-v-rukakh-svoego-gormonalxnogo-fona-100cashback\"}]]"
+            }
           ]
-        }
-      ]
-    ],
-    "jsonrpc": "2.0"
-  }
-]
+        ],
+        "extensions": [],
+        "signatures": [
+          "1b54a6bb546f16f7150d47d23f8ba762e168c694d6694b8e325cfbe249dc358a4b2ba5b86a4030774fcc9cff4ee49b6bd6b9796f8b7149c7c6604ec3555ed2a631"
+        ]
+      }
+    ]
+  ]
