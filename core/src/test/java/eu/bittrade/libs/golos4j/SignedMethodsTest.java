@@ -162,4 +162,11 @@ public class SignedMethodsTest extends TestCase {
         golos4J.getSimplifiedOperations().reblog(discussion.getAuthor(), discussion.getPermlink());
 
     }
+
+    @Test
+    public void testGetVotes() throws Exception {
+        Discussion discussion = golos4J.getDatabaseMethods().getDiscussionsBy(
+                DiscussionQuery.newBuilder().setLimit(1).setVoteLimit(0).setTruncateBody(1).build(), DiscussionSortType.GET_DISCUSSIONS_BY_ACTIVE).get(0);
+        golos4J.getDatabaseMethods().getActiveVotes(discussion.getAuthor(), discussion.getPermlink());
+    }
 }

@@ -147,7 +147,6 @@ public class Comment {
     }
 
 
-
     @Nullable
     public Long getActiveVotesCount() {
         return activeVotesCount;
@@ -310,7 +309,6 @@ public class Comment {
 
     /**
      * @return the category
-     *
      */
     public String getCategory() {
         return category;

@@ -1,10 +1,53 @@
 package eu.bittrade.libs.golos4j;
 
 
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+
 import eu.bittrade.libs.golosj.Golos4J;
 import eu.bittrade.libs.golosj.apis.follow.enums.FollowType;
-import eu.bittrade.libs.golosj.apis.follow.model.*;
-import eu.bittrade.libs.golosj.base.models.*;
+import eu.bittrade.libs.golosj.apis.follow.model.AccountReputation;
+import eu.bittrade.libs.golosj.apis.follow.model.BlogEntry;
+import eu.bittrade.libs.golosj.apis.follow.model.CommentBlogEntry;
+import eu.bittrade.libs.golosj.apis.follow.model.CommentFeedEntry;
+import eu.bittrade.libs.golosj.apis.follow.model.FeedEntry;
+import eu.bittrade.libs.golosj.apis.follow.model.FollowApiObject;
+import eu.bittrade.libs.golosj.apis.follow.model.FollowCountApiObject;
+import eu.bittrade.libs.golosj.apis.follow.model.PostsPerAuthorPair;
+import eu.bittrade.libs.golosj.base.models.AccountName;
+import eu.bittrade.libs.golosj.base.models.AppliedOperation;
+import eu.bittrade.libs.golosj.base.models.Asset;
+import eu.bittrade.libs.golosj.base.models.BlockHeader;
+import eu.bittrade.libs.golosj.base.models.ChainProperties;
+import eu.bittrade.libs.golosj.base.models.Config;
+import eu.bittrade.libs.golosj.base.models.Discussion;
+import eu.bittrade.libs.golosj.base.models.DiscussionLight;
+import eu.bittrade.libs.golosj.base.models.DiscussionQuery;
+import eu.bittrade.libs.golosj.base.models.DiscussionWithComments;
+import eu.bittrade.libs.golosj.base.models.ExtendedAccount;
+import eu.bittrade.libs.golosj.base.models.FeedHistory;
+import eu.bittrade.libs.golosj.base.models.GlobalProperties;
+import eu.bittrade.libs.golosj.base.models.Permlink;
+import eu.bittrade.libs.golosj.base.models.ScheduledHardfork;
+import eu.bittrade.libs.golosj.base.models.SignedBlockWithInfo;
+import eu.bittrade.libs.golosj.base.models.TrendingTag;
+import eu.bittrade.libs.golosj.base.models.VoteState;
+import eu.bittrade.libs.golosj.base.models.Witness;
+import eu.bittrade.libs.golosj.base.models.WitnessSchedule;
 import eu.bittrade.libs.golosj.base.models.operations.AccountCreateOperation;
 import eu.bittrade.libs.golosj.base.models.operations.Operation;
 import eu.bittrade.libs.golosj.base.models.operations.VoteOperation;
@@ -15,23 +58,19 @@ import eu.bittrade.libs.golosj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.golosj.exceptions.SteemResponseError;
 import eu.bittrade.libs.golosj.util.AuthUtils;
 import eu.bittrade.libs.golosj.util.SteemJUtils;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.math.BigInteger;
-import java.util.*;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 
 import static eu.bittrade.libs.golosj.enums.PrivateKeyType.POSTING;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.greaterThanOrEqualTo;
+import static org.hamcrest.Matchers.instanceOf;
+import static org.hamcrest.Matchers.isEmptyOrNullString;
+import static org.hamcrest.Matchers.not;
 import static org.hamcrest.core.IsEqual.equalTo;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class PublicMethodsTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(PublicMethodsTest.class);
@@ -56,9 +95,26 @@ public class PublicMethodsTest {
         assertNotNull(blockHeader.getPrevious());
         assertNotNull(blockHeader.getTimestamp());
     }
+
+    //    const totalVestingFundSteem = toAsset(total_vesting_fund_steem).amount
+//    const totalVestingShares = toAsset(total_vesting_shares).amount
+//    const vesting_shares = toAsset(vestingShares).amount
+//    return (totalVestingFundSteem * (vesting_shares / totalVestingShares)).toFixed(3)
+    //61082.674
+    @Test
+    public void testConvertToGolosPower() throws Exception {
+        GlobalProperties properties = golos4J.getDatabaseMethods().getDynamicGlobalProperties();
+        ExtendedAccount account = golos4J.getDatabaseMethods().getAccounts(Collections.singletonList(new AccountName("uanix"))).get(0);
+        double totalVestingFundSteem = properties.getTotalVestingFundSteem().getAmount();
+        double totalVestingShares = properties.getTotalVestingShares().getAmount();
+        double vesting_shares = account.getVestingShares().getAmount();
+        double result = (totalVestingFundSteem * (vesting_shares/totalVestingShares));
+        System.out.println(result);
+    }
+
     @Test
     public void testProps() throws Exception {
-       GlobalProperties props =  golos4J.getDatabaseMethods().getDynamicGlobalProperties();
+        GlobalProperties props = golos4J.getDatabaseMethods().getDynamicGlobalProperties();
         System.out.println(props);
     }
 

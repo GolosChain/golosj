@@ -23,8 +23,6 @@ import java.util.*;
 
 /**
  * Created by yuri yurivladdurain@gmail.com .
- * 46.101.154.98 (testnet.golos.io)
- * qwerty P5KbaLKyg7rWZNWHVNqewHqQwN7CamUfCpGqMm7872K7oieYwQsM
  */
 
 public class Golos4J {

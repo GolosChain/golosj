@@ -14,6 +14,7 @@ import eu.bittrade.libs.golosj.exceptions.SteemCommunicationException;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -47,7 +48,7 @@ class GolosFollowApiMethodsHandler implements FollowApiMethods {
         Object[] parameters = {following.getName(), startFollower.getName(), type.toString().toLowerCase(), limit};
         requestObject.setAdditionalParameters(parameters);
 
-        return communicationHandler.performRequest(requestObject, FollowApiObject.class);
+        return new ArrayList<> (new HashSet<>(communicationHandler.performRequest(requestObject, FollowApiObject.class)));
     }
 
     @Override
@@ -65,7 +66,7 @@ class GolosFollowApiMethodsHandler implements FollowApiMethods {
         Object[] parameters = parametersList.toArray();
         requestObject.setAdditionalParameters(parameters);
 
-        return communicationHandler.performRequest(requestObject, FollowApiObject.class);
+        return new ArrayList<> (new HashSet<>(communicationHandler.performRequest(requestObject, FollowApiObject.class)));
     }
 
     @Override

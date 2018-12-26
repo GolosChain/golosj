@@ -2,6 +2,8 @@ package eu.bittrade.libs.golosj.base.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.Objects;
+
 /**
  * Created by yuri on 22.01.18.
  */
@@ -21,19 +23,6 @@ public class VoteLight {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof VoteLight)) return false;
-
-        VoteLight voteLight = (VoteLight) o;
-
-
-        if (rshares != voteLight.rshares) return false;
-        if (percent != voteLight.percent) return false;
-        return name != null ? name.equals(voteLight.name) : voteLight.name == null;
-    }
-
-    @Override
     public String toString() {
         return "VoteLight{" +
                 "name='" + name + '\'' +
@@ -44,12 +33,19 @@ public class VoteLight {
     }
 
     @Override
-    public int hashCode() {
-        int result = name != null ? name.hashCode() : 0;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        VoteLight voteLight = (VoteLight) o;
+        return rshares == voteLight.rshares &&
+                percent == voteLight.percent &&
+                Objects.equals(name, voteLight.name);
+    }
 
-        result = 31 * result + (int) (rshares ^ (rshares >>> 32));
-        result = 31 * result + (int) percent;
-        return result;
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(name, rshares, percent);
     }
 
     public VoteLight() {

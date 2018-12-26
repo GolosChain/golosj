@@ -10,8 +10,6 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 import eu.bittrade.libs.golosj.base.models.deserializer.VoteLightDeserializer;
-import eu.bittrade.libs.golosj.base.models.deserializer.VotesDeseriaizer;
-import eu.bittrade.libs.golosj.util.ArrayMap;
 
 /**
  * Created by yuri on 27.11.17.
@@ -44,10 +42,11 @@ public class DiscussionLight extends CommentLight {
     public long voteRshares;
 
     public DiscussionLight() {
+        super();
     }
 
-    public DiscussionLight(long id, String category, String parentAuthor, String parentPermlink, String author, String permlink, String title, String body, String jsonMetadata, TimePointSec created, short depth, int children, Asset totalPayoutValue, long authorRewards, int netVotes, String mode, int percentSteemDollars, Boolean allowReplies, Boolean allowVotes, Boolean allowCurationRewards, TimePointSec lastUpdate, Long activeVotesCount, String url, String rootTitle, Asset pendingPayoutValue, Asset totalPendingPayoutValue, List<VoteLight> votes, long authorReputation, Long bodyLength, List<String> rebloggedBy, String firstRebloggedBy, Date firstRebloggedOn, long voteRshares) {
-        super(id, category, parentAuthor, parentPermlink, author, permlink, title, body, jsonMetadata, created, depth, children, totalPayoutValue, authorRewards, netVotes, mode, percentSteemDollars, allowReplies, allowVotes, allowCurationRewards, lastUpdate, activeVotesCount);
+    public DiscussionLight(long id, String category, String parentAuthor, String parentPermlink, String author, String permlink, String title, String body, String jsonMetadata, TimePointSec created, short depth, int children, Asset totalPayoutValue, long authorRewards, int netVotes, Asset curatorPayoutValue, String mode, int percentSteemDollars, Boolean allowReplies, Boolean allowVotes, Boolean allowCurationRewards, TimePointSec lastUpdate, long netRshares, @Nullable Long activeVotesCount, String url, String rootTitle, Asset pendingPayoutValue, Asset totalPendingPayoutValue, List<VoteLight> votes, long authorReputation, Long bodyLength, List<String> rebloggedBy, @Nullable String firstRebloggedBy, @Nullable Date firstRebloggedOn, long voteRshares) {
+        super(id, category, parentAuthor, parentPermlink, author, permlink, title, body, jsonMetadata, created, depth, children, totalPayoutValue, authorRewards, netVotes, curatorPayoutValue, mode, percentSteemDollars, allowReplies, allowVotes, allowCurationRewards, lastUpdate, netRshares, activeVotesCount);
         this.url = url;
         this.rootTitle = rootTitle;
         this.pendingPayoutValue = pendingPayoutValue;
@@ -152,7 +151,6 @@ public class DiscussionLight extends CommentLight {
     }
 
 
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -164,14 +162,17 @@ public class DiscussionLight extends CommentLight {
         if (authorReputation != that.authorReputation) return false;
         if (voteRshares != that.voteRshares) return false;
         if (url != null ? !url.equals(that.url) : that.url != null) return false;
-        if (rootTitle != null ? !rootTitle.equals(that.rootTitle) : that.rootTitle != null) return false;
+        if (rootTitle != null ? !rootTitle.equals(that.rootTitle) : that.rootTitle != null)
+            return false;
         if (pendingPayoutValue != null ? !pendingPayoutValue.equals(that.pendingPayoutValue) : that.pendingPayoutValue != null)
             return false;
         if (totalPendingPayoutValue != null ? !totalPendingPayoutValue.equals(that.totalPendingPayoutValue) : that.totalPendingPayoutValue != null)
             return false;
         if (votes != null ? !votes.equals(that.votes) : that.votes != null) return false;
-        if (bodyLength != null ? !bodyLength.equals(that.bodyLength) : that.bodyLength != null) return false;
-        if (rebloggedBy != null ? !rebloggedBy.equals(that.rebloggedBy) : that.rebloggedBy != null) return false;
+        if (bodyLength != null ? !bodyLength.equals(that.bodyLength) : that.bodyLength != null)
+            return false;
+        if (rebloggedBy != null ? !rebloggedBy.equals(that.rebloggedBy) : that.rebloggedBy != null)
+            return false;
         if (firstRebloggedBy != null ? !firstRebloggedBy.equals(that.firstRebloggedBy) : that.firstRebloggedBy != null)
             return false;
         return firstRebloggedOn != null ? firstRebloggedOn.equals(that.firstRebloggedOn) : that.firstRebloggedOn == null;

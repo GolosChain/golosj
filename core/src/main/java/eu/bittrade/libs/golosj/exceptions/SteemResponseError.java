@@ -13,12 +13,12 @@ public class SteemResponseError extends SteemCommunicationException {
     private final transient SteemError steemError;
 
     public SteemResponseError(SteemError steemError) {
-        super();
+        super(steemError.toString());
         this.steemError = steemError;
     }
 
     public SteemResponseError(String message, SteemError steemError) {
-        super(message);
+        super(message + " " + steemError.toString());
         this.steemError = steemError;
     }
 

@@ -2,6 +2,7 @@ package eu.bittrade.libs.golosj.apis.follow.model;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.libs.golosj.base.models.AccountName;
@@ -13,6 +14,7 @@ import eu.bittrade.libs.golosj.base.models.TimePointSec;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class BlogEntry {
     private AccountName author;
     private Permlink permlink;

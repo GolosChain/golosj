@@ -3,6 +3,8 @@ package eu.bittrade.libs.golosj.base.models;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.Objects;
+
 import javax.annotation.Nullable;
 
 /**
@@ -32,10 +34,14 @@ public class CommentLight {
     int children;
     Asset totalPayoutValue;
     @JsonProperty("author_rewards")
-    long authorRewards;
+    long authorRewards;//curator_payout_value
     // Original type is int32_t.
     @JsonProperty("net_votes")
     int netVotes;
+
+    @JsonProperty("curator_payout_value")
+    Asset curatorPayoutValue;
+
     @Deprecated
     String mode;
     @JsonProperty("percent_steem_dollars")
@@ -48,6 +54,8 @@ public class CommentLight {
     Boolean allowCurationRewards;
     @JsonProperty("last_update")
     TimePointSec lastUpdate;
+    @JsonProperty("net_rshares")
+    long netRshares;
     @JsonProperty("active_votes_count")
     @Nullable
     Long activeVotesCount;
@@ -55,8 +63,7 @@ public class CommentLight {
     public CommentLight() {
     }
 
-
-    public CommentLight(long id, String category, String parentAuthor, String parentPermlink, String author, String permlink, String title, String body, String jsonMetadata, TimePointSec created, short depth, int children, Asset totalPayoutValue, long authorRewards, int netVotes, String mode, int percentSteemDollars, Boolean allowReplies, Boolean allowVotes, Boolean allowCurationRewards, TimePointSec lastUpdate, Long activeVotesCount) {
+    public CommentLight(long id, String category, String parentAuthor, String parentPermlink, String author, String permlink, String title, String body, String jsonMetadata, TimePointSec created, short depth, int children, Asset totalPayoutValue, long authorRewards, int netVotes, Asset curatorPayoutValue, String mode, int percentSteemDollars, Boolean allowReplies, Boolean allowVotes, Boolean allowCurationRewards, TimePointSec lastUpdate, long netRshares, @Nullable Long activeVotesCount) {
         this.id = id;
         this.category = category;
         this.parentAuthor = parentAuthor;
@@ -72,13 +79,23 @@ public class CommentLight {
         this.totalPayoutValue = totalPayoutValue;
         this.authorRewards = authorRewards;
         this.netVotes = netVotes;
+        this.curatorPayoutValue = curatorPayoutValue;
         this.mode = mode;
         this.percentSteemDollars = percentSteemDollars;
         this.allowReplies = allowReplies;
         this.allowVotes = allowVotes;
         this.allowCurationRewards = allowCurationRewards;
         this.lastUpdate = lastUpdate;
+        this.netRshares = netRshares;
         this.activeVotesCount = activeVotesCount;
+    }
+
+    public Asset getCuratorPayoutValue() {
+        return curatorPayoutValue;
+    }
+
+    public void setCuratorPayoutValue(Asset curatorPayoutValue) {
+        this.curatorPayoutValue = curatorPayoutValue;
     }
 
     @Nullable
@@ -98,61 +115,37 @@ public class CommentLight {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         CommentLight that = (CommentLight) o;
-
-        if (id != that.id) return false;
-        if (depth != that.depth) return false;
-        if (children != that.children) return false;
-        if (authorRewards != that.authorRewards) return false;
-        if (netVotes != that.netVotes) return false;
-        if (percentSteemDollars != that.percentSteemDollars) return false;
-        if (category != null ? !category.equals(that.category) : that.category != null) return false;
-        if (parentAuthor != null ? !parentAuthor.equals(that.parentAuthor) : that.parentAuthor != null) return false;
-        if (parentPermlink != null ? !parentPermlink.equals(that.parentPermlink) : that.parentPermlink != null)
-            return false;
-        if (author != null ? !author.equals(that.author) : that.author != null) return false;
-        if (permlink != null ? !permlink.equals(that.permlink) : that.permlink != null) return false;
-        if (title != null ? !title.equals(that.title) : that.title != null) return false;
-        if (body != null ? !body.equals(that.body) : that.body != null) return false;
-        if (jsonMetadata != null ? !jsonMetadata.equals(that.jsonMetadata) : that.jsonMetadata != null) return false;
-        if (created != null ? !created.equals(that.created) : that.created != null) return false;
-        if (totalPayoutValue != null ? !totalPayoutValue.equals(that.totalPayoutValue) : that.totalPayoutValue != null)
-            return false;
-        if (mode != null ? !mode.equals(that.mode) : that.mode != null) return false;
-        if (allowReplies != null ? !allowReplies.equals(that.allowReplies) : that.allowReplies != null) return false;
-        if (allowVotes != null ? !allowVotes.equals(that.allowVotes) : that.allowVotes != null) return false;
-        if (allowCurationRewards != null ? !allowCurationRewards.equals(that.allowCurationRewards) : that.allowCurationRewards != null)
-            return false;
-        if (lastUpdate != null ? !lastUpdate.equals(that.lastUpdate) : that.lastUpdate != null) return false;
-        return activeVotesCount != null ? activeVotesCount.equals(that.activeVotesCount) : that.activeVotesCount == null;
+        return id == that.id &&
+                depth == that.depth &&
+                children == that.children &&
+                authorRewards == that.authorRewards &&
+                netVotes == that.netVotes &&
+                percentSteemDollars == that.percentSteemDollars &&
+                netRshares == that.netRshares &&
+                Objects.equals(category, that.category) &&
+                Objects.equals(parentAuthor, that.parentAuthor) &&
+                Objects.equals(parentPermlink, that.parentPermlink) &&
+                Objects.equals(author, that.author) &&
+                Objects.equals(permlink, that.permlink) &&
+                Objects.equals(title, that.title) &&
+                Objects.equals(body, that.body) &&
+                Objects.equals(jsonMetadata, that.jsonMetadata) &&
+                Objects.equals(created, that.created) &&
+                Objects.equals(totalPayoutValue, that.totalPayoutValue) &&
+                Objects.equals(curatorPayoutValue, that.curatorPayoutValue) &&
+                Objects.equals(mode, that.mode) &&
+                Objects.equals(allowReplies, that.allowReplies) &&
+                Objects.equals(allowVotes, that.allowVotes) &&
+                Objects.equals(allowCurationRewards, that.allowCurationRewards) &&
+                Objects.equals(lastUpdate, that.lastUpdate) &&
+                Objects.equals(activeVotesCount, that.activeVotesCount);
     }
 
     @Override
     public int hashCode() {
-        int result = (int) (id ^ (id >>> 32));
-        result = 31 * result + (category != null ? category.hashCode() : 0);
-        result = 31 * result + (parentAuthor != null ? parentAuthor.hashCode() : 0);
-        result = 31 * result + (parentPermlink != null ? parentPermlink.hashCode() : 0);
-        result = 31 * result + (author != null ? author.hashCode() : 0);
-        result = 31 * result + (permlink != null ? permlink.hashCode() : 0);
-        result = 31 * result + (title != null ? title.hashCode() : 0);
-        result = 31 * result + (body != null ? body.hashCode() : 0);
-        result = 31 * result + (jsonMetadata != null ? jsonMetadata.hashCode() : 0);
-        result = 31 * result + (created != null ? created.hashCode() : 0);
-        result = 31 * result + (int) depth;
-        result = 31 * result + children;
-        result = 31 * result + (totalPayoutValue != null ? totalPayoutValue.hashCode() : 0);
-        result = 31 * result + (int) (authorRewards ^ (authorRewards >>> 32));
-        result = 31 * result + netVotes;
-        result = 31 * result + (mode != null ? mode.hashCode() : 0);
-        result = 31 * result + percentSteemDollars;
-        result = 31 * result + (allowReplies != null ? allowReplies.hashCode() : 0);
-        result = 31 * result + (allowVotes != null ? allowVotes.hashCode() : 0);
-        result = 31 * result + (allowCurationRewards != null ? allowCurationRewards.hashCode() : 0);
-        result = 31 * result + (lastUpdate != null ? lastUpdate.hashCode() : 0);
-        result = 31 * result + (activeVotesCount != null ? activeVotesCount.hashCode() : 0);
-        return result;
+
+        return Objects.hash(id, category, parentAuthor, parentPermlink, author, permlink, title, body, jsonMetadata, created, depth, children, totalPayoutValue, authorRewards, netVotes, curatorPayoutValue, mode, percentSteemDollars, allowReplies, allowVotes, allowCurationRewards, lastUpdate, netRshares, activeVotesCount);
     }
 
     public long getId() {
@@ -323,6 +316,14 @@ public class CommentLight {
         this.lastUpdate = lastUpdate;
     }
 
+    public long getNetRshares() {
+        return netRshares;
+    }
+
+    public void setNetRshares(long netRshares) {
+        this.netRshares = netRshares;
+    }
+
     @Override
     public String toString() {
         return "CommentLight{" +
@@ -341,12 +342,15 @@ public class CommentLight {
                 ", totalPayoutValue=" + totalPayoutValue +
                 ", authorRewards=" + authorRewards +
                 ", netVotes=" + netVotes +
+                ", curatorPayoutValue=" + curatorPayoutValue +
                 ", mode='" + mode + '\'' +
                 ", percentSteemDollars=" + percentSteemDollars +
                 ", allowReplies=" + allowReplies +
                 ", allowVotes=" + allowVotes +
                 ", allowCurationRewards=" + allowCurationRewards +
                 ", lastUpdate=" + lastUpdate +
+                ", netRshares=" + netRshares +
+                ", activeVotesCount=" + activeVotesCount +
                 '}';
     }
 }

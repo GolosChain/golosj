@@ -703,8 +703,8 @@ class SteemJ {
      */
     public CommentOperation createPost(AccountName authorThatPublishsThePost, String title, String content,
                                        String[] tags) throws SteemCommunicationException, SteemInvalidTransactionException {
-        if (tags == null || tags.length < 1 || tags.length > 5) {
-            throw new InvalidParameterException("You need to provide at least one tag, but not more than five.");
+        if (tags == null || tags.length < 1) {
+            throw new InvalidParameterException("You need to provide at least one tag");
         }
         ArrayList<Operation> operations = new ArrayList<>();
 
@@ -728,18 +728,18 @@ class SteemJ {
         short percentSteemDollars = (short) 10000;
         Asset maxAcceptedPayout = new Asset(1000000000, AssetSymbolType.GBG);
 
-        BeneficiaryRouteType beneficiaryRouteType = new BeneficiaryRouteType(SteemJConfig.getSteemJAccount(),
-                SteemJConfig.getInstance().getSteemJWeight());
+//        BeneficiaryRouteType beneficiaryRouteType = new BeneficiaryRouteType(SteemJConfig.getSteemJAccount(),
+//                SteemJConfig.getInstance().getSteemJWeight());
+//
+//
+//        ArrayList<BeneficiaryRouteType> beneficiaryRouteTypes = new ArrayList<>();
+//        beneficiaryRouteTypes.add(beneficiaryRouteType);
 
-
-        ArrayList<BeneficiaryRouteType> beneficiaryRouteTypes = new ArrayList<>();
-        beneficiaryRouteTypes.add(beneficiaryRouteType);
-
-        CommentPayoutBeneficiaries commentPayoutBeneficiaries = new CommentPayoutBeneficiaries();
-        commentPayoutBeneficiaries.setBeneficiaries(beneficiaryRouteTypes);
+//        CommentPayoutBeneficiaries commentPayoutBeneficiaries = new CommentPayoutBeneficiaries();
+//        commentPayoutBeneficiaries.setBeneficiaries(beneficiaryRouteTypes);
 
         ArrayList<CommentOptionsExtension> commentOptionsExtensions = new ArrayList<>();
-        commentOptionsExtensions.add(commentPayoutBeneficiaries);
+       // commentOptionsExtensions.add(commentPayoutBeneficiaries);
 
         CommentOptionsOperation commentOptionsOperation = new CommentOptionsOperation(authorThatPublishsThePost,
                 permlink, maxAcceptedPayout, percentSteemDollars, allowVotes, allowCurationRewards,
@@ -792,8 +792,8 @@ class SteemJ {
     public CommentOperation createComment(AccountName authorOfThePostOrCommentToReplyTo,
                                           Permlink permlinkOfThePostOrCommentToReplyTo, AccountName authorThatPublishsTheComment, String content,
                                           String[] tags) throws SteemCommunicationException, SteemInvalidTransactionException {
-        if (tags == null || tags.length < 1 || tags.length > 5) {
-            throw new InvalidParameterException("You need to provide at least one tag, but not more than five.");
+        if (tags == null || tags.length < 1) {
+            throw new InvalidParameterException("You need to provide at least one tag");
         }
         ArrayList<Operation> operations = new ArrayList<>();
 
@@ -819,17 +819,17 @@ class SteemJ {
         short percentSteemDollars = (short) 10000;
         Asset maxAcceptedPayout = new Asset(1000000000, AssetSymbolType.GBG);
 
-        BeneficiaryRouteType beneficiaryRouteType = new BeneficiaryRouteType(SteemJConfig.getSteemJAccount(),
-                SteemJConfig.getInstance().getSteemJWeight());
+//        BeneficiaryRouteType beneficiaryRouteType = new BeneficiaryRouteType(SteemJConfig.getSteemJAccount(),
+//                SteemJConfig.getInstance().getSteemJWeight());
+//
+//        ArrayList<BeneficiaryRouteType> beneficiaryRouteTypes = new ArrayList<>();
+//        beneficiaryRouteTypes.add(beneficiaryRouteType);
 
-        ArrayList<BeneficiaryRouteType> beneficiaryRouteTypes = new ArrayList<>();
-        beneficiaryRouteTypes.add(beneficiaryRouteType);
-
-        CommentPayoutBeneficiaries commentPayoutBeneficiaries = new CommentPayoutBeneficiaries();
-        commentPayoutBeneficiaries.setBeneficiaries(beneficiaryRouteTypes);
+//        CommentPayoutBeneficiaries commentPayoutBeneficiaries = new CommentPayoutBeneficiaries();
+//        commentPayoutBeneficiaries.setBeneficiaries(beneficiaryRouteTypes);
 
         ArrayList<CommentOptionsExtension> commentOptionsExtensions = new ArrayList<>();
-        commentOptionsExtensions.add(commentPayoutBeneficiaries);
+        //commentOptionsExtensions.add(commentPayoutBeneficiaries);
 
         CommentOptionsOperation commentOptionsOperation = new CommentOptionsOperation(authorThatPublishsTheComment,
                 permlink, maxAcceptedPayout, percentSteemDollars, allowVotes, allowCurationRewards,
@@ -880,8 +880,8 @@ class SteemJ {
     public CommentOperation updatePost(AccountName authorOfThePostToUpdate, Permlink permlinkOfThePostToUpdate,
                                        String title, String content, String[] tags)
             throws SteemCommunicationException, SteemInvalidTransactionException {
-        if (tags == null || tags.length < 1 || tags.length > 5) {
-            throw new InvalidParameterException("You need to provide at least one tag, but not more than five.");
+        if (tags == null || tags.length < 1) {
+            throw new InvalidParameterException("You need to provide at least one tag");
         }
 
         ArrayList<Operation> operations = new ArrayList<>();
@@ -944,8 +944,8 @@ class SteemJ {
     public CommentOperation updateComment(AccountName parentAuthor, Permlink parentPermlink,
                                           Permlink originalPermlinkOfTheCommentToUpdate, AccountName originalAuthorOfTheCommentToUpdate,
                                           String content, String[] tags) throws SteemCommunicationException, SteemInvalidTransactionException {
-        if (tags == null || tags.length < 1 || tags.length > 5) {
-            throw new InvalidParameterException("You need to provide at least one tag, but not more than five.");
+        if (tags == null || tags.length < 1) {
+            throw new InvalidParameterException("You need to provide at least one tag");
         }
         ArrayList<Operation> operations = new ArrayList<>();
 

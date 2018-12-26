@@ -3,6 +3,7 @@ package eu.bittrade.libs.golosj.apis.follow.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
+import java.util.Objects;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
@@ -43,6 +44,22 @@ public class FollowApiObject {
      */
     public List<FollowType> getWhat() {
         return what;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        FollowApiObject that = (FollowApiObject) o;
+        return Objects.equals(follower, that.follower) &&
+                Objects.equals(following, that.following) &&
+                Objects.equals(what, that.what);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(follower, following, what);
     }
 
     @Override

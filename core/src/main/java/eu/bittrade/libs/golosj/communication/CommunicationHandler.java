@@ -154,7 +154,7 @@ public class CommunicationHandler extends Endpoint implements MessageHandler.Who
 
             @SuppressWarnings("unchecked")
             ResponseWrapperDTO<T> response = mapper.readValue(mResponcesMap.get(requestObject.getId()), ResponseWrapperDTO.class);
-         //   System.out.println(mResponcesMap.get(requestObject.getId()));
+            System.out.println(mResponcesMap.get(requestObject.getId()));
             mResponcesMap.remove(requestObject.getId());
 
 

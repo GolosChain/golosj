@@ -67,26 +67,29 @@ public class AccountName implements ByteTransformable, SignatureObject {
         if (name == null) {
             this.name = "";
         } else {
+            String lowercasedName = name.toLowerCase();
             if (name.length() > 1 && name.startsWith("@")) name = name.substring(1);
             if (!name.isEmpty()) {
-                if (name.length() < 3 || name.length() > 16) {
+
+                if (lowercasedName.length() < 3 || lowercasedName.length() > 16) {
                     throw new InvalidParameterException(
                             "An account name needs to have a minimum length of 3 and a maximum length of 16.");
-                } else if (!name.split("\\.")[0].matches("^[a-z]{1}[a-z0-9\\-]{1,14}[a-z0-9]{1}")) {
+                } else if (!lowercasedName.split("\\.")[0].matches("^[a-z]{1}[a-z0-9\\-]{1,14}[a-z0-9]{1}")) {
                     /*
                      * It looks like only values infront of a "." are validated.
                      * Those characters in front of a dot must fullfil the
                      * following rules: The first char needs to be one of "a-z"
                      * while a "-" and "0-9" are allowed for further chars.
                      */
-                    throw new InvalidParameterException("The given account name '" + name
+                    System.err.println("The given account name '" + name
                             + "' contains unsupported characters. The first character needs to be one"
                             + " of 'a-z', characters in the middle can be 'a-z', '0,9' and a '-' and the last character of the "
                             + "name has to be one of 'a-z' and '0-9'.");
+                    lowercasedName = "";
                 }
             }
 
-            this.name = name;
+            this.name = lowercasedName;
         }
     }
 

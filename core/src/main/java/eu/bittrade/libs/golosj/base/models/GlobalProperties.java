@@ -4,11 +4,14 @@ import java.math.BigInteger;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class GlobalProperties {
     // Original type is id_type which is a uint16_t so we use int here.
     private int id;
